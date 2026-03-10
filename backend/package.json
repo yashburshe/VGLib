@@ -1,12 +1,25 @@
 {
-  "name": "backend",
+  "name": "vglib-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "This is the backend server for VGLib, a video game library management application. It provides RESTful APIs for managing video game collections, including adding, updating, and deleting games, as well as retrieving game information.",
   "license": "MIT",
-  "author": "",
+  "author": "Yash Mahesh Burshe and Ben Piperno",
   "type": "module",
   "main": "backend.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node node_modules/nodemon/bin/nodemon.js backend.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "mongodb": "^7.1.0",
+    "nodemon": "^3.1.14"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.0.3",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "globals": "^17.4.0",
+    "prettier": "^3.8.1"
   }
 }
