@@ -18,6 +18,7 @@ if (!db) {
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('../frontend/dist'));
 app.use('/api/user', userRouter);
 app.use('/api/list', listRouter);
 app.listen(PORT, () => {
