@@ -69,20 +69,37 @@ VGLib is a web platform that provides a comprehensive catalogue of videogames ac
 
 * As Alex, I want to be able to update a videogame’s information that I created from the data repository
 
-### Design Mockups
+## API Routes
+
+### Videogames
 
 TBD
 
-### API Routes
-
-## Videogames
+### Lists
 
 TBD
 
-## Lists
+### Users
 
 TBD
 
-## Users
+## Design Mockups
 
-TBD
+![Home Page]("/assets/images/Home.jpg")
+![Top Games]("/assets/images/Top_Games.jpg")
+![Lists Page]("/assets/images/List.jpg)
+![Users Page]("/assets/images/users_Page.jpg")
+![Profile]("/assets/images/Profile.jpg")
+
+![VideoGame]("/assets/images/Videogame.jpg)
+![New Game]("/assets/images/New_Game.jpg")
+![Edit Game]("/assets/images/Edit_Game.jpg")
+![Delete Game]("/assets/images/Delete_Game.jpg)
+
+![Lists]("/assets/images/List.jpg")
+![Add to List]("/assets/images/Add_to_List.jpg")
+![Edit List]("/assets/images/Edit_List.jpg)
+![New List]("/assets/images/New_List.jpg")
+![Delete List]("/assets/images/Delete_List.jpg")
+
+
