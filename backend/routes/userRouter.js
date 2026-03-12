@@ -1,33 +1,23 @@
 import { Router } from 'express';
-import { getDB} from "../db/mongo.js";
-import { generateJWT, verifyJWT } from '../utils/jwt.js';
+import { db, COLLECTIONS } from "../db/mongo.js";
+import { AuthenticateUser } from './userAuth.js';
+import { createUser, deleteUser, getUser } from '../services/userService.js';
 
 const router = Router();
-const USER_COLLECTION = "users";
 
 //use to sign up a new user
 router.post('/signup', async (req, res) => {
-    try {
-        const { username, passwordHash } = req.body;
-        const db = await getDB();
-        
+    try {     
+        const { username, passwordHash } = req.body; 
         //check if there is already a user with the same username
-        const existingUser = await db
-            .collection(USER_COLLECTION)
-            .findOne({ username });
+        const existingUser = await getUser(username);
         if (existingUser) {
             return res
                 .status(400)
-                .json({ message: 'Username already exists' });
+                .json({ success: false, message: 'Username already exists' });
         }
-
-        //otherwise insert the user into the database
-        const dbResult = await db
-            .collection('users')
-            .insertOne({ username, passwordHash });
-        print(dbResult)
-        const userID = 1; //TODO: read userID from dbResult
-        const token = generateJWT(userID);
+        const newUserID = await createUser(username, passwordHash);
+        const token = generateJWT(newUserID);
         res.status(201).json({ token });
     } catch (error) {
         res.status(500).json({ success: false, message: "Internal server error"});
@@ -37,14 +27,11 @@ router.post('/signup', async (req, res) => {
 //use to login an existing user
 router.post('/login', async (req, res) => {
     try {
-        const { username, password } = req.body;
-        const db = await getDB();
+        const { username, passwordHash } = req.body;
         const matchingUser = await db
-            .collection(USER_COLLECTION)
-            .findOne({ username});
-        print(matchingUser)
-        const userID = 1; //TODO: read userID from dbResult
-        const token = generateJWT(userID);
+            .collection(COLLECTIONS.USERS)
+            .findOne({ username, password_hash: passwordHash});
+        const token = generateJWT(matchingUser.userID);
         res.status(201).json({ token });
     } catch (error) {
         res.status(500).json({ success: false, message: "Internal server error"});
@@ -53,121 +40,43 @@ router.post('/login', async (req, res) => {
 
 //get a user's info
 router.get('/me', async (req, res) => {
-    try {
-        //check for auth header existence
-        const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            return res.status(401)
-                .json({success: false, message: "missing token"});
-        }
-
-        //check auth token validity
-        const token = authHeader.split(" ")[1];
-        const decoded = verifyJWT(token);
-        if (!decoded) {
-            return res.status(401)
-                .json({success: false, message: "invalid token"});
-        }
-
-        const db = await getDB();
-        const matchingUser = await db
-            .collection(USER_COLLECTION)
-            .findOne(
-                {userId: decoded.userId},                          //define query
-                {projection: { _id: 0, username: 1, password: 0}}, //define fields to return
-            );
-        if (!matchingUser) {
-            return res.status(404)
-                .json({success: false, message: "user not found"});
-        }
-        res.status(200)
-            .json({success: true, user: matchingUser});
-
-    } catch (error) {
-        res.status(500)
-            .json({ success: false, message: "Internal server error"});
-    }
+    return await AuthenticateUser(req, res);
 });
 
 //delete a user's account
 router.delete('/delete', async (req, res) => {
+    const user = await AuthenticateUser(req, res);
+    if (!user) return;
     try {
-        //check for auth header existence
-        const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            return res.status(401)
-                .json({success: false, message: "missing token"});
-        }
-
-        //check auth token validity
-        const token = authHeader.split(" ")[1];
-        const decoded = verifyJWT(token);
-        if (!decoded) {
-            return res.status(401)
-                .json({success: false, message: "invalid token"});
-        }
-
-        //TODO: delete user's associated records
-        const db = await getDB();
-        const deleteResult = await db
-            .collection(USER_COLLECTION)
-            .deleteOne({userId: decoded.userId});
-        if (result.deletedCount === 1) {
-            res.status(200)
-                .json({success: true, message: "user deleted successfully"});
-        }
-        else if (!result) {
-            return res.status(404)
-                .json({success: false, message: "Internal server error"});
-        }
-        res.status(200)
-            .json({success: true, user: matchingUser});
-
+        //TODO: delete user's associated records (e.g. lists, etc.)
+        deleteUser(user.userID);
+        return res
+            .status(200)
+            .json({success: true, message: "user deleted successfully"});
     } catch (error) {
         res.status(500)
-            .json({ success: false, message: "Internal server error"});
+            .json({ success: false, message: error.message});
     }
 });
 
+//TODO allow users to update their profile picture
 router.patch('/me', async (req, res) => {
+    const user = await AuthenticateUser(req, res);
+    if (!user) return;
     try {
-        //check for auth header existence
-        const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startsWith("Bearer ")) {
-            return res.status(401)
-                .json({success: false, message: "missing token"});
-        }
-
-        //check auth token validity
-        const token = authHeader.split(" ")[1];
-        const decoded = verifyJWT(token);
-        if (!decoded) {
-            return res.status(401)
-                .json({success: false, message: "invalid token"});
-        }
-
         //read updated parameters
-        const { firstName } = req.body;
-        if (!firstName || firstName.trim() === "") {
+        const { profile_phrase } = req.body;
+        if (!profile_phrase || profile_phrase.trim() === "") {
             return res.status(400)
-                .json({ success: false, message: "Name cannot be empty" });
+                .json({ success: false, message: "Profile phrase cannot be empty" });
         }
 
-        const db = await getDB();
-        const deleteResult = await db
-            .collection(USER_COLLECTION)
-            .updateOne(
-                {userId: decoded.userId},     //define query
-                {$set: {firstName: firstName}}, //define update operations
-            );
-        if (!matchingUser) {
-            return res.status(404)
-                .json({success: false, message: "user not found"});
-        }
+        //update the user's profile phrase
+        await updateUser(user.userID, { profile_banner_phrase : profile_phrase });
         res.status(200).json({success: true, user: matchingUser});
 
     } catch (error) {
-        res.status(500).json({ success: false, message: "Internal server error"});
+        res.status(500).json({ success: false, message: error.message });
     }
 });
 
