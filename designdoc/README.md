@@ -23,7 +23,7 @@ VGLib is a web platform that provides a comprehensive catalogue of videogames ac
 
 ## User Stories
 
-### 1. Lists (Alex)
+### 1. Lists (Alex width="300">
 
 * As Alex, I want to have predefined “Favorites”, “Wishlist”, “Owned” lists, so that I can quickly add games to my favorites and wishlist.
 
@@ -35,7 +35,7 @@ VGLib is a web platform that provides a comprehensive catalogue of videogames ac
 
 * As Alex, I want to be able to view list details and all the games added to that list, so I can keep track of which games I have in which list
 
-### 2. User Accounts (Jordan)
+### 2. User Accounts (Jordan width="300">
 
 * As Jordan, I want to sign up for an account to access my personal lists
 
@@ -47,7 +47,7 @@ VGLib is a web platform that provides a comprehensive catalogue of videogames ac
 
 * As Jordan, I want to delete my account.
 
-### 3. Pre-defined public lists (Riley)
+### 3. Pre-defined public lists (Riley width="300">
 
 * As Riley, I want to view pre-defined lists of videogames based on the data of other users without logging in including “Favorites”, “Wishlist”, “Popular”
 
@@ -57,7 +57,7 @@ VGLib is a web platform that provides a comprehensive catalogue of videogames ac
 
     * Popular - Games sorted by descending order of how many times they were added to any list
 
-### 4. Videogame Search (Alex)
+### 4. Videogame Search (Alex width="300">
 
 * As Alex, I want to be able to search for video games by name, platform, and other metadata
 
@@ -85,21 +85,19 @@ TBD
 
 ## Design Mockups
 
-![Home Page]("/assets/images/Home.jpg")
-![Top Games]("/assets/images/Top_Games.jpg")
-![Lists Page]("/assets/images/List.jpg)
-![Users Page]("/assets/images/users_Page.jpg")
-![Profile]("/assets/images/Profile.jpg")
+<img src="./mockups/Home.jpg" alt="Home Page" width="300">
+<img alt="Top Games" src="./mockups/Top_Games.jpg" width="300">
+<img alt="Lists Page" src="./mockups/List.jpg" width="300">
+<img alt="Users Page" src="./mockups/users_Page.jpg" width="300">
+<img alt="Profile" src="./mockups/Profile.jpg" width="300">
 
-![VideoGame]("/assets/images/Videogame.jpg)
-![New Game]("/assets/images/New_Game.jpg")
-![Edit Game]("/assets/images/Edit_Game.jpg")
-![Delete Game]("/assets/images/Delete_Game.jpg)
+<img alt="VideoGame" src="./mockups/Videogame.jpg" width="300">
+<img alt="New Game" src="./mockups/New_Game.jpg" width="300">
+<img alt="Edit Game" src="./mockups/Edit_Game.jpg" width="300">
+<img alt="Delete Game" src="./mockups/Delete_Game.jpg" width="300">
 
-![Lists]("/assets/images/List.jpg")
-![Add to List]("/assets/images/Add_to_List.jpg")
-![Edit List]("/assets/images/Edit_List.jpg)
-![New List]("/assets/images/New_List.jpg")
-![Delete List]("/assets/images/Delete_List.jpg")
-
-
+<img alt="Lists" src="./mockups/List.jpg" width="300">
+<img alt="Add to List" src="./mockups/Add_to_List.jpg" width="300">
+<img alt="Edit List" src="./mockups/Edit_List.jpg" width="300">
+<img alt="New List" src="./mockups/New_List.jpg" width="300">
+<img alt="Delete List" src="./mockups/Delete_List.jpg" width="300">
