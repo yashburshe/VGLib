@@ -1,36 +1,33 @@
 import {MongoClient, ServerApiVersion} from "mongodb";
 
-const DB_URL = process.env.MONGODB_URI || "mongodb://localhost:27017"
-const DB_NAME = "vg-lib"
+process.loadEnvFile();
 
-let db_client = null;
+const DB_URL = process.env.MONGODB_URI
+const DB_NAME = "VGLIB"
 
-export async function connectDB() {
-    if (db_client) {
-        return db_client;
-    }
-    
-    try {
-        const client = new MongoClient(DB_URL, {
-            serverApi: {
-                version: ServerApiVersion.v1,
-                strict: true,
-                deprecationErrors: true,
-            }
-        });
-        await client.connect();
-        console.log("Successfully Connected to MongoDatabase!");
-        db_client = client.db(DB_NAME);
-        return database;
-    } catch(err) {
-        console.error(error);
-        process.exit(1);
-    }
+export const COLLECTIONS = {
+    USERS: "users",
+    VIDEOGAMES: "games",
+    LISTS: "lists"
 }
 
-export function getDB() {
-    if (!db_client) {
-        console.error("Database not instantiated!");
-    } 
-    return db_client;
+const client = new MongoClient(DB_URL, {
+    serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+    }
+});
+
+export const db = client.db(DB_NAME);
+
+async function run() {
+    console.log("Attempting to connect to MongoDB...");
+    // Connect the client to the server	(optional starting in v4.7)
+    await client.connect();
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("Successfully connected to MongoDB!");
 }
+
+run();
