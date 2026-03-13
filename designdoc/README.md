@@ -23,7 +23,7 @@ VGLib is a web platform that provides a comprehensive catalogue of videogames ac
 
 ## User Stories
 
-### 1. Lists (Alex width="500">
+### 1. Lists (Alex)
 
 * As Alex, I want to have predefined “Favorites”, “Wishlist”, “Owned” lists, so that I can quickly add games to my favorites and wishlist.
 
@@ -35,7 +35,7 @@ VGLib is a web platform that provides a comprehensive catalogue of videogames ac
 
 * As Alex, I want to be able to view list details and all the games added to that list, so I can keep track of which games I have in which list
 
-### 2. User Accounts (Jordan width="500">
+### 2. User Accounts (Jordan)
 
 * As Jordan, I want to sign up for an account to access my personal lists
 
@@ -47,7 +47,7 @@ VGLib is a web platform that provides a comprehensive catalogue of videogames ac
 
 * As Jordan, I want to delete my account.
 
-### 3. Pre-defined public lists (Riley width="500">
+### 3. Pre-defined public lists (Riley)
 
 * As Riley, I want to view pre-defined lists of videogames based on the data of other users without logging in including “Favorites”, “Wishlist”, “Popular”
 
@@ -57,7 +57,7 @@ VGLib is a web platform that provides a comprehensive catalogue of videogames ac
 
     * Popular - Games sorted by descending order of how many times they were added to any list
 
-### 4. Videogame Search (Alex width="500">
+### 4. Videogame Search (Alex)
 
 * As Alex, I want to be able to search for video games by name, platform, and other metadata
 
