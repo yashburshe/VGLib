@@ -10,6 +10,7 @@ import ProfilePage from './pages/profile_page.jsx'
 import GamesPage from './pages/GamesPage.jsx';
 import NavBar from './components/Nav.jsx';
 import GameDetailsPage from './pages/GameDetailsPage.jsx';
+import TopGamesPage from './pages/TopGames.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -21,6 +22,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/profile" element={<ProfilePage/>} />
         <Route path="/games" element={<GamesPage/>}/>
         <Route path='/games/:gameId' element={<GameDetailsPage/>}/>
+        <Route path='/top' element={<TopGamesPage/>}/>
       </Routes>
     </BrowserRouter>
   </StrictMode>,
