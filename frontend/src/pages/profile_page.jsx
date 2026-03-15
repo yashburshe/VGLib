@@ -1,40 +1,14 @@
 import { useState, useEffect } from "react";
+import { redirect } from "react-router";
+
 import NavBar from "../components/Nav";
 import UserProfile from "../components/UserProfile";
 import UserLists from "../components/UserLists";
 
-async function getUser() {
-  const token = "123445";
-  //const token = localStorage.getItem('token');
-  if (!token) {
-    console.warn("No authentication token found");
-    return null;
-  }
-  try {
-    const response = await fetch('api/user/me', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type' : 'application/json'
-      }
-    });
-    console.log("sent fetch request!");
-    const data = await response.json();
-    if (!response.ok) {
-      console.error("Session invalid: ", data.message);
-      localStorage.removeItem('token');
-      return null;
-    }
-    console.log("User data: ", data.user);
-    return data.user;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
-
+import  {getUser} from "../js/user";
 
 export default function ProfilePage() {
+  localStorage.setItem('token', "123444");
   const tmp_user = {
     userID: "1",
     username: "vgplayer",
@@ -65,17 +39,16 @@ export default function ProfilePage() {
 
   const [userProfile, setUserProfile] = useState(tmp_user);
 
-  const getUserData = async () => {
+  const fetchAndSetUser = async () => {
     const fetched_user = await getUser();
     if (!fetched_user) {
-      console.warn("No user data found, using default profile");
-      return;
+      redirect("/login");
     }
     setUserProfile(fetched_user);
   };
 
   useEffect(() => {
-    getUserData();
+    fetchAndSetUser();
   }, []);
 
 
@@ -90,7 +63,7 @@ export default function ProfilePage() {
   function handleCreateGame() {
     alert("Create new game clicked");
   }
-
+  
   return (
     <>
       <NavBar />
