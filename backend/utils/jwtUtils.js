@@ -1,15 +1,20 @@
 import crypto from "node:crypto";
 
+if (!process.env.JWT_SECRET) {
+  console.error("NO JWT_SECRET set as environmental variable!");
+  process.exit(1);
+}
+
 export function generateJWT(userId) {
   const nowInSeconds = Math.floor(Date.now() / 1000);
   const expiresAt = nowInSeconds + 60 * 60 * 24;
 
-  const header = Buffer.from(
-    JSON.stringify({ alg: "HS256", typ: "JWT" }),
-  ).toString("base64url");
-  const payload = Buffer.from(
-    JSON.stringify({ userId: userId, iat: nowInSeconds, exp: expiresAt }),
-  ).toString("base64url");
+  const header = Buffer
+    .from(JSON.stringify({ alg: "HS256", typ: "JWT" }))
+    .toString("base64url");
+  const payload = Buffer
+    .from(JSON.stringify({ userId: userId, iat: nowInSeconds, exp: expiresAt }))
+    .toString("base64url");
   const signature = crypto
     .createHmac("sha256", process.env.JWT_SECRET)
     .update(`${header}.${payload}`)
