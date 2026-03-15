@@ -1,7 +1,7 @@
 import { COLLECTIONS, db } from "../db/mongo.js";
 
 export async function getGameFromGameId(gameId) {
-  return await db.collection(COLLECTIONS.VIDEOGAMES).findOne({ id: gameId });
+  return await db.collection(COLLECTIONS.VIDEOGAMES).findOne({ id: Number(gameId) });
 }
 
 export async function getGames() {
