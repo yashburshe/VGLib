@@ -8,11 +8,6 @@ import NavBar from '../components/Nav';
 export default function LoginPage() {
     const [isLoginScreen, setIsLoginScreen] = useState(true);
     const navigate = useNavigate();
-
-    const handleSubmitSuccess= () => {
-        navigate("/profile");
-    }
-
     return (
         <>
             <NavBar/>
