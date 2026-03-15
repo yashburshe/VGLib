@@ -1,11 +1,11 @@
-import { COLLECTIONS, db } from "../db/mongo";
+import { COLLECTIONS, db } from "../db/mongo.js";
 
 export async function getGameFromGameId(gameId) {
   return await db.collection(COLLECTIONS.VIDEOGAMES).findOne({ id: gameId });
 }
 
 export async function getGames() {
-  return await db.collection(COLLECTIONS.VIDEOGAMES).find({});
+  return await db.collection(COLLECTIONS.VIDEOGAMES).find({}).toArray();
 }
 
 export async function createGame(userId, game) {
