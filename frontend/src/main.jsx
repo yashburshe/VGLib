@@ -7,14 +7,18 @@ import './index.css'
 import App from './App.jsx'
 import LoginPage from './pages/login_page.jsx'
 import ProfilePage from './pages/profile_page.jsx'
+import GamesPage from './pages/GamesPage.jsx';
+import NavBar from './components/Nav.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
+    <NavBar/>
       <Routes>
         <Route path="/" element={<App/>} />
         <Route path="/login" element={<LoginPage/>} />
         <Route path="/profile" element={<ProfilePage/>} />
+        <Route path="/games" element={<GamesPage/>}/>
       </Routes>
     </BrowserRouter>
   </StrictMode>,
