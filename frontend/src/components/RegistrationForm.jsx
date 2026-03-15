@@ -1,13 +1,8 @@
 import { useState} from 'react';
 
-export default function RegistrationForm({onLoginClick}) {
+export default function RegistrationForm({onLoginClick, onRegisterSuccess}) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
-    const onRegisterButton = async (e) => {
-        e.preventDefault();
-    }
-
 
     //TODO: set confirm password and password complexity rules. Ensure that password hash is sent to backend, not raw password
     return (
@@ -21,11 +16,17 @@ export default function RegistrationForm({onLoginClick}) {
                             className="form-label">
                                 Username
                         </label>
-                        <input type="text" className="form-control" id="username" value={username}
+                        <input type="text" 
+                            className="form-control" 
+                            id="username" 
+                            value={username}
                             onChange={(e) => setUsername(e.target.value)}/>
                     </div>
                     <div className="mb-3">
-                        <label type="password" className="form-label" htmlFor="password">
+                        <label 
+                            type="password" 
+                            className="form-label" 
+                            htmlFor="password">
                             Password
                         </label>
                         <input 
@@ -39,7 +40,10 @@ export default function RegistrationForm({onLoginClick}) {
                         type="submit"
                         onClick={async (e) => {
                             e.preventDefault();
-                            await register(username, password);
+                            const success = await register(username, password);
+                            if (success) {
+                                onRegisterSuccess();
+                            }
                         }}
                     >Register
                     </button>
