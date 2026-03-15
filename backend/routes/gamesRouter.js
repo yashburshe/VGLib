@@ -4,8 +4,8 @@ import {
   getGameFromGameId,
   getGames,
   updateGame,
-} from "../services/gameService";
-import { AuthenticateUser, DecodeUserID } from "./userAuth";
+} from "../services/gameService.js";
+import { AuthenticateUser, DecodeUserID } from "./userAuth.js";
 
 const gamesRouter = Router();
 
