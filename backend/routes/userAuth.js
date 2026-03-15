@@ -2,7 +2,7 @@ import { verifyJWT } from '../utils/jwtUtils.js';
 import { getUser} from '../services/userService.js'
 
 //Read a token from the logged in user and get their corresponding user record.
-function DecodeUserID(req, res) {
+export function DecodeUserID(req, res) {
     //check for auth header existence
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
