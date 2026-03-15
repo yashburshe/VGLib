@@ -2,7 +2,7 @@ import { useState} from 'react';
 
 import { login } from '../js/user';
 
-export default function LoginForm({ onSignUpClick}) {
+export default function LoginForm({onSignUpClick, onLoginSuccess}) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
@@ -41,7 +41,10 @@ export default function LoginForm({ onSignUpClick}) {
                         type="submit" 
                         onClick={async (e) => {
                             e.preventDefault();
-                            await login(username, password);
+                            const success = await login(username, password);
+                            if (success) {
+                                onLoginSuccess();
+                            }
                         }}
                      >Log in</button>
                 </form>
