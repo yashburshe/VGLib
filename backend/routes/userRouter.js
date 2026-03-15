@@ -2,11 +2,13 @@ import { Router } from 'express';
 import { db, COLLECTIONS } from "../db/mongo.js";
 import { AuthenticateUser } from './userAuth.js';
 import { createUser, deleteUser, getUser } from '../services/userService.js';
+import { generateJWT } from '../utils/jwtUtils.js';
 
 const router = Router();
 
 //use to sign up a new user
 router.post('/signup', async (req, res) => {
+    console.log("Received signup request with body: ", req.body);
     try {     
         const { username, passwordHash } = req.body; 
         //check if there is already a user with the same username
@@ -26,16 +28,25 @@ router.post('/signup', async (req, res) => {
 
 //use to login an existing user
 router.post('/login', async (req, res) => {
+    console.log('received login request with body: ', req.body);
     try {
         const { username, password } = req.body;
         //TODO: hash the password with its corresponding salt before comparing with the database record
         const matchingUser = await db
             .collection(COLLECTIONS.USERS)
             .findOne({ username, password_hash: password});
+        if (!matchingUser) {
+            console.log("No matching credentials found");
+            return res.status(404).json({
+                success: false, 
+                message: "No matching credentials found"});
+        }
+        console.log("Matching user found: ", matchingUser);
         const token = generateJWT(matchingUser.userID);
-        res.status(201).json({ token });
+        console.log("Login successful, token generated: ", token);
+        return res.status(201).json({ token });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Internal server error"});
+        res.status(500).json({ success: false, message: error});
     }
 });
 
