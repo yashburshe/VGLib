@@ -27,10 +27,11 @@ router.post('/signup', async (req, res) => {
 //use to login an existing user
 router.post('/login', async (req, res) => {
     try {
-        const { username, passwordHash } = req.body;
+        const { username, password } = req.body;
+        //TODO: hash the password with its corresponding salt before comparing with the database record
         const matchingUser = await db
             .collection(COLLECTIONS.USERS)
-            .findOne({ username, password_hash: passwordHash});
+            .findOne({ username, password_hash: password});
         const token = generateJWT(matchingUser.userID);
         res.status(201).json({ token });
     } catch (error) {
@@ -40,7 +41,10 @@ router.post('/login', async (req, res) => {
 
 //get a user's info
 router.get('/me', async (req, res) => {
-    return await AuthenticateUser(req, res);
+    console.log("Received request for user info");
+    const user = await AuthenticateUser(req, res);
+    if (!user) return;
+    res.status(200).json({user});
 });
 
 //delete a user's account
