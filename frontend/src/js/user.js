@@ -3,8 +3,7 @@
 import { redirect } from "react-router";
 
 export async function getUser() {
-  const token = "123445";
-  //const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token');
   if (!token) {
     console.warn("No authentication token found");
     return null;
@@ -42,14 +41,15 @@ export async function login(username, password) {
         const data = await response.json();
         if (!response.ok) {
             console.error("Login failed: ", data.message);
+            return false;
         }
         else {
-            console.log("Login successful!");
             localStorage.setItem('token', data.token);
+            return true;
         }
-        
     } catch (error) {
         console.error("Network Error: ", error);
+        return false;
     }
 }
 
