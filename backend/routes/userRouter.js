@@ -22,6 +22,7 @@ router.post('/signup', async (req, res) => {
         }
         const newUserID = await createUser(username, password);
         const token = generateJWT(newUserID);
+        console.log("User created successfully with userID: ", newUserID);
         res.status(201).json({ token });
     } catch (error) {
         res.status(500).json({ success: false, message: "Internal server error: " + error.message });
