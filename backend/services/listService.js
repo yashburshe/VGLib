@@ -3,12 +3,13 @@ import {db, COLLECTIONS} from  "../db/mongo.js"
 //General purpose functions to handle list collection operations
 
 export async function createList(userID, listName) {
+    console.log(`Attempting to create list with name: ${listName} for userID: ${userID}`);
     //check if there is already a list associated with the user with the given name
     const existingList = await db
         .collection(COLLECTIONS.LISTS)
         .findOne({userID: userID, name: listName})
     if (existingList) {
-        throw new Error('List of same name already exists for the user!');
+        throw new Error(`List of name: ${listName} already exists for user: ${userID}!`);
     }
 
     //get the next incremented listID
@@ -40,16 +41,21 @@ export async function deleteList(listID) {
     if (!deleteResult || deleteResult.deletedCount === 0) {
         throw new Error("List not found or failed to delete");
     }
-    return;
 }
 
 export async function getList(listID) {
-    return await db
+    console.log(`Attempting to get list with ID: ${listID}`);
+    const list = await db
         .collection(COLLECTIONS.LISTS)
         .findOne({listID: listID});
+    if (!list) {
+        throw new Error("List not found");
+    }
+    return list;
 }
 
 export async function getUserLists(userID) {
+    console.log(`Attempting to get lists for userID: ${userID}`);   
     return await db
         .collection(COLLECTIONS.LISTS)
         .find({userID: userID})
@@ -58,6 +64,7 @@ export async function getUserLists(userID) {
 }
 
 export async function addListItem(listID, newItem) {
+    console.log(`Attempting to add item to list with ID: ${listID}`);
     const updateResult = await db
         .collection(COLLECTIONS.LISTS)
         .updateOne(
@@ -65,7 +72,7 @@ export async function addListItem(listID, newItem) {
             { $addToSet: {games: newItem} }
         );
     if (!updateResult || updateResult.modifiedCount === 0) {
-        throw new Error("User not found or no changes made");
+        throw new Error("List not found or no additions made");
     }
     return;
 }
