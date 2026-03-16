@@ -2,6 +2,7 @@ import express   from 'express';
 import { db }  from './db/mongo.js';
 import userRouter from "./routes/userRouter.js";
 import listRouter from "./routes/listRouter.js";
+import gamesRouter from './routes/gamesRouter.js';
 
 try {
   process.loadEnvFile();
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('../frontend/dist'));
 app.use('/api/user', userRouter);
 app.use('/api/list', listRouter);
+app.use('/api/games', gamesRouter);
 app.listen(PORT, () => {
   console.log("Server running in port ", PORT);
 });
