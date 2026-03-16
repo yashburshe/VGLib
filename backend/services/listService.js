@@ -38,7 +38,7 @@ export async function deleteList(listID) {
         .collection(COLLECTIONS.LISTS)
         .deleteOne({ listID: listID});
     if (!deleteResult || deleteResult.deletedCount === 0) {
-        throw new Error("List not found");
+        throw new Error("List not found or failed to delete");
     }
     return;
 }
@@ -52,7 +52,7 @@ export async function getList(listID) {
 export async function getUserLists(userID) {
     return await db
         .collection(COLLECTIONS.LISTS)
-        .findMany({userID: userID})
+        .find({userID: userID})
         .sort({ name: 1})
         .toArray();
 }
