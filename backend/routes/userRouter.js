@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import { db, COLLECTIONS } from "../db/mongo.js";
 import { AuthenticateUser } from './userAuth.js';
-import { createUser, deleteUser, getUser } from '../services/userService.js';
+import { createUser, deleteUser, getUser, updateUser } from '../services/userService.js';
 import { generateJWT } from '../utils/jwtUtils.js';
+
+console.log("userRouter loaded!");
 
 const router = Router();
 
@@ -52,8 +54,8 @@ router.post('/login', async (req, res) => {
 
 //get a user's info
 router.get('/me', async (req, res) => {
-    console.log("Received request for user info");
     const user = await AuthenticateUser(req, res);
+    console.log("GET /me request authenticated user: ", user.userID);
     if (!user) return;
     res.status(200).json({user});
 });
