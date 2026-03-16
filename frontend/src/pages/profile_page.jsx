@@ -9,7 +9,6 @@ import  {getUser} from "../js/user";
 import { getUserLists } from "../js/list";
 
 export default function ProfilePage() {
-  localStorage.setItem('token', "123444");
   const tmp_user = {
     userID: "1",
     username: "vgplayer",
