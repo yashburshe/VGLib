@@ -6,6 +6,7 @@ import UserProfile from "../components/UserProfile";
 import UserLists from "../components/UserLists";
 
 import  {getUser} from "../js/user";
+import { getUserLists } from "../js/list";
 
 export default function ProfilePage() {
   localStorage.setItem('token', "123444");
@@ -16,39 +17,25 @@ export default function ProfilePage() {
     createdAt: "2025-09-25T13:43:02.000+00:00",
     };
 
-  const lists = [
-    {
-      id: "l1",
-      name: "Favorites",
-      description: "My all-time favorite games.",
-      count: 12,
-    },
-    {
-      id: "l2",
-      name: "To Play",
-      description: "Games I want to play next.",
-      count: 8,
-    },
-    {
-      id: "l3",
-      name: "Multiplayer",
-      description: "Best games to play with friends.",
-      count: 5,
-    },
-  ];
-
   const [userProfile, setUserProfile] = useState(tmp_user);
+  const [userLists,   setUserLists  ] = useState([]);
 
   const fetchAndSetUser = async () => {
-    const fetched_user = await getUser();
+    let fetched_user = await getUser();
     if (!fetched_user) {
       redirect("/login");
     }
     setUserProfile(fetched_user);
   };
 
+  const fetchAndSetLists = async () => {
+    const userLists = await getUserLists();
+    setUserLists(userLists);
+  }
+
   useEffect(() => {
     fetchAndSetUser();
+    fetchAndSetLists();
   }, []);
 
 
@@ -63,7 +50,6 @@ export default function ProfilePage() {
   function handleCreateGame() {
     alert("Create new game clicked");
   }
-  
   return (
     <>
       <NavBar />
@@ -76,7 +62,7 @@ export default function ProfilePage() {
         />
         <section className="lists-section">
           <h2>Your Lists</h2>
-          <UserLists lists={lists} />
+          <UserLists lists={userLists} />
         </section>
       </main>
     </>
