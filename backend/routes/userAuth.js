@@ -16,7 +16,7 @@ function DecodeUserID(req, res) {
         res.status(401).json({ success: false, message: "Unauthorized" });
         return null;
     }
-    return userID;
+    return userID.userID;
 }
 
 //Full authentication against database
