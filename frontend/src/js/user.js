@@ -1,7 +1,5 @@
 //front end functions to support CRUD operations on the user route
 
-import { redirect } from "react-router";
-
 export async function getUser() {
   const token = localStorage.getItem('token');
   if (!token) {
@@ -107,13 +105,14 @@ export async function updateUser(profile_phrase) {
         console.warn("No authentication token found");
         return;
     }
-    try {        
+    try {
         const response = await fetch("/api/user/me", {
             method: "PATCH",
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
-            }        
+            },
+            body: JSON.stringify({ profile_phrase })        
         });
         const data = await response.json();
         if (!response.ok) {
