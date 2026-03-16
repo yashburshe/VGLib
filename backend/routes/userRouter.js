@@ -12,7 +12,7 @@ const router = Router();
 router.post('/signup', async (req, res) => {
     console.log("Received signup request with body: ", req.body);
     try {     
-        const { username, passwordHash } = req.body; 
+        const { username, password } = req.body; 
         //check if there is already a user with the same username
         const existingUser = await getUser(username);
         if (existingUser) {
@@ -20,11 +20,11 @@ router.post('/signup', async (req, res) => {
                 .status(400)
                 .json({ success: false, message: 'Username already exists' });
         }
-        const newUserID = await createUser(username, passwordHash);
+        const newUserID = await createUser(username, password);
         const token = generateJWT(newUserID);
         res.status(201).json({ token });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Internal server error"});
+        res.status(500).json({ success: false, message: "Internal server error: " + error.message });
     }
 });
 

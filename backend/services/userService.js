@@ -15,16 +15,20 @@ export async function createUser(username, passwordHash) {
     const maxUserID = await db
         .collection(COLLECTIONS.USERS)
         .find()
-        .sort({ userId: -1})
+        .sort({ userID: -1})
         .limit(1)
         .toArray();
+    console.log("Max userID found: ", maxUserID);
     const newUserID = maxUserID.length > 0 ? maxUserID[0].userID + 1 : 1;
     const userCreated = await db
         .collection(COLLECTIONS.USERS)
-        .insertOne( {
+        .insertOne({
             userID: newUserID,
             username: username, 
-            password_hash : passwordHash
+            password_hash : passwordHash,
+            createdAt: new Date().toISOString(),
+            profile_banner_phrase: "This user prefers to keep an air of mystery about them.",
+            profile_picture_url: "http://dummyimage.com/197x100.png/dddddd/000000"
         });
     if (!userCreated || !userCreated.acknowledged) {
         throw new Error("Failed to create user");
@@ -47,6 +51,7 @@ export async function deleteUser(userID) {
 }
 
 export async function getUser(userID) {
+    console.log(`Attempting to get user with ID: ${userID}`);
     return await db
         .collection(COLLECTIONS.USERS)
         .findOne( 

@@ -16,12 +16,12 @@ export default function LoginPage() {
                     {isLoginScreen ? (
                         <LoginForm 
                             onSignUpClick={() => setIsLoginScreen(false)} 
-                            onLoginSuccess={() => navigate("/")}
+                            onLoginSuccess={() => navigate("/profile")}
                         />
                     ) : (
                         <RegistrationForm 
                             onLoginClick={() => setIsLoginScreen(true)} 
-                            onRegisterSuccess={()=> navigate("/")}
+                            onRegisterSuccess={()=> navigate("/profile")}
                         />
                     )}
                 </div>

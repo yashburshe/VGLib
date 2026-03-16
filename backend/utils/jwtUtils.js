@@ -5,7 +5,7 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 
-export function generateJWT(userId) {
+export function generateJWT(userID) {
   const nowInSeconds = Math.floor(Date.now() / 1000);
   const expiresAt = nowInSeconds + 60 * 60 * 24;
 
@@ -13,7 +13,7 @@ export function generateJWT(userId) {
     .from(JSON.stringify({ alg: "HS256", typ: "JWT" }))
     .toString("base64url");
   const payload = Buffer
-    .from(JSON.stringify({ userId: userId, iat: nowInSeconds, exp: expiresAt }))
+    .from(JSON.stringify({ userID: userID, iat: nowInSeconds, exp: expiresAt }))
     .toString("base64url");
   const signature = crypto
     .createHmac("sha256", process.env.JWT_SECRET)

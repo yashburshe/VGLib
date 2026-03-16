@@ -1,5 +1,7 @@
 import { useState} from 'react';
 
+import { register } from '../js/user';
+
 export default function RegistrationForm({onLoginClick, onRegisterSuccess}) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");

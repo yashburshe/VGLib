@@ -17,7 +17,6 @@ export async function getUser() {
     const data = await response.json();
     if (!response.ok) {
       console.error("Session invalid: ", data.message);
-      localStorage.removeItem('token');
       return null;
     }
     return data.user;
@@ -63,13 +62,16 @@ export async function register(username, password) {
         const data = await response.json();
         if (!response.ok) {
             console.error("Registration failed: ", data.message);
+            return false;
         }
         else {
             console.log("Registration successful!");
             localStorage.setItem('token', data.token);
+            return true;
         }
     } catch (error) {
         console.error("Network Error: ", error);
+        return false;
     }
 }
 
