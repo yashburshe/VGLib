@@ -51,7 +51,6 @@ export default function ProfilePage() {
   }
   return (
     <>
-      <NavBar />
       <main className="profile-page">
         <UserProfile
           user={userProfile}

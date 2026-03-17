@@ -10,7 +10,6 @@ export default function LoginPage() {
     const navigate = useNavigate();
     return (
         <>
-            <NavBar/>
             <div>
                 <div>
                     {isLoginScreen ? (
