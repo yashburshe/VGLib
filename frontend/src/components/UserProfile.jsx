@@ -1,4 +1,6 @@
 import React from "react";
+import NewGameModalButton from "./NewGameModalButton";
+import NewListModalButton from "./NewListModalButton";
 
 export default function UserProfile({
   user,
@@ -6,8 +8,11 @@ export default function UserProfile({
   onCreateList,
   onCreateGame,
 }) {
+  const existingNames = []; // This should be fetched from the user's existing lists
+
   const { profile_picture_url, username, createdAt } = user;
   const yearJoined = new Date(createdAt).getFullYear();
+
   return (
     <section className="profile-header">
       <div className="profile-avatar">
@@ -20,12 +25,8 @@ export default function UserProfile({
           <button className="btn btn-primary" onClick={onEditProfile}>
             Edit Profile
           </button>
-          <button className="btn btn-secondary" onClick={onCreateList}>
-            Create New List
-          </button>
-          <button className="btn btn-secondary" onClick={onCreateGame}>
-            Create New Game
-          </button>
+          <NewGameModalButton onCreateGame={onCreateGame} />
+          <NewListModalButton onAddList={onCreateList} existingNames={existingNames} />
         </div>
       </div>
     </section>
