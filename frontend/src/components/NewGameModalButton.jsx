@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
-export default function NewGameModal(onCreateGame) {
+export default function NewGameModal({onCreateGame}) {
   const game_default = {
     name: "",
     summary: "",
@@ -19,14 +19,15 @@ export default function NewGameModal(onCreateGame) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const handleChange = (e) => {
-    const {name, summary, rating, url, platform} = e.target;
-
-    if (name) game.name = name;
-    if (summary) game.summary = summary;
-    if (rating) game.rating = rating;
-    if (url) game.url = url;
-    if (platform) game.platform = platform;
+    setGame((prevData) => ({
+      ...prevData,
+      [e.target.name]: e.target.value
+    }));
   };
+
+  const handleCreateGame = () => {
+    onCreateGame(game);
+  }
 
 
   return (
@@ -43,17 +44,19 @@ export default function NewGameModal(onCreateGame) {
             <Form>
                 <Form.Group>
                   <Form.Label>Game Name</Form.Label>
-                  <Form.Control 
-                    type="text" 
+                  <Form.Control
+                    name="name" 
+                    type="text"
                     placeholder="Enter game name" 
                     value={game.name}
-                    onChange={(e) => setGame(e.target.value)}
+                    onChange={handleChange}
                   />
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Summary</Form.Label>
                   <Form.Control 
-                    as="textarea" 
+                    as="textarea"
+                    name="summary" 
                     rows={3} 
                     placeholder="Enter game description" 
                     value={game.summary}
@@ -63,7 +66,8 @@ export default function NewGameModal(onCreateGame) {
                 <Form.Group>
                   <Form.Label>rating</Form.Label>
                   <Form.Control 
-                    type="number" 
+                    type="number"
+                    name="rating" 
                     placeholder="Enter game rating out of 100" 
                     value={game.rating}
                     onChange={handleChange}
@@ -72,7 +76,8 @@ export default function NewGameModal(onCreateGame) {
                 <Form.Group>
                   <Form.Label>Cover Art Link</Form.Label>
                   <Form.Control 
-                    type="url" 
+                    type="url"
+                    name="url" 
                     placeholder="Enter cover art link"
                     value={game.url} 
                     onChange={handleChange}
@@ -81,10 +86,12 @@ export default function NewGameModal(onCreateGame) {
                 <Form.Group>
                   <Form.Label>Platforms</Form.Label>
                   <Form.Control 
-                    type="text" 
-                    placeholder="Enter platforms separated by commas" />
+                    type="text"
+                    name="platforms"
+                    placeholder="Enter platforms separated by commas"
                     value={game.platforms}
                     onChange={handleChange}
+                   />
                 </Form.Group>
             </Form>
             
@@ -93,7 +100,7 @@ export default function NewGameModal(onCreateGame) {
           <Button variant="secondary" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={handleCreateGame}>
             Create Game
           </Button>
         </Modal.Footer>
