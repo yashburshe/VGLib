@@ -60,12 +60,11 @@ router.get('/me', async (req, res) => {
 });
 
 //delete a user's account
-router.delete('/delete', async (req, res) => {
+router.delete('/', async (req, res) => {
     console.log("DELETE / request received!");
     const user = await AuthenticateUser(req, res);
     if (!user) return;
     try {
-        //TODO: delete user's associated records (e.g. lists, etc.)
         deleteUser(user.userID);
         return res
             .status(200)
@@ -76,21 +75,28 @@ router.delete('/delete', async (req, res) => {
     }
 });
 
-//TODO allow users to update their profile picture
 router.patch('/me', async (req, res) => {
     console.log("PATCH /me request received!");
     const user = await AuthenticateUser(req, res);
     if (!user) return;
     try {
         //read updated parameters
-        const { profile_phrase } = req.body;
-        if (!profile_phrase || profile_phrase.trim() === "") {
+        const {username, profile_banner_phrase, profile_picture_url} = req.body;
+        if (!profile_banner_phrase || profile_banner_phrase.trim() === "") {
             return res.status(400)
                 .json({ success: false, message: "Profile phrase cannot be empty" });
         }
+        if (!username || username.trim() === "") {
+            return res.status(400)
+                .json({ success: false, message: "username cannot be empty" });
+        }
 
         //update the user's profile phrase
-        await updateUser(user.userID, { profile_banner_phrase : profile_phrase });
+        await updateUser(user.userID, { 
+            profile_banner_phrase : profile_banner_phrase,
+            username: username,
+            profile_picture_url : profile_picture_url
+        });
         res.status(200).json({success: true, user: matchingUser});
 
     } catch (error) {
