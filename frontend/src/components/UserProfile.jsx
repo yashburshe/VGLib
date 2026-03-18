@@ -1,18 +1,11 @@
-import React from "react";
+import EditProfileModalButton from "./EditProfileModalButton";
 import NewGameModalButton from "./NewGameModalButton";
 import NewListModalButton from "./NewListModalButton";
 
-export default function UserProfile({
-  user,
-  onEditProfile,
-  onCreateList,
-  onCreateGame,
-}) {
-  const existingNames = []; // This should be fetched from the user's existing lists
-
-  const { profile_picture_url, username, createdAt } = user;
+export default function UserProfile({ user, listNames, }) {
+  const { profile_picture_url, username, createdAt, profile_banner_phrase } = user;
   const yearJoined = new Date(createdAt).getFullYear();
-
+  console.log("User Profile Component using user: ", user);
   return (
     <section className="profile-header">
       <div className="profile-avatar">
@@ -20,13 +13,12 @@ export default function UserProfile({
       </div>
       <div className="profile-info">
         <h2 className="profile-username">{username}</h2>
+        <p>{profile_banner_phrase}</p>
         <p className="profile-joined">Joined {yearJoined}</p>
         <div className="profile-actions">
-          <button className="btn btn-primary" onClick={onEditProfile}>
-            Edit Profile
-          </button>
-          <NewGameModalButton onCreateGame={onCreateGame} />
-          <NewListModalButton onAddList={onCreateList} existingNames={existingNames} />
+          <NewGameModalButton/>
+          <NewListModalButton existingNames={listNames} />
+          <EditProfileModalButton userProp={user}/>
         </div>
       </div>
     </section>
