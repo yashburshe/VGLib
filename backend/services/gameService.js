@@ -90,3 +90,7 @@ export async function updateGame(game) {
 
   return;
 }
+
+export async function getAllGamesByUserId(userId) {
+  return await db.collection(COLLECTIONS.VIDEOGAMES).find({ userId: userId }).toArray();
+}
