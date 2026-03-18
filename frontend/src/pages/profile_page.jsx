@@ -28,8 +28,9 @@ export default function ProfilePage() {
   };
 
   const fetchAndSetLists = async () => {
-    const userLists = await getUserLists();
-    setUserLists(userLists);
+    const tmp = await getUserLists();
+    console.log("User Lists retrieved: ", tmp);
+    setUserLists(tmp);
   }
 
   useEffect(() => {
@@ -37,18 +38,12 @@ export default function ProfilePage() {
     fetchAndSetLists();
   }, []);
 
-  function handleEditProfile() {
-    alert("Edit profile clicked");
-  }
-
   return (
     <>
       <main className="profile-page">
         <UserProfile
           user={userProfile}
-          onEditProfile={handleEditProfile}
-          onCreateList={(listName) => alert("New List Created!")}
-          onCreateGame={(game) => createGame(game)}
+          lists={userLists}
         />
         <section className="lists-section">
           <h2>Your Lists</h2>
