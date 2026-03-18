@@ -1,11 +1,31 @@
 import { COLLECTIONS, db } from "../db/mongo.js";
 
 export async function getGameFromGameId(gameId) {
-  return await db.collection(COLLECTIONS.VIDEOGAMES).findOne({ id: gameId });
+  return await db.collection(COLLECTIONS.VIDEOGAMES).findOne({ id: Number(gameId) });
 }
 
 export async function getGames() {
   return await db.collection(COLLECTIONS.VIDEOGAMES).find({}).toArray();
+}
+
+export async function getGamesSortedByPopularity() {
+  return await db.collection(COLLECTIONS.VIDEOGAMES).aggregate([
+    {
+      $lookup: {
+        from: COLLECTIONS.LISTS,
+        localField: "id",
+        foreignField: "games",
+        as: "occurrences"
+      }
+    },
+    {
+      $addFields: {
+        listCount: { $size: "$occurrences" }
+      }
+    },
+    { $sort: { listCount: -1, name: 1 } },
+    { $project: { occurrences: 0 } }
+  ]).toArray();
 }
 
 export async function createGame(userId, game) {
@@ -69,4 +89,8 @@ export async function updateGame(game) {
   }
 
   return;
+}
+
+export async function getAllGamesByUserId(userId) {
+  return await db.collection(COLLECTIONS.VIDEOGAMES).find({ userId: userId }).toArray();
 }

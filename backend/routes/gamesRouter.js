@@ -3,6 +3,7 @@ import {
   deleteGame,
   getGameFromGameId,
   getGames,
+  getGamesSortedByPopularity,
   updateGame,
 } from "../services/gameService.js";
 import { AuthenticateUser, DecodeUserID } from "./userAuth.js";
@@ -13,6 +14,22 @@ gamesRouter.post("/", async (req, res) => {
   const user = await AuthenticateUser(req, res);
   if (!user) {
     return;
+  }
+});
+
+gamesRouter.get("/top", async (req, res) => {
+  try {
+    const topGames = await getGamesSortedByPopularity();
+
+    if (topGames) {
+      return res.status(200).json({ success: true, topGames: topGames });
+    } else {
+      return res
+        .status(404)
+        .json({ success: false, message: "No games found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error });
   }
 });
 
