@@ -1,5 +1,6 @@
 import {db, COLLECTIONS } from "../db/mongo.js"
-import {createList} from "./listService.js"
+import {createList, deleteList, getUserLists} from "./listService.js"
+import { getAllGamesByUserId, deleteGame } from "./gameService.js";
 
 //General purpose functions to handle user related database operations, such as creating a new user, updating a user's info, etc. These functions are used by the userRouter to handle incoming requests, and are also used by other services (e.g. listService) to get user info when needed.
 
@@ -47,6 +48,20 @@ export async function deleteUser(userID) {
     if (!deleteResult || deleteResult.deletedCount === 0) {
         throw new Error("User not found");
     }
+    //delete any lists made by the user
+    const userLists = await getUserLists(userID);
+    if (userLists && userLists.length > 0) {
+        userLists.array.forEach(element => {
+            deleteList(element.ListID);
+        });
+    }
+    //delete any games made by the user
+    const userGames = await getAllGamesByUserId(userID);
+    if (userGames && userGames.length > 0) {
+        userGames.array.forEach(game => {
+            deleteGame(game.id);
+        })
+    }
     return;
 }
 
@@ -56,6 +71,15 @@ export async function getUser(userID) {
         .collection(COLLECTIONS.USERS)
         .findOne( 
             {userID: userID},
+            {projection: {password_hash: 0}}
+        );
+}
+
+export function getUsers() {
+    console.log(`Retrieving all users`);
+    return db
+        .collection(COLLECTIONS.USERS)
+        .find(
             {projection: {password_hash: 0}}
         );
 }
