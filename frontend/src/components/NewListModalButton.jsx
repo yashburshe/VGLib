@@ -1,9 +1,10 @@
 //Button and Modal for users to create a new list
-
 import { useState } from 'react';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
 
-export default function AddListModalButton({ onAddList, existingNames }) {
+import { createList } from '../js/list.js';
+
+export default function AddListModalButton({ existingNames }) {
     const [show, setShow] = useState(false);
     const [listName, setListName] = useState('');
     const [error, setError] = useState('');
@@ -14,13 +15,19 @@ export default function AddListModalButton({ onAddList, existingNames }) {
             return;
         }
 
-        if (existingNames.includes(listName.trim())) {
+        if (existingNames && existingNames.includes(listName.trim())) {
             setError('A list with this name already exists');
             return;
         }
-
-        onAddList(listName.trim());
-        setListName('');
+        createList(listName.trim());
+        const res = setListName('');
+        if (res) {
+            setError('');
+            setShow(false);
+            alert(res.message);
+        } else {
+            setError(res.message);
+        }
         setError('');
         setShow(false);
     };
@@ -31,11 +38,9 @@ export default function AddListModalButton({ onAddList, existingNames }) {
         setShow(false);
     };
 
-    const handleShow = () => setShow(true);
-
     return (
         <>
-            <Button variant="primary" onClick={handleShow}>
+            <Button variant="primary" onClick={() => setShow(true)}>
                 Create New List
             </Button>
 

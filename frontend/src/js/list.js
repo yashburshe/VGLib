@@ -12,12 +12,15 @@ export async function getList(listID) {
 
 export async function createList(listName) {
     const data = await makeAuthReq('/api/list', 'POST', {listName: listName});
-    return data !== null;
+    if (data) {
+        console.log(data.message);
+    }
+    return data;
 }
 
 export async function deleteList(listID) {
     const data = await makeAuthReq(`/api/list/${listID}`, 'DELETE');
-    return data !== null;
+    return data;
 }
 
 export async function addGameToList(listID, newGameID) {
@@ -26,5 +29,5 @@ export async function addGameToList(listID, newGameID) {
         'PATCH',
         {gameID: newGameID}
     );
-    return data !== null;
+    return data;
 }

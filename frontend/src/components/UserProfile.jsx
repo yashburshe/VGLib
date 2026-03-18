@@ -1,11 +1,11 @@
 import EditProfileModalButton from "./EditProfileModalButton";
 import NewGameModalButton from "./NewGameModalButton";
 import NewListModalButton from "./NewListModalButton";
+import DeleteAccountModalButton from "./DeleteAccountModalButton";
 
-export default function UserProfile({ user, listNames, }) {
+export default function UserProfile({ user, listNames}) {
   const { profile_picture_url, username, createdAt, profile_banner_phrase } = user;
   const yearJoined = new Date(createdAt).getFullYear();
-  console.log("User Profile Component using user: ", user);
   return (
     <section className="profile-header">
       <div className="profile-avatar">
@@ -19,6 +19,7 @@ export default function UserProfile({ user, listNames, }) {
           <NewGameModalButton/>
           <NewListModalButton existingNames={listNames} />
           <EditProfileModalButton userProp={user}/>
+          <DeleteAccountModalButton/>
         </div>
       </div>
     </section>
