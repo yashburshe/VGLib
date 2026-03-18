@@ -14,7 +14,7 @@ export function DecodeUserID(req, res) {
     const userID = verifyJWT(token);
     if (!userID) {
         res.status(401).json({ success: false, message: "Unauthorized" });
-        console.log("Rejected user for unverifiable token: ", token);
+        console.error("Rejected user for unverifiable token: ", token);
         return null;
     }
     return userID.userID;

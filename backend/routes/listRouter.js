@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/userlists', async (req, res) => {
-    console.log("GET /listByUser request received!", req.headers.authorization);
+    console.log("GET /listByUser request received!");
     return handleUserRequest(req, res, async (user) => {
         const lists =  await getUserLists(user.userID);
         if (lists) {
