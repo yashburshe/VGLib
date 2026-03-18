@@ -30,9 +30,12 @@ router.post('/list', async (req, res) => {
         if (existingList) {
             return res
                 .status(400)
-                .json({success: false, message: "User can't create lists with same name!"})
+                .json({success: false, message: `list: ${listName} already exists for user ${user.urserID}`});
         }
         createList(user.userID, listName);
+        return res
+            .status(200)
+            .json({success: true, message: `list: ${listName} successfully added for user ${user.userID}`});
     });
 });
 
