@@ -1,52 +1,30 @@
-//front end functions to support CRUD operations on the lists route
-async function helper(method, endpoint, body= null) {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        console.warn("No authentication token found");
-        return null;
-    }
-    try {
-        let requestInit = {
-            method: method,
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type' : 'application/json'
-            }
-        };
-        if (body) {
-            requestInit.body = JSON.stringify({body});
-        }  
-        const response = await fetch(endpoint, requestInit);
-        const data = await response.json();
-        if (!response.ok) {
-            console.error("Session error: ", data.message);
-            return null;
-        }
-        return data;
-    } catch (error) {
-        console.error(error);
-        return null;
-    }
-}
+import { makeAuthReq } from "./frontEndUtils";
 
 export async function getUserLists() {
-    const data = helper('GET', "/api/list/userlists");
-    return data.lists ?? [];
+    const data = await makeAuthReq('/api/list/userlists', 'GET');
+    if (data) return data.lists;
 }
 
 export async function getList(listID) {
-    const data = helper('GET', `/api/list/${listID}`);
-    return data.list ?? null;
+    const data = await makeAuthReq(`/api/list/${listID}`, 'GET');
+    if (data) return data.list;
 }
 
 export async function createList(listName) {
-    return helper('POST', '/api/list', listName) ? true : false;
+    const data = await makeAuthReq('/api/list', 'POST', {listName: listName});
+    return data !== null;
 }
 
 export async function deleteList(listID) {
-    return helper('DELETE', `/api/list/${listID}`) ? true : false;
+    const data = await makeAuthReq(`/api/list/${listID}`, 'DELETE');
+    return data !== null;
 }
 
-export async function updateList(listID, newGameID) {
-    return helper('PATCH', `/api/list/${listID}`, newGameID) ? true : false;
+export async function addGameToList(listID, newGameID) {
+    const data = await makeAuthReq(
+        `/api/list/${listID}`,
+        'PATCH',
+        {gameID: newGameID}
+    );
+    return data !== null;
 }
