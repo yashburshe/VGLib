@@ -3,7 +3,9 @@
 import { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
-export default function NewGameModal({onCreateGame}) {
+import { createGame } from "../js/game";
+
+export default function NewGameModal() {
   const game_default = {
     name: "",
     summary: "",
@@ -16,8 +18,6 @@ export default function NewGameModal({onCreateGame}) {
   const [game, setGame] = useState(game_default);
   //TODO use error to useState and display error messages in the modal
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   const handleChange = (e) => {
     setGame((prevData) => ({
       ...prevData,
@@ -25,18 +25,13 @@ export default function NewGameModal({onCreateGame}) {
     }));
   };
 
-  const handleCreateGame = () => {
-    onCreateGame(game);
-  }
-
-
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button variant="primary" onClick={() => setShow(true)}>
         Create Game
       </Button>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={() => setShow(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Create New Game</Modal.Title>
         </Modal.Header>
@@ -97,10 +92,10 @@ export default function NewGameModal({onCreateGame}) {
             
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={() => setShow(false)}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleCreateGame}>
+          <Button variant="primary" onClick={() => createGame(game)}>
             Create Game
           </Button>
         </Modal.Footer>
