@@ -61,7 +61,7 @@ export async function register(username, password) {
 }
 
 export async function deleteUser() {
-    const data = await makeAuthReq('/api/user/', 'DELETE');
+    const data = await makeAuthReq('/api/user/me', 'DELETE');
     if (data) {
         localStorage.removeItem('token');
         console.log('Account deleted successfully!');
