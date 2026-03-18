@@ -1,7 +1,13 @@
+//Library Imports
 import { Router } from 'express';
-import { db, COLLECTIONS } from "../db/mongo.js";
-import { AuthenticateUser } from './userAuth.js';
-import { createUser, deleteUser, getUser, updateUser } from '../services/userService.js';
+
+//Service layer functions
+import { createUser, deleteUser, getUser, updateUser, verifyUser } from '../services/userService.js';
+import { createList, getUserLists, deleteList } from '../services/listService.js';
+import { getAllGamesByUserId, deleteGame } from "../services/gameService.js";
+
+//Additional Utils
+import { AuthenticateUser } from './userAuth.js'
 import { generateJWT } from '../utils/jwtUtils.js';
 import { handleUserRequest } from './routeUtil.js';
 
@@ -9,7 +15,7 @@ const router = Router();
 
 //use to sign up a new user
 router.post('/signup', async (req, res) => {
-    console.log("POST /signup with body: ", req.body);
+    console.log("USER POST /signup with body: ", req.body);
     try {     
         const { username, password } = req.body; 
         //check if there is already a user with the same username
@@ -19,7 +25,12 @@ router.post('/signup', async (req, res) => {
                 .status(400)
                 .json({ success: false, message: 'Username already exists' });
         }
+        //Create user and default lists
         const newUserID = await createUser(username, password);
+        await createList(newUserID, "Favorites");
+        await createList(newUserID, "Wishlist");
+        await createList(newUserID, "Owned");
+        
         const token = generateJWT(newUserID);
         console.log("User created successfully with userID: ", newUserID);
         res.status(201).json({ token });
@@ -30,13 +41,12 @@ router.post('/signup', async (req, res) => {
 
 //use to login an existing user
 router.post('/login', async (req, res) => {
-    console.log('POST /login with body: ', req.body);
+    console.log('USER POST /login with body: ', req.body);
     try {
         const { username, password } = req.body;
         //TODO: hash the password with its corresponding salt before comparing with the database record
-        const matchingUser = await db
-            .collection(COLLECTIONS.USERS)
-            .findOne({ username, password_hash: password});
+        const matchingUser = await verifyUser(username, password);
+        console.log("/login: matchingUser: " , matchingUser);
         if (!matchingUser) {
             console.log("No matching credentials found");
             return res.status(404).json({
@@ -52,17 +62,32 @@ router.post('/login', async (req, res) => {
 
 //get a user's info
 router.get('/me', async (req, res) => {
-    console.log('GET /me request received!');
+    console.log('USER GET /me request received!');
     const user = await AuthenticateUser(req, res);;
     if (!user) return;
     res.status(200).json({user: user});
 });
 
 //delete a user's account
-router.delete('/', async (req, res) => {
-    console.log("DELETE / request received!");
+router.delete('/me', async (req, res) => {
+    console.log("USER DELETE /me request received!");
     return handleUserRequest(req, res, async (user) => {
-        deleteUser(user.userID);
+        //delete any lists made by the user
+        const userLists = await getUserLists(user.userID);
+        if (userLists && userLists.length > 0) {
+            userLists.forEach(async (list) => {
+                console.log("List: ", list);
+                await deleteList(list.listID);
+            });
+        }
+        //delete any games made by the user
+        const userGames = await getAllGamesByUserId(user.userID);
+        if (userGames && userGames.length > 0) {
+            userGames.forEach(async (game) => {
+                await deleteGame(game.id);
+            });
+        }
+        await deleteUser(user.userID);
         return res
             .status(200)
             .json({success: true, message: "user deleted successfully"});
@@ -70,7 +95,7 @@ router.delete('/', async (req, res) => {
 });
 
 router.patch('/me', async (req, res) => {
-    console.log("PATCH /me request received!");
+    console.log("USER PATCH /me request received!");
     return handleUserRequest(req, res, async (user) => {
         //read updated parameters
         const {username, profile_banner_phrase, profile_picture_url} = req.body;
@@ -105,6 +130,5 @@ router.get('/:userID', async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 });
-
 
 export default router;

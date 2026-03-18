@@ -35,11 +35,12 @@ export async function createList(userID, listName) {
 }
 
 export async function deleteList(listID) {
+    console.log("ListService: Deleting list: ", listID);
     const deleteResult = await db
         .collection(COLLECTIONS.LISTS)
         .deleteOne({ listID: listID});
     if (!deleteResult || deleteResult.deletedCount === 0) {
-        throw new Error("List not found or failed to delete");
+        throw new Error("List not found or failed to delete:", listID);
     }
 }
 
@@ -55,12 +56,13 @@ export async function getList(listID) {
 }
 
 export async function getUserLists(userID) {
-    console.log(`Attempting to get lists for userID: ${userID}`);   
-    return await db
+    console.log(`listService: getUserlists for userID: ${userID}`);   
+    const lists =  await db
         .collection(COLLECTIONS.LISTS)
         .find({userID: userID})
         .sort({ name: 1})
         .toArray();
+    return lists;
 }
 
 export async function addListItem(listID, newItem) {
