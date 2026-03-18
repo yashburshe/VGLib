@@ -19,7 +19,6 @@ export async function createUser(username, passwordHash) {
         .sort({ userID: -1})
         .limit(1)
         .toArray();
-    console.log("Max userID found: ", maxUserID);
     const newUserID = maxUserID.length > 0 ? maxUserID[0].userID + 1 : 1;
     const userCreated = await db
         .collection(COLLECTIONS.USERS)
@@ -66,7 +65,6 @@ export async function deleteUser(userID) {
 }
 
 export async function getUser(userID) {
-    console.log(`Attempting to get user with ID: ${userID}`);
     return await db
         .collection(COLLECTIONS.USERS)
         .findOne( 
@@ -91,8 +89,12 @@ export async function updateUser(userID, updatedFields) {
             { userID: userID },
             { $set: updatedFields }
         );
-    if (!updateResult || updateResult.modifiedCount === 0) {
-        throw new Error("User not found or no changes made");
-    }
-    return;
+    if (updateResult 
+        && updateResult.modifiedCount === 1 
+        && updateResult.upsertedCount === 0
+    ) {
+        console.log("Update Success!");
+    } else {
+        throw new Error("User not found or no changes made. Result: ", updateResult);
+    }   
 }

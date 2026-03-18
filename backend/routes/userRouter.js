@@ -3,8 +3,7 @@ import { db, COLLECTIONS } from "../db/mongo.js";
 import { AuthenticateUser } from './userAuth.js';
 import { createUser, deleteUser, getUser, updateUser } from '../services/userService.js';
 import { generateJWT } from '../utils/jwtUtils.js';
-
-console.log("userRouter loaded!");
+import { handleUserRequest } from './routeUtil.js';
 
 const router = Router();
 
@@ -53,33 +52,26 @@ router.post('/login', async (req, res) => {
 
 //get a user's info
 router.get('/me', async (req, res) => {
-    const user = await AuthenticateUser(req, res);
-    console.log("GET /me request authenticated user: ", user.userID);
+    console.log('GET /me request received!');
+    const user = await AuthenticateUser(req, res);;
     if (!user) return;
-    res.status(200).json({user});
+    res.status(200).json({user: user});
 });
 
 //delete a user's account
 router.delete('/', async (req, res) => {
     console.log("DELETE / request received!");
-    const user = await AuthenticateUser(req, res);
-    if (!user) return;
-    try {
+    return handleUserRequest(req, res, async (user) => {
         deleteUser(user.userID);
         return res
             .status(200)
             .json({success: true, message: "user deleted successfully"});
-    } catch (error) {
-        res.status(500)
-            .json({ success: false, message: error.message});
-    }
+    });
 });
 
 router.patch('/me', async (req, res) => {
     console.log("PATCH /me request received!");
-    const user = await AuthenticateUser(req, res);
-    if (!user) return;
-    try {
+    return handleUserRequest(req, res, async (user) => {
         //read updated parameters
         const {username, profile_banner_phrase, profile_picture_url} = req.body;
         if (!profile_banner_phrase || profile_banner_phrase.trim() === "") {
@@ -97,11 +89,8 @@ router.patch('/me', async (req, res) => {
             username: username,
             profile_picture_url : profile_picture_url
         });
-        res.status(200).json({success: true, user: matchingUser});
-
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
+        res.status(200).json({success: true, message: "user updated!"});
+    });
 });
 
 router.get('/:userID', async (req, res) => {

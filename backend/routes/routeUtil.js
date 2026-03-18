@@ -3,7 +3,6 @@ import { AuthenticateUser } from "./userAuth.js";
 //default function logic to handle user and general HTTP requests
 
 export async function handleUserRequest(req, res, method) {
-    console.log("received req", req.headers.authorization);
     const user = await AuthenticateUser(req, res);
     if (!user) return;
     try {

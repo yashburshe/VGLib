@@ -16,7 +16,6 @@ export default function EditProfileModalButton({userProp}) {
     );
 
     //TODO use error to useState and display error messages in the modal
-    console.log("Edit Profile Modal with user info: ", userProp)
     const handleChange = (e) => {
         const { name, value} = e.target;
         setUser((prevData) => ({
@@ -28,6 +27,9 @@ export default function EditProfileModalButton({userProp}) {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Submitting user changes: ", user);
+        updateUser(user);
+        setShow(false);
+        alert("refresh to see changed profile settings");
         //TODO: update backend to allow updates to username, profile banner phrase, and profile picture
         //cause refresh
     }
