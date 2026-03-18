@@ -10,7 +10,7 @@ const router = Router();
 
 //use to sign up a new user
 router.post('/signup', async (req, res) => {
-    console.log("Received signup request with body: ", req.body);
+    console.log("POST /signup with body: ", req.body);
     try {     
         const { username, password } = req.body; 
         //check if there is already a user with the same username
@@ -31,7 +31,7 @@ router.post('/signup', async (req, res) => {
 
 //use to login an existing user
 router.post('/login', async (req, res) => {
-    console.log('received login request with body: ', req.body);
+    console.log('POST /login with body: ', req.body);
     try {
         const { username, password } = req.body;
         //TODO: hash the password with its corresponding salt before comparing with the database record
@@ -44,9 +44,7 @@ router.post('/login', async (req, res) => {
                 success: false, 
                 message: "No matching credentials found"});
         }
-        console.log("Matching user found: ", matchingUser);
         const token = generateJWT(matchingUser.userID);
-        console.log("Login successful, token generated: ", token);
         return res.status(201).json({ token });
     } catch (error) {
         res.status(500).json({ success: false, message: error});
@@ -63,6 +61,7 @@ router.get('/me', async (req, res) => {
 
 //delete a user's account
 router.delete('/delete', async (req, res) => {
+    console.log("DELETE / request received!");
     const user = await AuthenticateUser(req, res);
     if (!user) return;
     try {
@@ -79,6 +78,7 @@ router.delete('/delete', async (req, res) => {
 
 //TODO allow users to update their profile picture
 router.patch('/me', async (req, res) => {
+    console.log("PATCH /me request received!");
     const user = await AuthenticateUser(req, res);
     if (!user) return;
     try {
