@@ -1,67 +1,52 @@
 //front end functions to support CRUD operations on the lists route
-
-export async function getUserLists() {
+async function helper(method, endpoint, body= null) {
     const token = localStorage.getItem('token');
     if (!token) {
         console.warn("No authentication token found");
         return null;
     }
     try {
-        const response = await fetch("/api/list/userlists", {
-            method: 'GET',
+        let requestInit = {
+            method: method,
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type' : 'application/json'
             }
-        });
+        };
+        if (body) {
+            requestInit.body = JSON.stringify({body});
+        }  
+        const response = await fetch(endpoint, requestInit);
         const data = await response.json();
         if (!response.ok) {
             console.error("Session error: ", data.message);
-            return [];
+            return null;
         }
-        console.log("Lists fetched successfully: ", data.lists);
-        return data.lists;
+        return data;
     } catch (error) {
         console.error(error);
-        return [];
+        return null;
     }
+}
+
+export async function getUserLists() {
+    const data = helper('GET', "/api/list/userlists");
+    return data.lists ?? [];
 }
 
 export async function getList(listID) {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        console.warn("No authentication token found");
-        return null;
-    }
-    try {
-        const response = await fetch(`/api/list/${listID}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type' : 'application/json'
-            }
-        });
-        const data = await response.json();
-        if (!response.ok) {
-            console.error("Session error: ", data.message);
-            return [];
-        }
-        return data.list;
-    } catch (error) {
-        console.error(error);
-        return [];
-    }
+    const data = helper('GET', `/api/list/${listID}`);
+    return data.list ?? null;
 }
 
 export async function createList(listName) {
-
+    return helper('POST', '/api/list', listName) ? true : false;
 }
-
 
 export async function deleteList(listID) {
-
+    return helper('DELETE', `/api/list/${listID}`) ? true : false;
 }
 
-export async function updateList(listID) {
-
+export async function updateList(listID, newGameID) {
+    return helper('PATCH', `/api/list/${listID}`, newGameID) ? true : false;
 }
