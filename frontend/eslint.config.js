@@ -1,15 +1,19 @@
-import globals from 'globals';
-import js from '@eslint/js';
-import eslintConfigPrettier from 'eslint-config-prettier';
-import prettier from 'eslint-plugin-prettier';
+import globals from "globals";
+import js from "@eslint/js";
+import eslintConfigPrettier from "eslint-config-prettier";
+import prettier from "eslint-plugin-prettier";
+import reactPlugin from "eslint-plugin-react";
 
 export default [
   {
-    files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
+    ignores: ["dist/**", "node_modules/**"],
+  },
+  {
+    files: ["**/*.{js,jsx,mjs,cjs,ts,tsx}"],
 
     languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
+      ecmaVersion: "latest",
+      sourceType: "module",
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
@@ -24,30 +28,40 @@ export default [
     },
     plugins: {
       prettier: prettier,
+      react: reactPlugin,
+    },
+
+    settings: {
+      react: {
+        version: "detect",
+      },
     },
 
     rules: {
       // ESLint recommended rules
       ...js.configs.recommended.rules,
 
+      "react/jsx-uses-vars": "error",
+      "react/jsx-uses-react": "error",
+
       indent: [
-        'error',
+        "error",
         2,
         {
           SwitchCase: 1,
         },
       ],
 
-      'linebreak-style': ['error', 'unix'],
-      quotes: ['error', 'double'],
-      semi: ['error', 'always'],
-      'no-console': 0,
+      "linebreak-style": ["error", "unix"],
+      quotes: ["error", "double"],
+      semi: ["error", "always"],
+      "no-console": 0,
 
       // Prettier integration - this runs Prettier through ESLint
-      'prettier/prettier': [
-        'error',
+      "prettier/prettier": [
+        "error",
         {
-          endOfLine: 'lf',
+          endOfLine: "lf",
         },
       ],
     },

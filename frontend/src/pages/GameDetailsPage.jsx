@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router';
-import Image from 'react-bootstrap/Image';
-import Container from 'react-bootstrap/esm/Container';
-import Row from 'react-bootstrap/esm/Row';
-import Col from 'react-bootstrap/esm/Col';
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router";
+import Image from "react-bootstrap/Image";
+import Container from "react-bootstrap/esm/Container";
+import Row from "react-bootstrap/esm/Row";
+import Col from "react-bootstrap/esm/Col";
 
-import { getUser } from '../js/user';
-import { getUserLists } from '../js/list';
-import DeleteGameModalButton from '../components/DeleteGameModalButton';
-import EditGameModalButton from '../components/EditGameModalButton';
-import AddGameToListButton from '../components/AddGameToListButton';
+import { getUser } from "../js/user";
+import { getUserLists } from "../js/list";
+import DeleteGameModalButton from "../components/DeleteGameModalButton";
+import EditGameModalButton from "../components/EditGameModalButton";
+import AddGameToListButton from "../components/AddGameToListButton";
 
 export default function GameDetailsPage() {
   const { gameId } = useParams();
@@ -69,7 +69,7 @@ export default function GameDetailsPage() {
                     />
                   </>
                 ) : (
-                  ''
+                  ""
                 )}
               </>
             ) : (
@@ -82,7 +82,7 @@ export default function GameDetailsPage() {
           <h1>{gameDetails.name}</h1>
           <p>{gameDetails.summary}</p>
           <p>Rating: {Math.round(gameDetails.rating)}</p>
-          <p>Platforms: {gameDetails.platforms?.join(', ')}</p>
+          <p>Platforms: {gameDetails.platforms?.join(", ")}</p>
         </Col>
       </Row>
     </Container>

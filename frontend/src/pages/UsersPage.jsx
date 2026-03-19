@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Pagination from 'react-bootstrap/Pagination';
-import ProfileCard from '../components/ProfileCard';
-import { Spinner } from 'react-bootstrap';
+import { useEffect, useState } from "react";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Pagination from "react-bootstrap/Pagination";
+import ProfileCard from "../components/ProfileCard";
+import { Spinner } from "react-bootstrap";
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
@@ -28,7 +28,7 @@ export default function UsersPage() {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const res = await fetch('/api/user/all');
+      const res = await fetch("/api/user/all");
       const data = await res.json();
       console.log(data.users);
 

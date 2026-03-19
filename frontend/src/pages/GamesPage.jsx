@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import GameCard from '../components/GameCard';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Pagination from 'react-bootstrap/Pagination';
-import { Spinner } from 'react-bootstrap';
+import { useEffect, useState } from "react";
+import GameCard from "../components/GameCard";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Pagination from "react-bootstrap/Pagination";
+import { Spinner } from "react-bootstrap";
 
-import AddGameToListButton from '../components/AddGameToListButton';
-import { getUserLists } from '../js/list';
+import AddGameToListButton from "../components/AddGameToListButton";
+import { getUserLists } from "../js/list";
 
 export default function GamesPage() {
   const [games, setGames] = useState([]);
@@ -32,7 +32,7 @@ export default function GamesPage() {
 
   useEffect(() => {
     const fetchGames = async () => {
-      const res = await fetch('/api/games');
+      const res = await fetch("/api/games");
       const data = await res.json();
       console.log(data.games);
 

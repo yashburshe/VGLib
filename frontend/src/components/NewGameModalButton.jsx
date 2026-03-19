@@ -1,17 +1,17 @@
 //Modal for users to create a new modal
 
-import { useState } from 'react';
-import { Modal, Button, Form, Toast, ToastContainer } from 'react-bootstrap';
+import { useState } from "react";
+import { Modal, Button, Form, Toast, ToastContainer } from "react-bootstrap";
 
-import { createGame } from '../js/game';
+import { createGame } from "../js/game";
 
 export default function NewGameModal() {
   const game_default = {
-    name: '',
-    summary: '',
+    name: "",
+    summary: "",
     rating: 0,
-    url: '',
-    platforms: '',
+    url: "",
+    platforms: "",
   };
 
   const [show, setShow] = useState(false);
@@ -19,7 +19,7 @@ export default function NewGameModal() {
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [showErrorToast, setShowErrorToast] = useState(false);
   const [errorMessage, setErrorMessage] = useState(
-    'Could not create game. Please try again.',
+    "Could not create game. Please try again.",
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -41,12 +41,12 @@ export default function NewGameModal() {
         setShowSuccessToast(true);
       } else {
         setErrorMessage(
-          res?.message || 'Could not create game. Please try again.',
+          res?.message || "Could not create game. Please try again.",
         );
         setShowErrorToast(true);
       }
     } catch {
-      setErrorMessage('Could not create game. Please try again.');
+      setErrorMessage("Could not create game. Please try again.");
       setShowErrorToast(true);
     } finally {
       setIsSubmitting(false);
@@ -126,7 +126,7 @@ export default function NewGameModal() {
             onClick={handleCreateGame}
             disabled={isSubmitting}
           >
-            {isSubmitting ? 'Creating...' : 'Create Game'}
+            {isSubmitting ? "Creating..." : "Create Game"}
           </Button>
         </Modal.Footer>
       </Modal>

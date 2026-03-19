@@ -1,28 +1,28 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import { login } from '../js/user';
-import { Button, Container, Form, Alert } from 'react-bootstrap';
+import { login } from "../js/user";
+import { Button, Container, Form, Alert } from "react-bootstrap";
 
 export default function LoginForm({ onSignUpClick, onLoginSuccess }) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); //clear previous errors
+    setError(""); //clear previous errors
 
     if (!username || !password) {
-      setError('Please enter both a username and password');
+      setError("Please enter both a username and password");
       return;
     }
     (await login(username, password))
       ? onLoginSuccess()
-      : setError('Invalid username or password');
+      : setError("Invalid username or password");
   };
 
   return (
-    <Container className="mt-4" style={{ maxWidth: '420px' }}>
+    <Container className="mt-4" style={{ maxWidth: "420px" }}>
       <h2 className="mb-4">Log in</h2>
 
       {error && <Alert variant="danger">{error}</Alert>}

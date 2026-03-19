@@ -1,9 +1,9 @@
 //Modal for users to create a new modal
 
-import { useEffect, useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { useEffect, useState } from "react";
+import { Modal, Button, Form } from "react-bootstrap";
 
-import { updateUser } from '../js/user.js';
+import { updateUser } from "../js/user.js";
 
 export default function EditProfileModalButton({ userProp }) {
   const [show, setShow] = useState(false);
@@ -23,10 +23,10 @@ export default function EditProfileModalButton({ userProp }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Submitting user changes: ', user);
+    console.log("Submitting user changes: ", user);
     updateUser(user);
     setShow(false);
-    alert('refresh to see changed profile settings');
+    alert("refresh to see changed profile settings");
     //TODO: update backend to allow updates to username, profile banner phrase, and profile picture
     //cause refresh
   };

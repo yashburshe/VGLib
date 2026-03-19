@@ -1,33 +1,33 @@
 //Button and Modal for users to create a new list
-import { useState } from 'react';
-import { Modal, Button, Form, Alert } from 'react-bootstrap';
+import { useState } from "react";
+import { Modal, Button, Form, Alert } from "react-bootstrap";
 
-import { createList } from '../js/list.js';
+import { createList } from "../js/list.js";
 
 export default function AddListModalButton({ existingNames }) {
   const [show, setShow] = useState(false);
-  const [listName, setListName] = useState('');
-  const [error, setError] = useState('');
+  const [listName, setListName] = useState("");
+  const [error, setError] = useState("");
 
   const handleAdd = async () => {
     if (!listName.trim()) {
-      setError('List name cannot be empty');
+      setError("List name cannot be empty");
       return;
     }
 
     if (existingNames && existingNames.includes(listName.trim())) {
-      setError('A list with this name already exists');
+      setError("A list with this name already exists");
       return;
     }
     await createList(listName.trim());
-    setListName('');
-    setError('');
+    setListName("");
+    setError("");
     setShow(false);
   };
 
   const handleClose = () => {
-    setListName('');
-    setError('');
+    setListName("");
+    setError("");
     setShow(false);
   };
 
@@ -51,7 +51,7 @@ export default function AddListModalButton({ existingNames }) {
                 placeholder="Enter list name"
                 value={listName}
                 onChange={(e) => setListName(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
+                onKeyDown={(e) => e.key === "Enter" && handleAdd()}
               />
             </Form.Group>
           </Form>

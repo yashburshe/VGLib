@@ -1,19 +1,19 @@
-import { Card, Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import { Trash } from 'react-bootstrap-icons';
+import { Card, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { Trash } from "react-bootstrap-icons";
 
-import { deleteList } from '../js/list.js';
-import '../css/list.css'
+import { deleteList } from "../js/list.js";
+import "../css/list.css";
 
 export default function ListCard({ list }) {
   const navigate = useNavigate();
-  const requiredLists = ['Favorites', 'Wishlist', 'Owned'];
+  const requiredLists = ["Favorites", "Wishlist", "Owned"];
   const isDefaultList = requiredLists.includes(list.name);
 
   const onDelete = (e) => {
     e.stopPropagation();
     deleteList(list.listID);
-    alert('List deleted!');
+    alert("List deleted!");
   };
 
   const DeleteButton = () => {
@@ -30,7 +30,7 @@ export default function ListCard({ list }) {
     <Card
       className="list-grid-card h-100 w-100"
       onClick={() => navigate(`/lists/${list.listID}`)}
-      style={{ cursor: 'pointer' }}
+      style={{ cursor: "pointer" }}
     >
       <Card.Body className="d-flex flex-column">
         <Card.Title className="d-flex justify-content-between align-items-start gap-2 mb-2">
@@ -40,7 +40,7 @@ export default function ListCard({ list }) {
           )}
         </Card.Title>
         <Card.Text className="text-muted mb-3 list-description">
-          {list.description ?? 'No Description'}
+          {list.description ?? "No Description"}
         </Card.Text>
         {!isDefaultList ? (
           <div className="mt-auto">

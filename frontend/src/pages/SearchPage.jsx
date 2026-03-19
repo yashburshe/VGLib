@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   Col,
   Container,
@@ -6,15 +6,15 @@ import {
   Pagination,
   Row,
   Spinner,
-} from 'react-bootstrap';
-import { useSearchParams } from 'react-router-dom';
-import GameCard from '../components/GameCard';
+} from "react-bootstrap";
+import { useSearchParams } from "react-router-dom";
+import GameCard from "../components/GameCard";
 
 export default function SearchPage() {
   const [searchParams] = useSearchParams();
-  const [searchText, setSearchText] = useState(searchParams.get('q') || '');
-  const [platformFilter, setPlatformFilter] = useState('');
-  const [ratingSort, setRatingSort] = useState('desc');
+  const [searchText, setSearchText] = useState(searchParams.get("q") || "");
+  const [platformFilter, setPlatformFilter] = useState("");
+  const [ratingSort, setRatingSort] = useState("desc");
   const [platforms, setPlatforms] = useState([]);
   const [games, setGames] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +38,7 @@ export default function SearchPage() {
   );
 
   useEffect(() => {
-    setSearchText(searchParams.get('q') || '');
+    setSearchText(searchParams.get("q") || "");
   }, [searchParams]);
 
   useEffect(() => {
@@ -50,11 +50,11 @@ export default function SearchPage() {
       const fetchPlatforms = async () => {
         try {
           const params = new URLSearchParams();
-          if (trimmedSearch) params.set('q', trimmedSearch);
+          if (trimmedSearch) params.set("q", trimmedSearch);
           const queryString = params.toString();
           const endpoint = queryString
             ? `/api/games/search/platforms?${queryString}`
-            : '/api/games/search/platforms';
+            : "/api/games/search/platforms";
           const res = await fetch(endpoint);
           const data = await res.json();
           setPlatforms(data?.platforms || []);
@@ -81,9 +81,9 @@ export default function SearchPage() {
       setIsLoading(true);
       try {
         const params = new URLSearchParams();
-        if (trimmedSearch) params.set('q', trimmedSearch);
-        if (platformFilter) params.set('platform', platformFilter);
-        params.set('sort', ratingSort);
+        if (trimmedSearch) params.set("q", trimmedSearch);
+        if (platformFilter) params.set("platform", platformFilter);
+        params.set("sort", ratingSort);
 
         const res = await fetch(`/api/games/search?${params.toString()}`);
         const data = await res.json();

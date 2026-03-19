@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 
-import UserProfile from '../components/UserProfile';
-import UserLists from '../components/UserLists';
-import UserGames from '../components/UserGames';
+import UserProfile from "../components/UserProfile";
+import UserLists from "../components/UserLists";
+import UserGames from "../components/UserGames";
 
-import { getUser } from '../js/user.js';
-import { getUserLists } from '../js/list.js';
-import { getGamesByUser } from '../js/game.js';
-import { Container } from 'react-bootstrap';
+import { getUser } from "../js/user.js";
+import { getUserLists } from "../js/list.js";
+import { getGamesByUser } from "../js/game.js";
+import { Container } from "react-bootstrap";
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -16,15 +16,6 @@ export default function ProfilePage() {
   const [userProfile, setUserProfile] = useState({});
   const [userLists, setUserLists] = useState([]);
   const [userGames, setUserGames] = useState([]);
-
-  const fetchAndSetUser = async () => {
-    let fetched_user = await getUser();
-    if (!fetched_user) {
-      console.error('profilePage.jsx: getUser failed!');
-      navigate('/login');
-    }
-    setUserProfile(fetched_user);
-  };
 
   const fetchAndSetLists = async () => {
     const tmp = await getUserLists();
@@ -40,8 +31,8 @@ export default function ProfilePage() {
     const init = async () => {
       const fetchedUser = await getUser();
       if (!fetchedUser) {
-        console.error('profilePage.jsx: getUser failed!');
-        navigate('/login');
+        console.error("profilePage.jsx: getUser failed!");
+        navigate("/login");
         return;
       }
       setUserProfile(fetchedUser);

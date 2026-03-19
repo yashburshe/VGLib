@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import { Container, Nav, Navbar, Image, NavDropdown } from 'react-bootstrap';
-import { PersonCircle } from 'react-bootstrap-icons';
-import { useNavigate } from 'react-router';
-import { useLocation } from 'react-router';
+import { useState, useEffect } from "react";
+import { Container, Nav, Navbar, Image, NavDropdown } from "react-bootstrap";
+import { PersonCircle } from "react-bootstrap-icons";
+import { useNavigate } from "react-router";
+import { useLocation } from "react-router";
 
-import { getUser } from '../js/user';
+import { getUser } from "../js/user";
 
 export default function NavBar() {
   const navigate = useNavigate();
@@ -21,10 +21,10 @@ export default function NavBar() {
 
   //Handle User Nav Bar Item on right hand side (only if user is logged in)
   function userItem() {
-    if (!user || location.pathname === '/login') return <></>;
+    if (!user || location.pathname === "/login") return <></>;
 
     const userImage =
-      user.profile_picture_url && user.profile_picture_url.trim() !== '' ? (
+      user.profile_picture_url && user.profile_picture_url.trim() !== "" ? (
         <Image
           src={user.profile_picture_url}
           roundedCircle
@@ -34,20 +34,20 @@ export default function NavBar() {
       ) : (
         <PersonCircle
           size={20}
-          style={{ marginRight: '6px', marginBottom: '2px' }}
+          style={{ marginRight: "6px", marginBottom: "2px" }}
           className="icon"
         />
       );
 
     const onLogout = () => {
-      localStorage.removeItem('token');
-      navigate('/login');
+      localStorage.removeItem("token");
+      navigate("/login");
     };
 
     return (
       <>
         <Nav className="ms-auto">
-          {' '}
+          {" "}
           {/* Right aligned*/}
           <NavDropdown
             title={
@@ -68,7 +68,7 @@ export default function NavBar() {
   }
 
   const accountLabel =
-    user && user.username !== '' ? user.username : 'My Account';
+    user && user.username !== "" ? user.username : "My Account";
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
@@ -76,7 +76,7 @@ export default function NavBar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            {' '}
+            {" "}
             {/* Left aligned*/}
             <Nav.Link href="/top">Top</Nav.Link>
             <Nav.Link href="/search">Search</Nav.Link>

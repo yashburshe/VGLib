@@ -64,7 +64,7 @@ router.get("/:listID", async (req, res) => {
 
 router.delete("/:listID", async (req, res) => {
   console.log("DELETE /list request received! ListID: ", req.params.listID);
-  return handleUserRequest(req, res, async (user) => {
+  return handleUserRequest(req, res, async () => {
     await deleteList(Number(req.params.listID));
     return res
       .status(200)
@@ -74,7 +74,7 @@ router.delete("/:listID", async (req, res) => {
 
 router.patch("/:listID", async (req, res) => {
   console.log("PATCH /list request received! ListID: ", req.params.listID);
-  return handleUserRequest(req, res, async (user) => {
+  return handleUserRequest(req, res, async () => {
     const { gameID } = req.body;
     const listID = Number(req.params.listID);
 

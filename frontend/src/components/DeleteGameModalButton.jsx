@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button, Modal, Toast, ToastContainer } from 'react-bootstrap';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button, Modal, Toast, ToastContainer } from "react-bootstrap";
 
-import { deleteGame } from '../js/game';
+import { deleteGame } from "../js/game";
 
 export default function DeleteGameModalButton({ gameId, gameName }) {
   const [show, setShow] = useState(false);
@@ -10,7 +10,7 @@ export default function DeleteGameModalButton({ gameId, gameName }) {
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [showErrorToast, setShowErrorToast] = useState(false);
   const [errorMessage, setErrorMessage] = useState(
-    'Could not delete this game.',
+    "Could not delete this game.",
   );
   const navigate = useNavigate();
 
@@ -24,14 +24,14 @@ export default function DeleteGameModalButton({ gameId, gameName }) {
         setShow(false);
         setShowSuccessToast(true);
         setTimeout(() => {
-          navigate('/games');
+          navigate("/games");
         }, 900);
       } else {
-        setErrorMessage(res?.message || 'Could not delete this game.');
+        setErrorMessage(res?.message || "Could not delete this game.");
         setShowErrorToast(true);
       }
     } catch {
-      setErrorMessage('Could not delete this game.');
+      setErrorMessage("Could not delete this game.");
       setShowErrorToast(true);
     } finally {
       setIsDeleting(false);
@@ -50,8 +50,8 @@ export default function DeleteGameModalButton({ gameId, gameName }) {
         </Modal.Header>
         <Modal.Body>
           <p className="mb-2">
-            Are you sure you want to delete{' '}
-            {gameName ? `\"${gameName}\"` : 'this game'}?
+            Are you sure you want to delete{" "}
+            {gameName ? `"${gameName}"` : "this game"}?
           </p>
           <p className="mb-0 text-muted">This action cannot be undone.</p>
         </Modal.Body>
@@ -64,7 +64,7 @@ export default function DeleteGameModalButton({ gameId, gameName }) {
             Cancel
           </Button>
           <Button variant="danger" onClick={handleDelete} disabled={isDeleting}>
-            {isDeleting ? 'Deleting...' : 'Delete'}
+            {isDeleting ? "Deleting..." : "Delete"}
           </Button>
         </Modal.Footer>
       </Modal>

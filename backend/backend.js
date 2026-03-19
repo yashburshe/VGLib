@@ -3,8 +3,8 @@ import { db } from "./db/mongo.js";
 import userRouter from "./routes/userRouter.js";
 import listRouter from "./routes/listRouter.js";
 import gamesRouter from "./routes/gamesRouter.js";
-import path from 'path';
-import {fileURLToPath} from 'url';
+import path from "path";
+import { fileURLToPath } from "url";
 
 // try {
 //   process.loadEnvFile();
@@ -29,7 +29,6 @@ if (!userRouter || !listRouter || !gamesRouter) {
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 
 app.use("/api/user", userRouter);
 app.use("/api/list", listRouter);

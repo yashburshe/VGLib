@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
-import { useNavigate } from 'react-router';
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/esm/Container';
-import Row from 'react-bootstrap/esm/Row';
-import Col from 'react-bootstrap/esm/Col';
-import { Trash } from 'react-bootstrap-icons';
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { useNavigate } from "react-router";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/esm/Container";
+import Row from "react-bootstrap/esm/Row";
+import Col from "react-bootstrap/esm/Col";
+import { Trash } from "react-bootstrap-icons";
 
-import { getList, deleteList, toggleGameInList } from '../js/list';
-import { getGame } from '../js/game';
-import GameCard from '../components/GameCard';
+import { getList, deleteList, toggleGameInList } from "../js/list";
+import { getGame } from "../js/game";
+import GameCard from "../components/GameCard";
 
 export default function ListDetailsPage() {
   const { listId } = useParams();
@@ -33,7 +33,7 @@ export default function ListDetailsPage() {
     fetchListDetails();
   }, []);
 
-  const requiredLists = ['Favorites', 'Wishlist', 'Owned'];
+  const requiredLists = ["Favorites", "Wishlist", "Owned"];
   const isDefaultList = requiredLists.includes(listDetails.name);
 
   const DeleteListButton = () => {
@@ -44,8 +44,8 @@ export default function ListDetailsPage() {
             size={20}
             onClick={() => {
               deleteList(listId);
-              alert('List deleted!');
-              navigate('/profile');
+              alert("List deleted!");
+              navigate("/profile");
             }}
           />
         </Button>
@@ -60,9 +60,9 @@ export default function ListDetailsPage() {
           <Trash
             size={20}
             onClick={() => {
-              console.log('removing game from list: ', gameID, listID);
+              console.log("removing game from list: ", gameID, listID);
               const result = toggleGameInList(listID, gameID);
-              console.log('tried removing game from list: result: ', result);
+              console.log("tried removing game from list: result: ", result);
             }}
           />
         </Button>
@@ -75,7 +75,7 @@ export default function ListDetailsPage() {
       <Col md={8} lg={9}>
         <h1>{listDetails.name}</h1>
         {isDefaultList ? <></> : <DeleteListButton />}
-        <p>{listDetails.description ?? 'No Description'}</p>
+        <p>{listDetails.description ?? "No Description"}</p>
         <h3 className="mt-4">Games in this list</h3>
         <Row className="mt-3">
           {games.lengh === 0 && <p>No games added!</p>}

@@ -1,10 +1,10 @@
 //Button and Modal for users to delete their account
 
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Modal, Button } from 'react-bootstrap';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Modal, Button } from "react-bootstrap";
 
-import { deleteUser } from '../js/user';
+import { deleteUser } from "../js/user";
 
 export default function DeleteAccountModalButton() {
   const [show, setShow] = useState(false);
@@ -12,10 +12,10 @@ export default function DeleteAccountModalButton() {
   const navigate = useNavigate();
 
   const handleDelete = () => {
-    console.log('Deleting account!');
+    console.log("Deleting account!");
     deleteUser();
     setShow(false);
-    navigate('/login');
+    navigate("/login");
   };
 
   return (

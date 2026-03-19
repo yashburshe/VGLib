@@ -1,29 +1,29 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import { register } from '../js/user';
-import { Button, Container, Form, Alert } from 'react-bootstrap';
+import { register } from "../js/user";
+import { Button, Container, Form, Alert } from "react-bootstrap";
 
 export default function RegistrationForm({ onLoginClick, onRegisterSuccess }) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); //clear previous errors
+    setError(""); //clear previous errors
 
     if (!username || !password) {
-      setError('Please enter both a username and password');
+      setError("Please enter both a username and password");
       return;
     }
     (await register(username, password))
       ? onRegisterSuccess()
-      : setError('Invalid: username already taken');
+      : setError("Invalid: username already taken");
   };
 
   //TODO: set confirm password and password complexity rules. Ensure that password hash is sent to backend, not raw password
   return (
-    <Container className="mt-4" style={{ maxWidth: '420px' }}>
+    <Container className="mt-4" style={{ maxWidth: "420px" }}>
       <h2 className="mb-4">Create Account</h2>
 
       {error && <Alert variant="danger">{error}</Alert>}

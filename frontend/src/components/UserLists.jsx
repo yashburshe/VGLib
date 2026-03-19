@@ -1,5 +1,5 @@
-import { Col, Container, Row } from 'react-bootstrap';
-import ListCard from './ListCard';
+import { Col, Container, Row } from "react-bootstrap";
+import ListCard from "./ListCard";
 
 export default function UserLists({ lists }) {
   if (!lists || lists.length === 0) {

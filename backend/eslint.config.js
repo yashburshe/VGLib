@@ -5,6 +5,9 @@ import prettier from "eslint-plugin-prettier";
 
 export default [
   {
+    ignores: ["dist/**", "node_modules/**"],
+  },
+  {
     files: ["**/*.{js,jsx,mjs,cjs,ts,tsx}"],
 
     languageOptions: {

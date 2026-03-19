@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
-import { Button, Modal, Form } from 'react-bootstrap';
-import { toggleGameInList } from '../js/list';
+import { useMemo, useState } from "react";
+import { Button, Modal, Form } from "react-bootstrap";
+import { toggleGameInList } from "../js/list";
 
 export default function AddGameToListButton({ lists, game }) {
   const [show, setShow] = useState(false);
@@ -20,7 +20,7 @@ export default function AddGameToListButton({ lists, game }) {
       console.log(response);
     }
     handleClose();
-    alert('refresh page to see updates');
+    alert("refresh page to see updates");
   };
 
   const handleToggle = (listID) => {
