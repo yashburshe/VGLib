@@ -23,7 +23,7 @@ if (!userRouter || !listRouter || !gamesRouter) {
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("../frontend/dist"));
+app.use(express.static("dist"));
 app.use("/api/user", userRouter);
 app.use("/api/list", listRouter);
 app.use("/api/games", gamesRouter);
