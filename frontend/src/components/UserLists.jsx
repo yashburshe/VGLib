@@ -1,3 +1,4 @@
+import { Col, Container, Row } from "react-bootstrap";
 import ListCard from "./ListCard";
 
 export default function UserLists({ lists }) {
@@ -10,10 +11,14 @@ export default function UserLists({ lists }) {
   }
 
   return (
-    <section className="lists-row">
-      {lists.map((list) => (
-        <ListCard key={list.listID} list={list} />
-      ))}
-    </section>
+    <Container className="mt-3 lists-row">
+      <Row xs={1} sm={2} lg={3} xl={4} className="g-4">
+        {lists.map((list) => (
+          <Col key={list.listID} className="d-flex">
+          <ListCard list={list} />
+          </Col>
+        ))}
+      </Row>
+    </Container>
   );
 }

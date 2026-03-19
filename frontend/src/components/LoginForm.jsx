@@ -1,6 +1,7 @@
 import { useState} from 'react';
 
 import { login } from '../js/user';
+import { Button, Container, Form } from 'react-bootstrap';
 
 export default function LoginForm({onSignUpClick, onLoginSuccess}) {
     const [username, setUsername] = useState("");
@@ -8,35 +9,35 @@ export default function LoginForm({onSignUpClick, onLoginSuccess}) {
 
     return (
         <>
-            <div>
+            <Container>
                 <h2>Log in</h2>
-                <form>
-                    <div className="mb-3">
-                        <label 
+                <Form className='mb-3'>
+                    <Form.Group className="mb-3">
+                        <Form.Label 
                             htmlFor="username" 
                             className="form-label">
                                 Username
-                        </label>
-                        <input type="text" 
+                        </Form.Label>
+                        <Form.Control type="text" 
                             className="form-control" 
                             id="username" 
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}/>
-                    </div>
-                    <div className="mb-3">
-                        <label 
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label 
                             type="password" 
                             className="form-label" 
                             htmlFor="password">
                             Password
-                        </label>
-                        <input 
+                        </Form.Label>
+                        <Form.Control 
                             type="password" 
                             value={password} 
                             onChange={(e) => setPassword(e.target.value)}
                         />
-                    </div>
-                    <button 
+                    </Form.Group>
+                    <Button 
                         className="btn btn-primary" 
                         type="submit" 
                         onClick={async (e) => {
@@ -46,14 +47,12 @@ export default function LoginForm({onSignUpClick, onLoginSuccess}) {
                                 onLoginSuccess();
                             }
                         }}
-                     >Log in</button>
-                </form>
-                <div>
-                    <a onClick={onSignUpClick}> 
+                     >Log in</Button>
+                </Form>
+                    <a className='a' onClick={onSignUpClick}> 
                         Don't have an account? Sign up here
                     </a>
-                </div>
-            </div>
+            </Container>
         </>
     );
 }

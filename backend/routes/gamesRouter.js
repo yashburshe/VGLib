@@ -19,7 +19,6 @@ gamesRouter.post("/", async (req, res) => {
     return;
   }
 
-  console.log("here")
   try {
     const { game } = req.body;
 

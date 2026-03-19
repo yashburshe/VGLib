@@ -11,7 +11,7 @@ import { getList, deleteList, toggleGameInList } from "../js/list";
 import { getGame } from "../js/game";
 import GameCard from "../components/GameCard";
 
-export default function GameDetailsPage() {
+export default function ListDetailsPage() {
     const { listId } = useParams();
     const navigate = useNavigate();
 

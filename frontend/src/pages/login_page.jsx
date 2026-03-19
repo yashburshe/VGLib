@@ -3,13 +3,14 @@ import { useNavigate} from 'react-router-dom';
 
 import LoginForm from "../components/LoginForm";
 import RegistrationForm from "../components/RegistrationForm";
+import { Container } from 'react-bootstrap';
 
 export default function LoginPage() {
     const [isLoginScreen, setIsLoginScreen] = useState(true);
     const navigate = useNavigate();
     return (
         <>
-            <div>
+            <Container className='mt-4'>
                 <div>
                     {isLoginScreen ? (
                         <LoginForm 
@@ -23,7 +24,7 @@ export default function LoginPage() {
                         />
                     )}
                 </div>
-            </div>
+            </Container>
         </>
     );
 }
