@@ -15,6 +15,10 @@ if (!db) {
   console.error("MongoDB database not initialized. Exiting.");
   process.exit(1);
 }
+if (!userRouter || !listRouter || !gamesRouter) {
+  console.error("Not all routers loaded!");
+  process.exit(1);
+}
 
 const app = express();
 app.use(express.json());
