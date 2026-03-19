@@ -3,16 +3,14 @@ import Card from "react-bootstrap/Card";
 import { Link } from "react-router";
 import ListGroup from "react-bootstrap/ListGroup";
 
-export default function GameCard({ game, showCount = false }) {
+export default function GameCard({ game, showCount = false, renderProp}) {
   return (
     <Card className="h-100 shadow-sm">
       {showCount ? (
         <Card.Header>
           <ListGroup.Item>In {game.listCount} lists</ListGroup.Item>
         </Card.Header>
-      ) : (
-        ""
-      )}
+      ) : null}
       <Card.Img
         className={showCount ? "rounded-0" : ""}
         style={{ objectFit: "cover", height: "250px" }}
@@ -25,10 +23,7 @@ export default function GameCard({ game, showCount = false }) {
             {game.name}
           </Card.Title>
         </Link>
-
-        <Button size="sm" variant="outline-primary">
-          Add To List
-        </Button>
+        {renderProp || null}
       </Card.Body>
     </Card>
   );
