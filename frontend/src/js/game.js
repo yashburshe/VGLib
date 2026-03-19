@@ -1,5 +1,7 @@
 //fetch functions for games route CRUD operations support
 
+import { makeAuthReq } from "./frontEndUtils";
+
 
 export async function createGame(game) {
     //TODO: confirm backend is complete!
@@ -29,4 +31,7 @@ export async function createGame(game) {
         console.error(error);
         return [];
     }
+export async function getGame(gameID) {
+    const data = await makeAuthReq(`/api/games/${gameID}`, 'GET');
+    if (data) return data.game;
 }

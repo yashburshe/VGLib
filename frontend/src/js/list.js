@@ -23,7 +23,7 @@ export async function deleteList(listID) {
     return data;
 }
 
-export async function addGameToList(listID, newGameID) {
+export async function toggleGameInList(listID, newGameID) {
     const data = await makeAuthReq(
         `/api/list/${listID}`,
         'PATCH',
