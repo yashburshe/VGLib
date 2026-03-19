@@ -6,9 +6,13 @@ import Container from "react-bootstrap/Container";
 import Pagination from "react-bootstrap/Pagination";
 import { Spinner } from "react-bootstrap";
 
+import AddGameToListButton from "../components/AddGameToListButton";
+import { getUserLists } from "../js/list";
+
 export default function GamesPage() {
   const [games, setGames] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [userLists, setUserLists] = useState([]);
   const gamesPerPage = 12;
 
   const totalPages = Math.ceil(games.length / gamesPerPage);
@@ -34,6 +38,14 @@ export default function GamesPage() {
     fetchGames();
   }, []);
 
+  useEffect(() => {
+    const fetchUserLists = async () => {
+      const lists = await getUserLists();
+      setUserLists(lists);
+    };
+    fetchUserLists();
+  }, []);
+
   return (
     <Container className="mt-4">
       <h1 className="mb-4">Games</h1>
@@ -42,7 +54,7 @@ export default function GamesPage() {
           <Row xs={1} sm={2} lg={3} xl={4} className="g-4">
             {paginatedGames.map((game) => (
               <Col key={game.id}>
-                <GameCard game={game} />
+                <GameCard key={game.id} game={game} renderProp={<AddGameToListButton lists={userLists} game={game}/>}/>
               </Col>
             ))}
           </Row>
