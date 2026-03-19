@@ -1,29 +1,14 @@
+import { makeAuthReq } from "./frontEndUtils.js";
+
 //front end functions to support CRUD operations on the user route
 
 export async function getUser() {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    console.warn("No authentication token found");
-    return null;
-  }
-  try {
-    const response = await fetch('api/user/me', {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type' : 'application/json'
-      }
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      console.error("Session invalid: ", data.message);
-      return null;
+    const data = await makeAuthReq('/api/user/me', 'GET');
+    if (data) {
+        return data.user;
+    } else {
+        console.error("Failed to retrieve user!");
     }
-    return data.user;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
 }
 
 export async function login(username, password) {
@@ -76,53 +61,28 @@ export async function register(username, password) {
 }
 
 export async function deleteUser() {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        console.warn("No authentication token found");
-        return;
+    const data = await makeAuthReq('/api/user/me', 'DELETE');
+    if (data) {
+        localStorage.removeItem('token');
+        console.log('Account deleted successfully!');
     }
-    try {        
-        const response = await fetch("/api/user/delete", {
-            method: "DELETE",
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }        
-        });
-        const data = await response.json();
-        if (!response.ok) {
-            console.error("Account deletion failed: ", data.message);
-        } else {
-            console.log("Account deleted successfully");
-            localStorage.removeItem('token');
-        }
-    } catch (error) {
-        console.error("Network Error: ", error);
+    else {
+        console.log("Account deletion failed!");
     }
 }
 
-export async function updateUser(profile_phrase) {
-    const token = localStorage.getItem('token');
-    if (!token) {
-        console.warn("No authentication token found");
-        return;
+export async function updateUser(user) {
+    const {username, profile_banner_phrase, profile_picture_url} = user;
+    const body = {
+        username: username, 
+        profile_banner_phrase: profile_banner_phrase, 
+        profile_picture_url: profile_picture_url
+    };
+    const data = await makeAuthReq('/api/user/me', 'PATCH', body);
+    if (data) {
+        console.log("Account updated successfully! user:", data.user);
     }
-    try {
-        const response = await fetch("/api/user/me", {
-            method: "PATCH",
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ profile_phrase })        
-        });
-        const data = await response.json();
-        if (!response.ok) {
-            console.error("Account update failed: ", data.message);
-        } else {
-            console.log("Account updated successfully! user:", data.user);
-        }
-    } catch (error) {
-        console.error("Network Error: ", error);
+    else {
+        console.log("Account update failed!");
     }
 }

@@ -1,35 +1,29 @@
 import { useState, useEffect } from "react";
-import { redirect } from "react-router";
+import { useNavigate } from "react-router";
 
 import UserProfile from "../components/UserProfile";
 import UserLists from "../components/UserLists";
 
-import  {getUser} from "../js/user";
-import { getUserLists } from "../js/list";
-import { createGame} from "../js/game";
+import  {getUser} from "../js/user.js";
+import { getUserLists } from "../js/list.js";
 
 export default function ProfilePage() {
-  const tmp_user = {
-      userID: "",
-      username: "",
-      profile_picture_url: "",
-      createdAt: "",
-  };
+  const navigate = useNavigate();
 
-  const [userProfile, setUserProfile] = useState(tmp_user);
+  const [userProfile, setUserProfile] = useState({});
   const [userLists,   setUserLists  ] = useState([]);
 
   const fetchAndSetUser = async () => {
     let fetched_user = await getUser();
     if (!fetched_user) {
-      redirect("/login");
+      console.error("profilePage.jsx: getUser failed!");
+      navigate("/login");
     }
     setUserProfile(fetched_user);
   };
 
   const fetchAndSetLists = async () => {
     const tmp = await getUserLists();
-    console.log("User Lists retrieved: ", tmp);
     setUserLists(tmp);
   }
 
@@ -38,12 +32,17 @@ export default function ProfilePage() {
     fetchAndSetLists();
   }, []);
 
+  let listNames = [];
+  if (userLists) {
+    listNames = userLists.map((list) => list.name); 
+  } 
+ 
   return (
     <>
       <main className="profile-page">
         <UserProfile
           user={userProfile}
-          lists={userLists}
+          listNames={listNames}
         />
         <section className="lists-section">
           <h2>Your Lists</h2>
