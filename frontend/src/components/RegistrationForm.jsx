@@ -19,7 +19,7 @@ export default function RegistrationForm({ onLoginClick, onRegisterSuccess }) {
       }
       await register(username, password) 
           ? onRegisterSuccess() 
-          : setError("Invalid username already taken");
+          : setError("Invalid: username already taken");
 
   };
 
