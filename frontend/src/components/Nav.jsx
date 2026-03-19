@@ -11,12 +11,13 @@ export default function NavBar() {
   const location = useLocation();
 
   const [user, setUser] = useState();
-  const fetchUser = async () => {
-    setUser(await getUser());
-  };
+  
   useEffect(() => {
+    const fetchUser = async () => {
+      setUser(await getUser());
+    };
     fetchUser();
-  });
+  }, []);
 
   //Handle User Nav Bar Item on right hand side (only if user is logged in)
   function userItem() {
