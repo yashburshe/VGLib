@@ -1,6 +1,6 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
 
-process.loadEnvFile();
+// process.loadEnvFile();
 
 const DB_URL = process.env.MONGODB_URI;
 const DB_NAME = "VGLIB";
