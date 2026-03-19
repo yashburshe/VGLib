@@ -8,3 +8,19 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/* Ensures both the profile image and the icon are exactly 20px */
+.icon {
+  width: 20px;
+  height: 20px;
+  object-fit: cover;   /* keeps images from stretching */
+  margin-right: 6px;
+  margin-bottom: 2px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Optional: make circular images perfectly round */
+.icon.rounded-circle {
+  border-radius: 50%;
+}

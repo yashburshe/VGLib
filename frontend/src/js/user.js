@@ -7,7 +7,7 @@ export async function getUser() {
     if (data) {
         return data.user;
     } else {
-        console.log("Failed to retrieve user!");
+        console.error("Failed to retrieve user!");
     }
 }
 
