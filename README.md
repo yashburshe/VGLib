@@ -38,3 +38,7 @@ Yash Mahesh Burshe and Ben Piperno as part of [NEU CS5610: Web Development Sprin
 - [Design Documents](/designdoc/README.md "View planning materials")
 - [Presentation Slides](https://docs.google.com/presentation/d/1D69h_bxtXzOx8lmD1nvb9B6FIwDBmkb7k5RjO4Jvrok/edit?usp=sharing "View slides on this website's design and implmentation")
 - [Video Demonstration](https://www.markdownguide.org "Watch us present on this website")
+
+## Attribution:
+
+Spell Icon credited to Delapouite per [games-icon.net](https://game-icons.net/1x1/delapouite/spell-book.html "CC")
