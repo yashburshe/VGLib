@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { toggleGameInList } from '../js/list';
 
 export default function AddGameToListButton({ lists, game }) {
   const [show, setShow] = useState(false);
   const [selectedLists, setSelectedLists] = useState(new Set([]));
+  const safeLists = useMemo(() => (Array.isArray(lists) ? lists : []), [lists]);
 
   const handleClose = () => {
     setSelectedLists(new Set([]));
@@ -46,7 +47,7 @@ export default function AddGameToListButton({ lists, game }) {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            {lists.map((list) => {
+            {safeLists.map((list) => {
               //console.log("creating form checkbox for list: ", list);
               const alreadyInList = list.games?.includes(game.id);
 
