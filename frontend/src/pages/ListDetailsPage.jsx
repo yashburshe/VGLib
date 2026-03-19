@@ -78,7 +78,7 @@ export default function ListDetailsPage() {
         <p>{listDetails.description ?? "No Description"}</p>
         <h3 className="mt-4">Games in this list</h3>
         <Row className="mt-3">
-          {games.lengh === 0 && <p>No games added!</p>}
+          {games.length === 0 && <p>No games added!</p>}
           {games?.length > 0 &&
             games.map((game) => (
               <Col key={game.id}>

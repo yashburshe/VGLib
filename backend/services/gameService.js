@@ -143,13 +143,20 @@ export async function createGame(userId, game) {
 }
 
 export async function deleteGame(gameId) {
+  const numericId = Number(gameId);
+
   const deleteResult = await db
     .collection(COLLECTIONS.VIDEOGAMES)
-    .deleteOne({ id: gameId });
+    .deleteOne({ id: numericId });
 
   if (!deleteResult || deleteResult.deletedCount === 0) {
     throw new Error("Game not found");
   }
+
+  await db
+    .collection(COLLECTIONS.LISTS)
+    .updateMany({ games: numericId }, { $pull: { games: numericId } });
+
   return;
 }
 
