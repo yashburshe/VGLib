@@ -3,6 +3,8 @@ import { db } from "./db/mongo.js";
 import userRouter from "./routes/userRouter.js";
 import listRouter from "./routes/listRouter.js";
 import gamesRouter from "./routes/gamesRouter.js";
+import path from 'path';
+import {fileURLToPath} from 'url';
 
 // try {
 //   process.loadEnvFile();
