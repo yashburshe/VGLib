@@ -2,7 +2,7 @@
 import { Router } from 'express';
 
 //Service layer functions
-import { createUser, deleteUser, getUser, updateUser, verifyUser } from '../services/userService.js';
+import { createUser, deleteUser, getUser, getUsers, updateUser, verifyUser } from '../services/userService.js';
 import { createList, getUserLists, deleteList } from '../services/listService.js';
 import { getAllGamesByUserId, deleteGame } from "../services/gameService.js";
 
@@ -57,6 +57,15 @@ router.post('/login', async (req, res) => {
         return res.status(201).json({ token });
     } catch (error) {
         res.status(500).json({ success: false, message: error});
+    }
+});
+
+router.get('/all', async(req, res) => {
+    try {
+        const users = await getUsers().toArray();
+        return res.status(200).json({ success: true, users });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
     }
 });
 
@@ -118,6 +127,20 @@ router.patch('/me', async (req, res) => {
     });
 });
 
+router.get('/:userID/games', async (req, res) => {
+    const userID = parseInt(req.params.userID);
+    if (Number.isNaN(userID)) {
+        return res.status(400).json({ success: false, message: "Invalid userID" });
+    }
+
+    try {
+        const games = await getAllGamesByUserId(userID);
+        return res.status(200).json({ success: true, games });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+});
+
 router.get('/:userID', async (req, res) => {
     const userID = parseInt(req.params.userID);
     try {
@@ -130,5 +153,7 @@ router.get('/:userID', async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 });
+
+
 
 export default router;
