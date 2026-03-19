@@ -49,9 +49,7 @@ export async function getList(listID) {
     const list = await db
         .collection(COLLECTIONS.LISTS)
         .findOne({listID: listID});
-    if (!list) {
-        throw new Error("List not found");
-    }
+    console.log("list: ", list);
     return list;
 }
 
@@ -90,4 +88,25 @@ export async function changeListName(listID, newName) {
         throw new Error("List not found or no changes made");
     }
     return;
+}
+
+export async function toggleListItem(listID, gameID) {
+    const collection = db.collection(COLLECTIONS.LISTS);
+
+    //is the item already present?
+    const present = await collection.findOne(
+        {listID: listID, games: gameID});
+    if (present) {
+        await collection.updateOne(
+            {listID: listID}, 
+            {$pull: { games: gameID}}
+        );
+        return { action: "removed", gameID};
+    } else {
+        await collection.updateOne(
+            {listID: listID}, 
+            {$addToSet: { games: gameID}}
+        );
+        return { action: "added", gameID};
+    }
 }

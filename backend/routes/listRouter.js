@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { db, COLLECTIONS } from "../db/mongo.js";
-import { createList, deleteList, getList, addListItem, changeListName, getUserLists } from '../services/listService.js';
+import { createList, deleteList, getList, toggleListItem, getUserLists } from '../services/listService.js';
 import { handleUserRequest, handleGenRequest } from './routeUtil.js';
 
 const router = Router();
@@ -41,8 +41,7 @@ router.get('/userlists', async (req, res) => {
 router.get('/:listID', async (req, res) => {
     console.log("GET /:listID with ListID: ", req.params.listID);
     return handleGenRequest(req, res, async () => {
-        //TODO: consider limiting view by user
-        const list =  await getList(req.params.listID);
+        const list =  await getList(Number(req.params.listID));
         if (list) {
             return res.status(200).json({success: true, list: list});
         } else {
@@ -54,19 +53,20 @@ router.get('/:listID', async (req, res) => {
 router.delete('/:listID', async (req, res) => {
     console.log("DELETE /list request received! ListID: ", req.params.listID);
     return handleUserRequest(req, res, async (user) => {
-        //TODO: confirm user owns list
-        await deleteList(req.params.listID);
+        await deleteList(Number(req.params.listID));
         return res.status(200).json({success: true, message: "deletion success!"});
     });
 });
 
-//TODO: allow user to add/remove items from the list, and update the list name
 router.patch('/:listID', async (req, res) => {
     console.log("PATCH /list request received! ListID: ", req.params.listID);
     return handleUserRequest(req, res, async (user) => {
         const { gameID } = req.body;
-        addListItem(req.params.listID, gameID);
-        return res.status(200).json({success: true, message: "Item added to list!"});
+        const listID = Number(req.params.listID);
+
+        const result = await toggleListItem(listID, gameID);
+        console.log(result);
+        return res.status(200).json({success: true, message: result.action});
     });
 });
 
