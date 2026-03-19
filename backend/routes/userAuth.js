@@ -33,7 +33,7 @@ export async function AuthenticateUser(req, res) {
       return null;
     }
     return matchingUser;
-  } catch (error) {
+  } catch {
     res.status(500).json({ success: false, message: "Internal server error" });
     return null;
   }

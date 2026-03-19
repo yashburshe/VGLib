@@ -46,12 +46,10 @@ router.post("/signup", async (req, res) => {
     console.log("User created successfully with userID: ", newUserID);
     res.status(201).json({ token });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Internal server error: " + error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Internal server error: " + error.message,
+    });
   }
 });
 
