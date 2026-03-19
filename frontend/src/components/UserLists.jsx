@@ -1,5 +1,3 @@
-import React from "react";
-
 import ListCard from "./ListCard";
 
 export default function UserLists({ lists }) {
@@ -14,7 +12,7 @@ export default function UserLists({ lists }) {
   return (
     <section className="lists-row">
       {lists.map((list) => (
-        <ListCard key={list.id} list={list} />
+        <ListCard key={list.listID} list={list} />
       ))}
     </section>
   );
