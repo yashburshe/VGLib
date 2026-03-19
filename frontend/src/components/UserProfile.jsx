@@ -3,6 +3,7 @@ import NewGameModalButton from './NewGameModalButton';
 import NewListModalButton from './NewListModalButton';
 import DeleteAccountModalButton from './DeleteAccountModalButton';
 import { Container, Image } from 'react-bootstrap';
+import '../css/profile.css'
 
 export default function UserProfile({ user, listNames, external = false }) {
   const { profile_picture_url, username, createdAt, profile_banner_phrase } =

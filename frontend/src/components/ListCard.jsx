@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Trash } from 'react-bootstrap-icons';
 
 import { deleteList } from '../js/list.js';
+import '../css/list.css'
 
 export default function ListCard({ list }) {
   const navigate = useNavigate();

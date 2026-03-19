@@ -1,0 +1,28 @@
+
+.list-grid-card {
+  border: 1px solid #e6e8ec;
+  border-radius: 0.75rem;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.list-grid-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(18, 24, 40, 0.08);
+}
+
+.list-count-pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #344054;
+  background: #f2f4f7;
+  border-radius: 999px;
+  padding: 0.15rem 0.55rem;
+  white-space: nowrap;
+}
+
+.list-description {
+  line-height: 1.4;
+  min-height: 2.8em;
+}
