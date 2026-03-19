@@ -1,7 +1,7 @@
-import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { Link } from 'react-router';
 import ListGroup from 'react-bootstrap/ListGroup';
+import '../css/gamecard.css'
 
 export default function GameCard({ game, showCount = false, renderProp }) {
   return (
