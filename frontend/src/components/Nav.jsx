@@ -81,7 +81,6 @@ export default function NavBar() {
             <Nav.Link href="/top">Top</Nav.Link>
             <Nav.Link href="/search">Search</Nav.Link>
             <Nav.Link href="/games">Games</Nav.Link>
-            <Nav.Link href="/lists">Lists</Nav.Link>
             <Nav.Link href="/users">Users</Nav.Link>
             {!user ? <Nav.Link href="/login">Login</Nav.Link> : null}
           </Nav>
