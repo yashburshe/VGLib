@@ -9,7 +9,7 @@ export default function AddListModalButton({ existingNames }) {
     const [listName, setListName] = useState('');
     const [error, setError] = useState('');
 
-    const handleAdd = () => {
+    const handleAdd = async () => {
         if (!listName.trim()) {
             setError('List name cannot be empty');
             return;
@@ -19,15 +19,8 @@ export default function AddListModalButton({ existingNames }) {
             setError('A list with this name already exists');
             return;
         }
-        createList(listName.trim());
-        const res = setListName('');
-        if (res) {
-            setError('');
-            setShow(false);
-            alert(res.message);
-        } else {
-            setError(res.message);
-        }
+        await createList(listName.trim());
+        setListName('');
         setError('');
         setShow(false);
     };
