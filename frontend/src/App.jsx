@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
-import GameCard from "./components/GameCard";
-import "./App.css";
-import SearchBar from "./components/SearchBar";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button, Col, Container, Row, Spinner } from 'react-bootstrap';
+import GameCard from './components/GameCard';
+import './App.css';
+import SearchBar from './components/SearchBar';
 
 function App() {
   const [topGames, setTopGames] = useState([]);
@@ -26,15 +26,15 @@ function App() {
     };
 
     updateVisibleColumns();
-    window.addEventListener("resize", updateVisibleColumns);
-    return () => window.removeEventListener("resize", updateVisibleColumns);
+    window.addEventListener('resize', updateVisibleColumns);
+    return () => window.removeEventListener('resize', updateVisibleColumns);
   }, []);
 
   useEffect(() => {
     const fetchTopGames = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch("/api/games/top");
+        const res = await fetch('/api/games/top');
         const data = await res.json();
         setTopGames((data?.topGames || []).slice(0, 12));
       } catch {
@@ -51,11 +51,11 @@ function App() {
 
   return (
     <Container className="mt-4">
-      <SearchBar/>
+      <SearchBar />
       <section>
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h2 className="mb-0">Top Games</h2>
-          <Button variant="outline-primary" onClick={() => navigate("/top")}>
+          <Button variant="outline-primary" onClick={() => navigate('/top')}>
             View More
           </Button>
         </div>

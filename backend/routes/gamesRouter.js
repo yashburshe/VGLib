@@ -28,8 +28,8 @@ gamesRouter.post("/", async (req, res) => {
         .json({ success: false, message: "Game name is required" });
     }
 
-    if(game.url === "") {
-      game.url = "https://placehold.net/600x800.png"
+    if (game.url === "") {
+      game.url = "https://placehold.net/600x800.png";
     }
 
     const normalizedPlatforms = Array.isArray(game.platforms)
@@ -47,7 +47,7 @@ gamesRouter.post("/", async (req, res) => {
       summary: game.summary ? game.summary.trim() : "",
       rating: Number.isFinite(Number(game.rating)) ? Number(game.rating) : 0,
       platforms: normalizedPlatforms,
-      cover_url: game.url
+      cover_url: game.url,
     };
 
     const newGameId = await createGame(user.userID, normalizedGame);
@@ -167,13 +167,16 @@ gamesRouter.patch("/:gameId", async (req, res) => {
       game.rating !== undefined && game.rating !== null
         ? Number(game.rating)
         : existingGame.rating,
-    summary: game.summary !== undefined ? game.summary.trim() : existingGame.summary,
+    summary:
+      game.summary !== undefined ? game.summary.trim() : existingGame.summary,
   };
 
   try {
     await updateGame(normalizedGame);
     const updatedGame = await getGameFromGameId(gameId);
-    return res.status(200).json({ success: true, message: "Game updated", game: updatedGame });
+    return res
+      .status(200)
+      .json({ success: true, message: "Game updated", game: updatedGame });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }

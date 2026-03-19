@@ -1,8 +1,8 @@
-import EditProfileModalButton from "./EditProfileModalButton";
-import NewGameModalButton from "./NewGameModalButton";
-import NewListModalButton from "./NewListModalButton";
-import DeleteAccountModalButton from "./DeleteAccountModalButton";
-import { Container, Image } from "react-bootstrap";
+import EditProfileModalButton from './EditProfileModalButton';
+import NewGameModalButton from './NewGameModalButton';
+import NewListModalButton from './NewListModalButton';
+import DeleteAccountModalButton from './DeleteAccountModalButton';
+import { Container, Image } from 'react-bootstrap';
 
 export default function UserProfile({ user, listNames, external = false }) {
   const { profile_picture_url, username, createdAt, profile_banner_phrase } =
@@ -13,7 +13,7 @@ export default function UserProfile({ user, listNames, external = false }) {
       <Image
         className="mx-auto d-block"
         roundedCircle
-        style={{ width: "150px", height: "150px", objectFit: "cover" }}
+        style={{ width: '150px', height: '150px', objectFit: 'cover' }}
         src={profile_picture_url}
         alt={`${username} avatar`}
       />
@@ -22,7 +22,7 @@ export default function UserProfile({ user, listNames, external = false }) {
         <p>{profile_banner_phrase}</p>
         <p className="profile-joined">Joined {yearJoined}</p>
         {external ? (
-          ""
+          ''
         ) : (
           <div className="profile-actions">
             <NewGameModalButton />

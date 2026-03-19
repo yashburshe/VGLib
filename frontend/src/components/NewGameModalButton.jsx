@@ -3,29 +3,30 @@
 import { useState } from 'react';
 import { Modal, Button, Form, Toast, ToastContainer } from 'react-bootstrap';
 
-import { createGame } from "../js/game";
+import { createGame } from '../js/game';
 
 export default function NewGameModal() {
   const game_default = {
-    name: "",
-    summary: "",
+    name: '',
+    summary: '',
     rating: 0,
-    url: "",
-    platforms: ""
-  }
+    url: '',
+    platforms: '',
+  };
 
   const [show, setShow] = useState(false);
   const [game, setGame] = useState(game_default);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
   const [showErrorToast, setShowErrorToast] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("Could not create game. Please try again.");
+  const [errorMessage, setErrorMessage] = useState(
+    'Could not create game. Please try again.',
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
-  //TODO use error to useState and display error messages in the modal
 
   const handleChange = (e) => {
     setGame((prevData) => ({
       ...prevData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -39,11 +40,13 @@ export default function NewGameModal() {
         setShowErrorToast(false);
         setShowSuccessToast(true);
       } else {
-        setErrorMessage(res?.message || "Could not create game. Please try again.");
+        setErrorMessage(
+          res?.message || 'Could not create game. Please try again.',
+        );
         setShowErrorToast(true);
       }
     } catch {
-      setErrorMessage("Could not create game. Please try again.");
+      setErrorMessage('Could not create game. Please try again.');
       setShowErrorToast(true);
     } finally {
       setIsSubmitting(false);
@@ -60,65 +63,69 @@ export default function NewGameModal() {
           <Modal.Title>Create New Game</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            <Form>
-                <Form.Group className='mb-2'>
-                  <Form.Label>Game Name</Form.Label>
-                  <Form.Control
-                    name="name" 
-                    type="text"
-                    placeholder="Enter game name" 
-                    value={game.name}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group className='mb-2'>
-                  <Form.Label>Summary</Form.Label>
-                  <Form.Control 
-                    as="textarea"
-                    name="summary" 
-                    rows={3} 
-                    placeholder="Enter game description" 
-                    value={game.summary}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group className='mb-2'>
-                  <Form.Label>Rating</Form.Label>
-                  <Form.Control 
-                    type="number"
-                    name="rating" 
-                    placeholder="Enter game rating out of 100" 
-                    value={game.rating}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group className='mb-2'>
-                  <Form.Label>Cover Art Link</Form.Label>
-                  <Form.Control 
-                    type="url"
-                    name="url" 
-                    placeholder="Enter cover art link"
-                    value={game.url} 
-                    onChange={handleChange}
-                  />
-                </Form.Group>
-                <Form.Group className='mb-2'>
-                  <Form.Label>Platforms</Form.Label>
-                  <Form.Control 
-                    type="text"
-                    name="platforms"
-                    placeholder="Enter platforms separated by commas"
-                    value={game.platforms}
-                    onChange={handleChange}
-                   />
-                </Form.Group>
-            </Form>
+          <Form>
+            <Form.Group className="mb-2">
+              <Form.Label>Game Name</Form.Label>
+              <Form.Control
+                name="name"
+                type="text"
+                placeholder="Enter game name"
+                value={game.name}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Summary</Form.Label>
+              <Form.Control
+                as="textarea"
+                name="summary"
+                rows={3}
+                placeholder="Enter game description"
+                value={game.summary}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Rating</Form.Label>
+              <Form.Control
+                type="number"
+                name="rating"
+                placeholder="Enter game rating out of 100"
+                value={game.rating}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Cover Art Link</Form.Label>
+              <Form.Control
+                type="url"
+                name="url"
+                placeholder="Enter cover art link"
+                value={game.url}
+                onChange={handleChange}
+              />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label>Platforms</Form.Label>
+              <Form.Control
+                type="text"
+                name="platforms"
+                placeholder="Enter platforms separated by commas"
+                value={game.platforms}
+                onChange={handleChange}
+              />
+            </Form.Group>
+          </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShow(false)}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleCreateGame} disabled={isSubmitting}>
+          <Button
+            variant="primary"
+            onClick={handleCreateGame}
+            disabled={isSubmitting}
+          >
             {isSubmitting ? 'Creating...' : 'Create Game'}
           </Button>
         </Modal.Footer>
@@ -132,7 +139,9 @@ export default function NewGameModal() {
           delay={2500}
           autohide
         >
-          <Toast.Body className="text-white">Game created successfully!</Toast.Body>
+          <Toast.Body className="text-white">
+            Game created successfully!
+          </Toast.Body>
         </Toast>
         <Toast
           bg="danger"

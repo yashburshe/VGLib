@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Container, Nav, Navbar, Image, NavDropdown} from 'react-bootstrap'; 
+import { Container, Nav, Navbar, Image, NavDropdown } from 'react-bootstrap';
 import { PersonCircle } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router';
 import { useLocation } from 'react-router';
@@ -11,7 +11,7 @@ export default function NavBar() {
   const location = useLocation();
 
   const [user, setUser] = useState();
-  
+
   useEffect(() => {
     const fetchUser = async () => {
       setUser(await getUser());
@@ -21,59 +21,66 @@ export default function NavBar() {
 
   //Handle User Nav Bar Item on right hand side (only if user is logged in)
   function userItem() {
-    if (!user || location.pathname === '/login') return  (<></>);
+    if (!user || location.pathname === '/login') return <></>;
 
-    const userImage = user.profile_picture_url 
-      && user.profile_picture_url.trim() !== ""
-    ? <Image 
-        src={user.profile_picture_url} roundedCircle
-        alt="user profile icon" 
-        className="icon"
-      />
-    : <PersonCircle 
-        size={20} 
-        style={{marginRight: "6px", marginBottom: "2px"}}
-        className="icon"
-      />;
+    const userImage =
+      user.profile_picture_url && user.profile_picture_url.trim() !== '' ? (
+        <Image
+          src={user.profile_picture_url}
+          roundedCircle
+          alt="user profile icon"
+          className="icon"
+        />
+      ) : (
+        <PersonCircle
+          size={20}
+          style={{ marginRight: '6px', marginBottom: '2px' }}
+          className="icon"
+        />
+      );
 
     const onLogout = () => {
       localStorage.removeItem('token');
       navigate('/login');
     };
 
-    return (<>
-      <Nav className="ms-auto"> {/* Right aligned*/}
-        <NavDropdown title={
-          <span className='d-inline-flex align-items-center gap-2'>
-            {accountLabel}
-            {userImage}
-          </span>
-        }
-        align="end"
-        >
-          <NavDropdown.Item href="/profile">My Profile</NavDropdown.Item>
-          <NavDropdown.Divider/>
-          <NavDropdown.Item onClick={onLogout}>
-            Log Out
-          </NavDropdown.Item>
-        </NavDropdown>
-      </Nav>
-    </>
+    return (
+      <>
+        <Nav className="ms-auto">
+          {' '}
+          {/* Right aligned*/}
+          <NavDropdown
+            title={
+              <span className="d-inline-flex align-items-center gap-2">
+                {accountLabel}
+                {userImage}
+              </span>
+            }
+            align="end"
+          >
+            <NavDropdown.Item href="/profile">My Profile</NavDropdown.Item>
+            <NavDropdown.Divider />
+            <NavDropdown.Item onClick={onLogout}>Log Out</NavDropdown.Item>
+          </NavDropdown>
+        </Nav>
+      </>
     );
   }
 
-
-  const accountLabel = user && user.username !== "" ? user.username : "My Account"; 
+  const accountLabel =
+    user && user.username !== '' ? user.username : 'My Account';
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
         <Navbar.Brand href="/">VGLib</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto"> {/* Left aligned*/}
+          <Nav className="me-auto">
+            {' '}
+            {/* Left aligned*/}
             <Nav.Link href="/top">Top</Nav.Link>
             <Nav.Link href="/search">Search</Nav.Link>
-            <Nav.Link href='/games'>Games</Nav.Link>
+            <Nav.Link href="/games">Games</Nav.Link>
             <Nav.Link href="/lists">Lists</Nav.Link>
             <Nav.Link href="/users">Users</Nav.Link>
             {!user ? <Nav.Link href="/login">Login</Nav.Link> : null}

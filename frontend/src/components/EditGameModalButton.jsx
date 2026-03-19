@@ -1,30 +1,30 @@
-import { useEffect, useState } from "react";
-import { Alert, Button, Form, Modal } from "react-bootstrap";
+import { useEffect, useState } from 'react';
+import { Alert, Button, Form, Modal } from 'react-bootstrap';
 
-import { updateGame } from "../js/game";
+import { updateGame } from '../js/game';
 
 export default function EditGameModalButton({ gameProp, onUpdated }) {
   const [show, setShow] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [game, setGame] = useState({
-    name: "",
-    summary: "",
+    name: '',
+    summary: '',
     rating: 0,
-    cover_url: "",
-    platforms: "",
+    cover_url: '',
+    platforms: '',
   });
 
   useEffect(() => {
     if (!gameProp) return;
     setGame({
-      name: gameProp.name || "",
-      summary: gameProp.summary || "",
+      name: gameProp.name || '',
+      summary: gameProp.summary || '',
       rating: gameProp.rating ?? 0,
-      cover_url: gameProp.cover_url || "",
+      cover_url: gameProp.cover_url || '',
       platforms: Array.isArray(gameProp.platforms)
-        ? gameProp.platforms.join(", ")
-        : gameProp.platforms || "",
+        ? gameProp.platforms.join(', ')
+        : gameProp.platforms || '',
     });
   }, [gameProp]);
 
@@ -38,7 +38,7 @@ export default function EditGameModalButton({ gameProp, onUpdated }) {
     if (!gameProp?.id) return;
 
     setIsSubmitting(true);
-    setError("");
+    setError('');
     try {
       const res = await updateGame(gameProp.id, game);
       if (res?.success) {
@@ -47,10 +47,10 @@ export default function EditGameModalButton({ gameProp, onUpdated }) {
           onUpdated(res.game);
         }
       } else {
-        setError(res?.message || "Failed to update game.");
+        setError(res?.message || 'Failed to update game.');
       }
     } catch {
-      setError("Failed to update game.");
+      setError('Failed to update game.');
     } finally {
       setIsSubmitting(false);
     }
@@ -71,7 +71,11 @@ export default function EditGameModalButton({ gameProp, onUpdated }) {
           <Form onSubmit={handleSubmit}>
             <Form.Group className="mb-2">
               <Form.Label>Game Name</Form.Label>
-              <Form.Control name="name" value={game.name} onChange={handleChange} />
+              <Form.Control
+                name="name"
+                value={game.name}
+                onChange={handleChange}
+              />
             </Form.Group>
             <Form.Group className="mb-2">
               <Form.Label>Summary</Form.Label>
@@ -113,11 +117,19 @@ export default function EditGameModalButton({ gameProp, onUpdated }) {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShow(false)} disabled={isSubmitting}>
+          <Button
+            variant="secondary"
+            onClick={() => setShow(false)}
+            disabled={isSubmitting}
+          >
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleSubmit} disabled={isSubmitting}>
-            {isSubmitting ? "Saving..." : "Save Changes"}
+          <Button
+            variant="primary"
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Saving...' : 'Save Changes'}
           </Button>
         </Modal.Footer>
       </Modal>

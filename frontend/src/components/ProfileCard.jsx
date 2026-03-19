@@ -1,6 +1,6 @@
-import Card from "react-bootstrap/Card";
-import Image from "react-bootstrap/Image";
-import { Link } from "react-router";
+import Card from 'react-bootstrap/Card';
+import Image from 'react-bootstrap/Image';
+import { Link } from 'react-router';
 
 export default function ProfileCard({ user, renderProp }) {
   if (!user) return null;
@@ -17,7 +17,7 @@ export default function ProfileCard({ user, renderProp }) {
           className="mb-3"
           src={user.profile_picture_url}
           alt={`${user.username} avatar`}
-          style={{ width: "120px", height: "120px", objectFit: "cover" }}
+          style={{ width: '120px', height: '120px', objectFit: 'cover' }}
         />
         <Link to={`/users/${user.userID}`}>
           <Card.Title className="fs-6 fw-bold mb-4 text-dark">

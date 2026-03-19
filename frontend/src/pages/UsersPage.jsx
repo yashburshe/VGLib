@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Container from "react-bootstrap/Container";
-import Pagination from "react-bootstrap/Pagination";
-import ProfileCard from "../components/ProfileCard";
-import { Spinner } from "react-bootstrap";
+import { useEffect, useState } from 'react';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import Pagination from 'react-bootstrap/Pagination';
+import ProfileCard from '../components/ProfileCard';
+import { Spinner } from 'react-bootstrap';
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);
@@ -14,16 +14,21 @@ export default function UsersPage() {
   const totalPages = Math.ceil(users.length / usersPerPage);
   const startIndex = (currentPage - 1) * usersPerPage;
   const paginatedUsers = users.slice(startIndex, startIndex + usersPerPage);
-  const pageWindow = [1, currentPage - 1, currentPage, currentPage + 1, totalPages]
-    .filter((page, index, pages) => {
-      const inRange = page >= 1 && page <= totalPages;
-      const isUnique = pages.indexOf(page) === index;
-      return inRange && isUnique;
-    });
+  const pageWindow = [
+    1,
+    currentPage - 1,
+    currentPage,
+    currentPage + 1,
+    totalPages,
+  ].filter((page, index, pages) => {
+    const inRange = page >= 1 && page <= totalPages;
+    const isUnique = pages.indexOf(page) === index;
+    return inRange && isUnique;
+  });
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const res = await fetch("/api/user/all");
+      const res = await fetch('/api/user/all');
       const data = await res.json();
       console.log(data.users);
 
@@ -50,7 +55,9 @@ export default function UsersPage() {
             <div className="d-flex justify-content-center mt-4">
               <Pagination>
                 <Pagination.Prev
-                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
                   disabled={currentPage === 1}
                 />
                 {pageWindow.map((page) => (

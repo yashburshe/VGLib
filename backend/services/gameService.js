@@ -1,7 +1,9 @@
 import { COLLECTIONS, db } from "../db/mongo.js";
 
 export async function getGameFromGameId(gameId) {
-  return await db.collection(COLLECTIONS.VIDEOGAMES).findOne({ id: Number(gameId) });
+  return await db
+    .collection(COLLECTIONS.VIDEOGAMES)
+    .findOne({ id: Number(gameId) });
 }
 
 export async function getGames() {
@@ -9,23 +11,26 @@ export async function getGames() {
 }
 
 export async function getGamesSortedByPopularity() {
-  return await db.collection(COLLECTIONS.VIDEOGAMES).aggregate([
-    {
-      $lookup: {
-        from: COLLECTIONS.LISTS,
-        localField: "id",
-        foreignField: "games",
-        as: "occurrences"
-      }
-    },
-    {
-      $addFields: {
-        listCount: { $size: "$occurrences" }
-      }
-    },
-    { $sort: { listCount: -1, name: 1 } },
-    { $project: { occurrences: 0 } }
-  ]).toArray();
+  return await db
+    .collection(COLLECTIONS.VIDEOGAMES)
+    .aggregate([
+      {
+        $lookup: {
+          from: COLLECTIONS.LISTS,
+          localField: "id",
+          foreignField: "games",
+          as: "occurrences",
+        },
+      },
+      {
+        $addFields: {
+          listCount: { $size: "$occurrences" },
+        },
+      },
+      { $sort: { listCount: -1, name: 1 } },
+      { $project: { occurrences: 0 } },
+    ])
+    .toArray();
 }
 
 export async function searchGamesByText(
@@ -73,12 +78,12 @@ export async function getAllPlatforms(query = "") {
   const text = (query || "").trim();
   const filter = text
     ? {
-      $or: [
-        { name: { $regex: text, $options: "i" } },
-        { summary: { $regex: text, $options: "i" } },
-        { platforms: { $elemMatch: { $regex: text, $options: "i" } } },
-      ],
-    }
+        $or: [
+          { name: { $regex: text, $options: "i" } },
+          { summary: { $regex: text, $options: "i" } },
+          { platforms: { $elemMatch: { $regex: text, $options: "i" } } },
+        ],
+      }
     : {};
 
   const platforms = await db
@@ -173,5 +178,8 @@ export async function updateGame(game) {
 }
 
 export async function getAllGamesByUserId(userId) {
-  return await db.collection(COLLECTIONS.VIDEOGAMES).find({ userId: userId }).toArray();
+  return await db
+    .collection(COLLECTIONS.VIDEOGAMES)
+    .find({ userId: userId })
+    .toArray();
 }

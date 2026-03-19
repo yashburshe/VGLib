@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import GameCard from "../components/GameCard";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Container from "react-bootstrap/Container";
-import Pagination from "react-bootstrap/Pagination";
-import { Spinner } from "react-bootstrap";
+import { useEffect, useState } from 'react';
+import GameCard from '../components/GameCard';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import Pagination from 'react-bootstrap/Pagination';
+import { Spinner } from 'react-bootstrap';
 
-import AddGameToListButton from "../components/AddGameToListButton";
-import { getUserLists } from "../js/list";
+import AddGameToListButton from '../components/AddGameToListButton';
+import { getUserLists } from '../js/list';
 
 export default function GamesPage() {
   const [games, setGames] = useState([]);
@@ -18,16 +18,21 @@ export default function GamesPage() {
   const totalPages = Math.ceil(games.length / gamesPerPage);
   const startIndex = (currentPage - 1) * gamesPerPage;
   const paginatedGames = games.slice(startIndex, startIndex + gamesPerPage);
-  const pageWindow = [1, currentPage - 1, currentPage, currentPage + 1, totalPages]
-    .filter((page, index, pages) => {
-      const inRange = page >= 1 && page <= totalPages;
-      const isUnique = pages.indexOf(page) === index;
-      return inRange && isUnique;
-    });
+  const pageWindow = [
+    1,
+    currentPage - 1,
+    currentPage,
+    currentPage + 1,
+    totalPages,
+  ].filter((page, index, pages) => {
+    const inRange = page >= 1 && page <= totalPages;
+    const isUnique = pages.indexOf(page) === index;
+    return inRange && isUnique;
+  });
 
   useEffect(() => {
     const fetchGames = async () => {
-      const res = await fetch("/api/games");
+      const res = await fetch('/api/games');
       const data = await res.json();
       console.log(data.games);
 
@@ -54,7 +59,13 @@ export default function GamesPage() {
           <Row xs={1} sm={2} lg={3} xl={4} className="g-4">
             {paginatedGames.map((game) => (
               <Col key={game.id}>
-                <GameCard key={game.id} game={game} renderProp={<AddGameToListButton lists={userLists} game={game}/>}/>
+                <GameCard
+                  key={game.id}
+                  game={game}
+                  renderProp={
+                    <AddGameToListButton lists={userLists} game={game} />
+                  }
+                />
               </Col>
             ))}
           </Row>
@@ -62,7 +73,9 @@ export default function GamesPage() {
             <div className="d-flex justify-content-center mt-4">
               <Pagination>
                 <Pagination.Prev
-                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
                   disabled={currentPage === 1}
                 />
                 {pageWindow.map((page) => (

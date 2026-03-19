@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-import UserProfile from "../components/UserProfile";
-import UserLists from "../components/UserLists";
-import UserGames from "../components/UserGames";
-import { useParams } from "react-router";
-import { Container } from "react-bootstrap";
-import { getGamesByUser } from "../js/game";
+import UserProfile from '../components/UserProfile';
+import UserLists from '../components/UserLists';
+import UserGames from '../components/UserGames';
+import { useParams } from 'react-router';
+import { Container } from 'react-bootstrap';
+import { getGamesByUser } from '../js/game';
 
 export default function UserPage() {
   const { userId } = useParams();
@@ -17,7 +17,7 @@ export default function UserPage() {
   const fetchAndSetUser = async () => {
     let fetched_user = await fetch(`/api/user/${userId}`);
     const user = await fetched_user.json();
-    console.log(user)
+    console.log(user);
     setUserProfile(user.user);
   };
 
@@ -40,9 +40,9 @@ export default function UserPage() {
   }, [userId]);
 
   let listNames = [];
-//   if (userLists.length > 0) {
-//     listNames = userLists.map((list) => list.name);
-//   }
+  //   if (userLists.length > 0) {
+  //     listNames = userLists.map((list) => list.name);
+  //   }
 
   return (
     <>

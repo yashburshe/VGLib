@@ -1,9 +1,9 @@
-import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-import { Link } from "react-router";
-import ListGroup from "react-bootstrap/ListGroup";
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+import { Link } from 'react-router';
+import ListGroup from 'react-bootstrap/ListGroup';
 
-export default function GameCard({ game, showCount = false, renderProp}) {
+export default function GameCard({ game, showCount = false, renderProp }) {
   return (
     <Card className="h-100 shadow-sm">
       {showCount ? (
@@ -12,8 +12,8 @@ export default function GameCard({ game, showCount = false, renderProp}) {
         </Card.Header>
       ) : null}
       <Card.Img
-        className={showCount ? "rounded-0" : ""}
-        style={{ objectFit: "cover", height: "250px" }}
+        className={showCount ? 'rounded-0' : ''}
+        style={{ objectFit: 'cover', height: '250px' }}
         variant="top"
         src={game.cover_url}
       />

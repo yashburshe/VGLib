@@ -1,19 +1,19 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { Button, Form, InputGroup } from "react-bootstrap";
+import { Button, Form, InputGroup } from 'react-bootstrap';
 
 export default function SearchBar() {
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState('');
   const navigate = useNavigate();
 
   const onSearch = (e) => {
     e.preventDefault();
     const q = searchText.trim();
     const params = new URLSearchParams();
-    if (q) params.set("q", q);
+    if (q) params.set('q', q);
     const queryString = params.toString();
-    navigate(queryString ? `/search?${queryString}` : "/search");
+    navigate(queryString ? `/search?${queryString}` : '/search');
   };
 
   return (
