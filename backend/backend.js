@@ -9,6 +9,10 @@ import gamesRouter from "./routes/gamesRouter.js";
 // } catch {
 //   console.log("Unable to load env file. Ignore if in production!");
 // }
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const PORT = process.env.PORT || 3000;
 
 if (!db) {
@@ -23,7 +27,7 @@ if (!userRouter || !listRouter || !gamesRouter) {
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("dist"));
+app.use(express.static(path.join(__dirname, "dist")));
 app.use("/api/user", userRouter);
 app.use("/api/list", listRouter);
 app.use("/api/games", gamesRouter);
