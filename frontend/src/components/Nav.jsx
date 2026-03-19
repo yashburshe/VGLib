@@ -44,10 +44,10 @@ export default function NavBar() {
     return (<>
       <Nav className="ms-auto"> {/* Right aligned*/}
         <NavDropdown title={
-          <>
+          <span className='d-inline-flex align-items-center gap-2'>
             {accountLabel}
             {userImage}
-          </>
+          </span>
         }
         align="end"
         >
@@ -63,8 +63,6 @@ export default function NavBar() {
   }
 
 
-
-
   const accountLabel = user && user.username !== "" ? user.username : "My Account"; 
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
@@ -74,8 +72,11 @@ export default function NavBar() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto"> {/* Left aligned*/}
             <Nav.Link href="/top">Top</Nav.Link>
+            <Nav.Link href="/search">Search</Nav.Link>
+            <Nav.Link href='/games'>Games</Nav.Link>
             <Nav.Link href="/lists">Lists</Nav.Link>
             <Nav.Link href="/users">Users</Nav.Link>
+            {!user ? <Nav.Link href="/login">Login</Nav.Link> : null}
           </Nav>
           {userItem()}
         </Navbar.Collapse>

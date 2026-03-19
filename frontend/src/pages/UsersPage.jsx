@@ -1,53 +1,48 @@
 import { useEffect, useState } from "react";
-import GameCard from "../components/GameCard";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Pagination from "react-bootstrap/Pagination";
+import ProfileCard from "../components/ProfileCard";
 import { Spinner } from "react-bootstrap";
 
-export default function TopGamesPage() {
-  const [games, setGames] = useState([]);
+export default function UsersPage() {
+  const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const gamesPerPage = 12;
+  const usersPerPage = 12;
 
-  const totalPages = Math.ceil(games.length / gamesPerPage);
-  const startIndex = (currentPage - 1) * gamesPerPage;
-  const paginatedGames = games.slice(startIndex, startIndex + gamesPerPage);
-  const pageWindow = [
-    1,
-    currentPage - 1,
-    currentPage,
-    currentPage + 1,
-    totalPages,
-  ].filter((page, index, pages) => {
-    const inRange = page >= 1 && page <= totalPages;
-    const isUnique = pages.indexOf(page) === index;
-    return inRange && isUnique;
-  });
+  const totalPages = Math.ceil(users.length / usersPerPage);
+  const startIndex = (currentPage - 1) * usersPerPage;
+  const paginatedUsers = users.slice(startIndex, startIndex + usersPerPage);
+  const pageWindow = [1, currentPage - 1, currentPage, currentPage + 1, totalPages]
+    .filter((page, index, pages) => {
+      const inRange = page >= 1 && page <= totalPages;
+      const isUnique = pages.indexOf(page) === index;
+      return inRange && isUnique;
+    });
 
   useEffect(() => {
-    const fetchGames = async () => {
-      const res = await fetch("/api/games/top");
+    const fetchUsers = async () => {
+      const res = await fetch("/api/user/all");
       const data = await res.json();
-      console.log(data.topGames);
+      console.log(data.users);
 
-      setGames(data.topGames);
+      setUsers(data.users);
       setCurrentPage(1);
     };
 
-    fetchGames();
+    fetchUsers();
   }, []);
 
   return (
     <Container className="mt-4">
-      <h1 className="mb-4">Top Games</h1>
-      {games.length > 0 ? (
+      <h1 className="mb-4">Users</h1>
+      {users.length > 0 ? (
         <>
           <Row xs={1} sm={2} lg={3} xl={4} className="g-4">
-            {paginatedGames.map((game) => (
-              <Col key={game.id}>
-                <GameCard key={game.id} game={game} showCount />
+            {paginatedUsers.map((user) => (
+              <Col key={user.userID}>
+                <ProfileCard user={user} />
               </Col>
             ))}
           </Row>
@@ -55,9 +50,7 @@ export default function TopGamesPage() {
             <div className="d-flex justify-content-center mt-4">
               <Pagination>
                 <Pagination.Prev
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(prev - 1, 1))
-                  }
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                   disabled={currentPage === 1}
                 />
                 {pageWindow.map((page) => (

@@ -1,7 +1,7 @@
 //Modal for users to create a new modal
 
 import { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, Toast, ToastContainer } from 'react-bootstrap';
 
 import { createGame } from "../js/game";
 
@@ -16,6 +16,10 @@ export default function NewGameModal() {
 
   const [show, setShow] = useState(false);
   const [game, setGame] = useState(game_default);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("Could not create game. Please try again.");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   //TODO use error to useState and display error messages in the modal
 
   const handleChange = (e) => {
@@ -25,19 +29,39 @@ export default function NewGameModal() {
     }));
   };
 
+  const handleCreateGame = async () => {
+    try {
+      setIsSubmitting(true);
+      const res = await createGame(game);
+      if (res && res.success) {
+        setShow(false);
+        setGame(game_default);
+        setShowErrorToast(false);
+        setShowSuccessToast(true);
+      } else {
+        setErrorMessage(res?.message || "Could not create game. Please try again.");
+        setShowErrorToast(true);
+      }
+    } catch {
+      setErrorMessage("Could not create game. Please try again.");
+      setShowErrorToast(true);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <>
       <Button variant="primary" onClick={() => setShow(true)}>
         Create Game
       </Button>
-
       <Modal show={show} onHide={() => setShow(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Create New Game</Modal.Title>
         </Modal.Header>
         <Modal.Body>
             <Form>
-                <Form.Group>
+                <Form.Group className='mb-2'>
                   <Form.Label>Game Name</Form.Label>
                   <Form.Control
                     name="name" 
@@ -47,7 +71,7 @@ export default function NewGameModal() {
                     onChange={handleChange}
                   />
                 </Form.Group>
-                <Form.Group>
+                <Form.Group className='mb-2'>
                   <Form.Label>Summary</Form.Label>
                   <Form.Control 
                     as="textarea"
@@ -58,8 +82,8 @@ export default function NewGameModal() {
                     onChange={handleChange}
                   />
                 </Form.Group>
-                <Form.Group>
-                  <Form.Label>rating</Form.Label>
+                <Form.Group className='mb-2'>
+                  <Form.Label>Rating</Form.Label>
                   <Form.Control 
                     type="number"
                     name="rating" 
@@ -68,7 +92,7 @@ export default function NewGameModal() {
                     onChange={handleChange}
                   />
                 </Form.Group>
-                <Form.Group>
+                <Form.Group className='mb-2'>
                   <Form.Label>Cover Art Link</Form.Label>
                   <Form.Control 
                     type="url"
@@ -78,7 +102,7 @@ export default function NewGameModal() {
                     onChange={handleChange}
                   />
                 </Form.Group>
-                <Form.Group>
+                <Form.Group className='mb-2'>
                   <Form.Label>Platforms</Form.Label>
                   <Form.Control 
                     type="text"
@@ -89,17 +113,37 @@ export default function NewGameModal() {
                    />
                 </Form.Group>
             </Form>
-            
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShow(false)}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={() => createGame(game)}>
-            Create Game
+          <Button variant="primary" onClick={handleCreateGame} disabled={isSubmitting}>
+            {isSubmitting ? 'Creating...' : 'Create Game'}
           </Button>
         </Modal.Footer>
       </Modal>
+
+      <ToastContainer position="top-end" className="p-3">
+        <Toast
+          bg="success"
+          onClose={() => setShowSuccessToast(false)}
+          show={showSuccessToast}
+          delay={2500}
+          autohide
+        >
+          <Toast.Body className="text-white">Game created successfully!</Toast.Body>
+        </Toast>
+        <Toast
+          bg="danger"
+          onClose={() => setShowErrorToast(false)}
+          show={showErrorToast}
+          delay={3500}
+          autohide
+        >
+          <Toast.Body className="text-white">{errorMessage}</Toast.Body>
+        </Toast>
+      </ToastContainer>
     </>
   );
 }

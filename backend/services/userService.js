@@ -62,9 +62,7 @@ export function getUsers() {
     console.log(`Retrieving all users`);
     return db
         .collection(COLLECTIONS.USERS)
-        .find(
-            {projection: {password_hash: 0}}
-        );
+        .find({}, { projection: { password_hash: 0 } });
 }
 
 export async function updateUser(userID, updatedFields) {

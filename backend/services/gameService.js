@@ -28,6 +28,87 @@ export async function getGamesSortedByPopularity() {
   ]).toArray();
 }
 
+export async function searchGamesByText(
+  query,
+  limit = 24,
+  platform = "",
+  sortRating = "desc",
+) {
+  const safeLimit = Number.isFinite(Number(limit)) ? Number(limit) : 24;
+  const text = (query || "").trim();
+  const selectedPlatform = (platform || "").trim();
+  const filters = [];
+
+  if (text) {
+    const regex = new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+    filters.push({
+      $or: [
+        { name: regex },
+        { summary: regex },
+        { platforms: { $elemMatch: { $regex: regex } } },
+      ],
+    });
+  }
+
+  if (selectedPlatform) {
+    const platformRegex = new RegExp(
+      `^${selectedPlatform.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,
+      "i",
+    );
+    filters.push({ platforms: { $elemMatch: { $regex: platformRegex } } });
+  }
+
+  const sortDirection = sortRating === "asc" ? 1 : -1;
+  const queryObject = filters.length > 0 ? { $and: filters } : {};
+
+  return await db
+    .collection(COLLECTIONS.VIDEOGAMES)
+    .find(queryObject)
+    .sort({ rating: sortDirection, name: 1 })
+    .limit(safeLimit)
+    .toArray();
+}
+
+export async function getAllPlatforms(query = "") {
+  const text = (query || "").trim();
+  const filter = text
+    ? {
+      $or: [
+        { name: { $regex: text, $options: "i" } },
+        { summary: { $regex: text, $options: "i" } },
+        { platforms: { $elemMatch: { $regex: text, $options: "i" } } },
+      ],
+    }
+    : {};
+
+  const platforms = await db
+    .collection(COLLECTIONS.VIDEOGAMES)
+    .aggregate([
+      { $match: filter },
+      { $unwind: "$platforms" },
+      {
+        $match: {
+          platforms: { $type: "string", $nin: [""] },
+        },
+      },
+      {
+        $group: {
+          _id: "$platforms",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          platform: "$_id",
+        },
+      },
+      { $sort: { platform: 1 } },
+    ])
+    .toArray();
+
+  return platforms.map((entry) => entry.platform);
+}
+
 export async function createGame(userId, game) {
   const lastGameId = await db
     .collection(COLLECTIONS.VIDEOGAMES)
@@ -42,9 +123,9 @@ export async function createGame(userId, game) {
     id: nextGameId,
     createAt: new Date().toISOString(),
     name: game.name,
+    cover_url: game.cover_url,
     platforms: game.platforms,
     rating: game.rating,
-    slug: game.slug,
     summary: game.summary,
     userId: userId,
   });
@@ -76,9 +157,9 @@ export async function updateGame(game) {
       $set: {
         createAt: new Date().toISOString(),
         name: game.name,
+        cover_url: game.cover_url,
         platforms: game.platforms,
         rating: game.rating,
-        slug: game.slug,
         summary: game.summary,
       },
     },

@@ -3,15 +3,19 @@ import { useNavigate } from "react-router";
 
 import UserProfile from "../components/UserProfile";
 import UserLists from "../components/UserLists";
+import UserGames from "../components/UserGames";
 
 import  {getUser} from "../js/user.js";
 import { getUserLists } from "../js/list.js";
+import { getGamesByUser } from "../js/game.js";
+import { Container } from "react-bootstrap";
 
 export default function ProfilePage() {
   const navigate = useNavigate();
 
   const [userProfile, setUserProfile] = useState({});
   const [userLists,   setUserLists  ] = useState([]);
+  const [userGames,   setUserGames  ] = useState([]);
 
   const fetchAndSetUser = async () => {
     let fetched_user = await getUser();
@@ -27,8 +31,24 @@ export default function ProfilePage() {
     setUserLists(tmp);
   }
 
+  const fetchAndSetGames = async (userID) => {
+    const games = await getGamesByUser(userID);
+    setUserGames(games);
+  }
+
   useEffect(() => {
-    fetchAndSetUser();
+    const init = async () => {
+      const fetchedUser = await getUser();
+      if (!fetchedUser) {
+        console.error("profilePage.jsx: getUser failed!");
+        navigate("/login");
+        return;
+      }
+      setUserProfile(fetchedUser);
+      await fetchAndSetGames(fetchedUser.userID);
+    };
+
+    init();
     fetchAndSetLists();
   }, []);
 
@@ -44,10 +64,14 @@ export default function ProfilePage() {
           user={userProfile}
           listNames={listNames}
         />
-        <section className="lists-section">
+        <Container className="lists-section mt-4">
           <h2>Your Lists</h2>
           <UserLists lists={userLists} />
-        </section>
+        </Container>
+        <Container className="lists-section mt-4">
+          <h2>Games You Created</h2>
+          <UserGames games={userGames} />
+        </Container>
       </main>
     </>
   );

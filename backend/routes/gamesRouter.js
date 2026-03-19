@@ -1,9 +1,12 @@
 import { Router } from "express";
 import {
+  createGame,
   deleteGame,
+  getAllPlatforms,
   getGameFromGameId,
   getGames,
   getGamesSortedByPopularity,
+  searchGamesByText,
   updateGame,
 } from "../services/gameService.js";
 import { AuthenticateUser, DecodeUserID } from "./userAuth.js";
@@ -14,6 +17,49 @@ gamesRouter.post("/", async (req, res) => {
   const user = await AuthenticateUser(req, res);
   if (!user) {
     return;
+  }
+
+  try {
+    const { game } = req.body;
+
+    if (!game || !game.name || game.name.trim() === "") {
+      return res
+        .status(400)
+        .json({ success: false, message: "Game name is required" });
+    }
+
+    if(game.url === "") {
+      game.url = "https://placehold.net/600x800.png"
+    }
+
+    const normalizedPlatforms = Array.isArray(game.platforms)
+      ? game.platforms
+      : typeof game.platforms === "string"
+        ? game.platforms
+            .split(",")
+            .map((platform) => platform.trim())
+            .filter((platform) => platform.length > 0)
+        : [];
+
+    const normalizedGame = {
+      ...game,
+      name: game.name.trim(),
+      summary: game.summary ? game.summary.trim() : "",
+      rating: Number.isFinite(Number(game.rating)) ? Number(game.rating) : 0,
+      platforms: normalizedPlatforms,
+      cover_url: game.url
+    };
+
+    const newGameId = await createGame(user.userID, normalizedGame);
+    const createdGame = await getGameFromGameId(newGameId);
+
+    return res.status(201).json({
+      success: true,
+      gameID: newGameId,
+      game: createdGame,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
   }
 });
 
@@ -30,6 +76,26 @@ gamesRouter.get("/top", async (req, res) => {
     }
   } catch (error) {
     return res.status(500).json({ message: error });
+  }
+});
+
+gamesRouter.get("/search", async (req, res) => {
+  try {
+    const { q, limit, platform, sort } = req.query;
+    const results = await searchGamesByText(q, limit, platform, sort);
+    return res.status(200).json({ success: true, games: results });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+gamesRouter.get("/search/platforms", async (req, res) => {
+  try {
+    const { q } = req.query;
+    const platforms = await getAllPlatforms(q);
+    return res.status(200).json({ success: true, platforms });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error.message });
   }
 });
 
@@ -64,46 +130,79 @@ gamesRouter.get("/", async (req, res) => {
 });
 
 gamesRouter.patch("/:gameId", async (req, res) => {
-  const user = AuthenticateUser(req, res);
+  const user = await AuthenticateUser(req, res);
 
   if (!user) return;
 
-  const gameId = req.params.gameId;
+  const gameId = Number(req.params.gameId);
 
-  if (!getGameFromGameId(gameId)) {
+  const existingGame = await getGameFromGameId(gameId);
+  if (!existingGame) {
     return res.status(404).json({ success: false, message: "Game not found" });
   }
 
-  const game = req.body.game;
+  if (Number(existingGame.userId) !== Number(user.userID)) {
+    return res
+      .status(403)
+      .json({ success: false, message: "Unauthorized update" });
+  }
+
+  const game = req.body.game || {};
+
+  const normalizedPlatforms = Array.isArray(game.platforms)
+    ? game.platforms
+    : typeof game.platforms === "string"
+      ? game.platforms
+          .split(",")
+          .map((platform) => platform.trim())
+          .filter((platform) => platform.length > 0)
+      : existingGame.platforms;
+
+  const normalizedGame = {
+    id: gameId,
+    name: game.name ? game.name.trim() : existingGame.name,
+    cover_url: game.cover_url || game.url || existingGame.cover_url,
+    platforms: normalizedPlatforms,
+    rating:
+      game.rating !== undefined && game.rating !== null
+        ? Number(game.rating)
+        : existingGame.rating,
+    summary: game.summary !== undefined ? game.summary.trim() : existingGame.summary,
+  };
 
   try {
-    updateGame(game);
-    return res.status(200).json({ success: true, message: "Game updated" });
+    await updateGame(normalizedGame);
+    const updatedGame = await getGameFromGameId(gameId);
+    return res.status(200).json({ success: true, message: "Game updated", game: updatedGame });
   } catch (error) {
-    return res.status(500).json({ message: error });
+    return res.status(500).json({ success: false, message: error.message });
   }
 });
 
 gamesRouter.delete("/:gameId", async (req, res) => {
-  const user = AuthenticateUser(req, res);
+  const user = await AuthenticateUser(req, res);
 
   if (!user) return;
 
-  const gameId = req.params.gameId;
+  const gameId = Number(req.params.gameId);
 
-  const game = getGameFromGameId(gameId);
-  const userId = DecodeUserID(req, res);
+  const game = await getGameFromGameId(gameId);
+  if (!game) {
+    return res.status(404).json({ success: false, message: "Game not found" });
+  }
+
+  const userId = Number(user.userID ?? DecodeUserID(req, res));
   if (game.userId !== userId) {
     return res
-      .status(400)
-      .message({ success: false, message: "Unauthorized delete" });
+      .status(403)
+      .json({ success: false, message: "Unauthorized delete" });
   }
 
   try {
-    deleteGame(gameId);
+    await deleteGame(gameId);
     return res.status(200).json({ success: true, message: "Game deleted" });
   } catch (error) {
-    return res.status(500).json({ message: error });
+    return res.status(500).json({ success: false, message: error.message });
   }
 });
 
