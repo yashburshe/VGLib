@@ -5,7 +5,9 @@ VGLib is a web platform that provides a comprehensive catalogue of videogames ac
 Create a new project using the same technologies for creating the backend, but using React with hooks for the front end. This will be a client side rendered application that will use AJAX to access data from the backend and render it using React.
 
 ## Authors
-Yash Mahesh Burshe and Ben Piperno
+Yash Mahesh Burshe and Ben Piperno as part of [NEU CS5610: Web Development Spring 2026](https://johnguerra.co/classes/webDevelopment_online_spring_2026/ "Class Link")
+
+## Screenshot
 
 ## Usage / Instructions to Build
 * Option 1: Visit the deployed version at: 
