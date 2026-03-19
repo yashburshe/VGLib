@@ -7,6 +7,7 @@ import Row from "react-bootstrap/esm/Row";
 import Col from "react-bootstrap/esm/Col";
 import { getUser } from "../js/user";
 import DeleteGameModalButton from "../components/DeleteGameModalButton";
+import EditGameModalButton from "../components/EditGameModalButton";
 
 export default function GameDetailsPage() {
   const { gameId } = useParams();
@@ -46,10 +47,16 @@ export default function GameDetailsPage() {
               <>
                 <Button variant="primary">Add to List</Button>
                 {canDeleteGame ? (
-                  <DeleteGameModalButton
-                    gameId={gameDetails.id}
-                    gameName={gameDetails.name}
-                  />
+                  <>
+                    <DeleteGameModalButton
+                      gameId={gameDetails.id}
+                      gameName={gameDetails.name}
+                    />
+                    <EditGameModalButton
+                      gameProp={gameDetails}
+                      onUpdated={(updatedGame) => setGameDetails(updatedGame)}
+                    />
+                  </>
                 ) : (
                   ""
                 )}

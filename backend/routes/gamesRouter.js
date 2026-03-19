@@ -130,23 +130,52 @@ gamesRouter.get("/", async (req, res) => {
 });
 
 gamesRouter.patch("/:gameId", async (req, res) => {
-  const user = AuthenticateUser(req, res);
+  const user = await AuthenticateUser(req, res);
 
   if (!user) return;
 
-  const gameId = req.params.gameId;
+  const gameId = Number(req.params.gameId);
 
-  if (!getGameFromGameId(gameId)) {
+  const existingGame = await getGameFromGameId(gameId);
+  if (!existingGame) {
     return res.status(404).json({ success: false, message: "Game not found" });
   }
 
-  const game = req.body.game;
+  if (Number(existingGame.userId) !== Number(user.userID)) {
+    return res
+      .status(403)
+      .json({ success: false, message: "Unauthorized update" });
+  }
+
+  const game = req.body.game || {};
+
+  const normalizedPlatforms = Array.isArray(game.platforms)
+    ? game.platforms
+    : typeof game.platforms === "string"
+      ? game.platforms
+          .split(",")
+          .map((platform) => platform.trim())
+          .filter((platform) => platform.length > 0)
+      : existingGame.platforms;
+
+  const normalizedGame = {
+    id: gameId,
+    name: game.name ? game.name.trim() : existingGame.name,
+    cover_url: game.cover_url || game.url || existingGame.cover_url,
+    platforms: normalizedPlatforms,
+    rating:
+      game.rating !== undefined && game.rating !== null
+        ? Number(game.rating)
+        : existingGame.rating,
+    summary: game.summary !== undefined ? game.summary.trim() : existingGame.summary,
+  };
 
   try {
-    updateGame(game);
-    return res.status(200).json({ success: true, message: "Game updated" });
+    await updateGame(normalizedGame);
+    const updatedGame = await getGameFromGameId(gameId);
+    return res.status(200).json({ success: true, message: "Game updated", game: updatedGame });
   } catch (error) {
-    return res.status(500).json({ message: error });
+    return res.status(500).json({ success: false, message: error.message });
   }
 });
 

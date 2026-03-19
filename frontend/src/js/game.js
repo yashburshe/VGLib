@@ -17,6 +17,10 @@ export async function deleteGame(gameID) {
     return await makeAuthReq(`/api/games/${gameID}`, 'DELETE');
 }
 
+export async function updateGame(gameID, game) {
+    return await makeAuthReq(`/api/games/${gameID}`, 'PATCH', { game });
+}
+
 export async function getGamesByUser(userID) {
     const res = await fetch(`/api/user/${userID}/games`);
     const data = await res.json();
