@@ -29,10 +29,18 @@ if (!userRouter || !listRouter || !gamesRouter) {
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "dist")));
+
+
 app.use("/api/user", userRouter);
 app.use("/api/list", listRouter);
 app.use("/api/games", gamesRouter);
+
+app.use(express.static(path.join(__dirname, "dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
+
 app.listen(PORT, () => {
   console.log("Server running in port ", PORT);
 });
