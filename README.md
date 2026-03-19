@@ -14,7 +14,13 @@ Yash Mahesh Burshe and Ben Piperno as part of [NEU CS5610: Web Development Sprin
 
 <img src="./designdoc/screenshot.png" alt="Screenshot" width="500">
 
-## Usage / Instructions to Build
+## Usage
+
+1. Navigate to the deployed website.
+2. Login with test credentials: username: `test` password `test`
+3. Explore games in the library, add them to your custom lists, and view other users and find which games are trending
+
+## Instructions to Build
 
 - Option 1: Visit the deployed version at:
 - Option 2: Follow the steps below:
@@ -28,7 +34,7 @@ Yash Mahesh Burshe and Ben Piperno as part of [NEU CS5610: Web Development Sprin
 
 ## Class Links:
 
-- [Deployment URL](https://tipp-sheet.onrender.com "View the website as an end user")
+- [Deployment URL](https://vglib.onrender.com "View the website as an end user")
 - [Design Documents](/designdoc/README.md "View planning materials")
-- [Presentation Slides](https://docs.google.com/presentation/d/1HAD6tIYrmdqC5iDKvJT0JPu7LSjdJjrOgLk_ntm5As4/edit?usp=sharing "View slides on this website's design and implmentation")
+- [Presentation Slides](https://docs.google.com/presentation/d/1D69h_bxtXzOx8lmD1nvb9B6FIwDBmkb7k5RjO4Jvrok/edit?usp=sharing "View slides on this website's design and implmentation")
 - [Video Demonstration](https://www.markdownguide.org "Watch us present on this website")
