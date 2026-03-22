@@ -17,7 +17,7 @@ Yash Mahesh Burshe and Ben Piperno as part of [NEU CS5610: Web Development Sprin
 ## Usage
 
 1. Navigate to the deployed website.
-2. Login with test credentials: username: `test` password `test`
+2. Login with test credentials: username: `example@test.com` password `test`
 3. Explore games in the library, add them to your custom lists, and view other users and find which games are trending
 
 ## Instructions to Build
