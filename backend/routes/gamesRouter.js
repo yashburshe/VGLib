@@ -9,16 +9,12 @@ import {
   searchGamesByText,
   updateGame,
 } from "../services/gameService.js";
-import { AuthenticateUser, DecodeUserID } from "./userAuth.js";
+
+import { isAuthenticated } from "../middleware/auth.js";
 
 const gamesRouter = Router();
 
-gamesRouter.post("/", async (req, res) => {
-  const user = await AuthenticateUser(req, res);
-  if (!user) {
-    return;
-  }
-
+gamesRouter.post("/", isAuthenticated, async (req, res) => {
   try {
     const { game } = req.body;
 
@@ -50,7 +46,7 @@ gamesRouter.post("/", async (req, res) => {
       cover_url: game.url,
     };
 
-    const newGameId = await createGame(user.userID, normalizedGame);
+    const newGameId = await createGame(req.user.userID, normalizedGame);
     const createdGame = await getGameFromGameId(newGameId);
 
     return res.status(201).json({
@@ -129,11 +125,7 @@ gamesRouter.get("/", async (req, res) => {
   }
 });
 
-gamesRouter.patch("/:gameId", async (req, res) => {
-  const user = await AuthenticateUser(req, res);
-
-  if (!user) return;
-
+gamesRouter.patch("/:gameId", isAuthenticated, async (req, res) => {
   const gameId = Number(req.params.gameId);
 
   const existingGame = await getGameFromGameId(gameId);
@@ -141,7 +133,7 @@ gamesRouter.patch("/:gameId", async (req, res) => {
     return res.status(404).json({ success: false, message: "Game not found" });
   }
 
-  if (Number(existingGame.userId) !== Number(user.userID)) {
+  if (Number(existingGame.userId) !== Number(req.user.userID)) {
     return res
       .status(403)
       .json({ success: false, message: "Unauthorized update" });
@@ -182,11 +174,7 @@ gamesRouter.patch("/:gameId", async (req, res) => {
   }
 });
 
-gamesRouter.delete("/:gameId", async (req, res) => {
-  const user = await AuthenticateUser(req, res);
-
-  if (!user) return;
-
+gamesRouter.delete("/:gameId", isAuthenticated, async (req, res) => {
   const gameId = Number(req.params.gameId);
 
   const game = await getGameFromGameId(gameId);
@@ -194,8 +182,7 @@ gamesRouter.delete("/:gameId", async (req, res) => {
     return res.status(404).json({ success: false, message: "Game not found" });
   }
 
-  const userId = Number(user.userID ?? DecodeUserID(req, res));
-  if (game.userId !== userId) {
+  if (game.userId !== req.user.userID) {
     return res
       .status(403)
       .json({ success: false, message: "Unauthorized delete" });

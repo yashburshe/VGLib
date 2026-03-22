@@ -8,6 +8,10 @@ import { Container } from "react-bootstrap";
 export default function LoginPage() {
   const [isLoginScreen, setIsLoginScreen] = useState(true);
   const navigate = useNavigate();
+  const onSuccess = () => {
+    console.log("login/registration success!");
+    navigate("/profile");
+  };
   return (
     <>
       <Container className="mt-4">
@@ -15,12 +19,12 @@ export default function LoginPage() {
           {isLoginScreen ? (
             <LoginForm
               onSignUpClick={() => setIsLoginScreen(false)}
-              onLoginSuccess={() => navigate("/profile")}
+              onLoginSuccess={onSuccess}
             />
           ) : (
             <RegistrationForm
               onLoginClick={() => setIsLoginScreen(true)}
-              onRegisterSuccess={() => navigate("/profile")}
+              onRegisterSuccess={onSuccess}
             />
           )}
         </div>

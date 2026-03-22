@@ -1,5 +1,7 @@
 //Library Imports
 import { Router } from "express";
+import bcrypt from "bcrypt";
+import passport from "passport";
 
 //Service layer functions
 import {
@@ -8,7 +10,6 @@ import {
   getUser,
   getUsers,
   updateUser,
-  verifyUser,
 } from "../services/userService.js";
 import {
   createList,
@@ -18,9 +19,8 @@ import {
 import { getAllGamesByUserId, deleteGame } from "../services/gameService.js";
 
 //Additional Utils
-import { AuthenticateUser } from "./userAuth.js";
-import { generateJWT } from "../utils/jwtUtils.js";
-import { handleUserRequest } from "./routeUtil.js";
+import { handleGenRequest } from "./routeUtil.js";
+import { isAuthenticated } from "../middleware/auth.js";
 
 const router = Router();
 
@@ -29,6 +29,10 @@ router.post("/signup", async (req, res) => {
   console.log("USER POST /signup with body: ", req.body);
   try {
     const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
     //check if there is already a user with the same username
     const existingUser = await getUser(username);
     if (existingUser) {
@@ -36,15 +40,20 @@ router.post("/signup", async (req, res) => {
         .status(400)
         .json({ success: false, message: "Username already exists" });
     }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     //Create user and default lists
-    const newUserID = await createUser(username, password);
+    const newUserID = await createUser(username, hashedPassword);
     await createList(newUserID, "Favorites");
     await createList(newUserID, "Wishlist");
     await createList(newUserID, "Owned");
 
-    const token = generateJWT(newUserID);
-    console.log("User created successfully with userID: ", newUserID);
-    res.status(201).json({ token });
+    res.status(201).json({
+      success: true,
+      message: "registration success",
+      userID: newUserID,
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -53,29 +62,11 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-//use to login an existing user
-router.post("/login", async (req, res) => {
-  console.log("USER POST /login with body: ", req.body);
-  try {
-    const { username, password } = req.body;
-    //TODO: hash the password with its corresponding salt before comparing with the database record
-    const matchingUser = await verifyUser(username, password);
-    console.log("/login: matchingUser: ", matchingUser);
-    if (!matchingUser) {
-      console.log("No matching credentials found");
-      return res.status(404).json({
-        success: false,
-        message: "No matching credentials found",
-      });
-    }
-    const token = generateJWT(matchingUser.userID);
-    return res.status(201).json({ token });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error });
-  }
+router.post("/login", passport.authenticate("local"), (req, res) => {
+  res.status(200).json({ message: "login success" });
 });
 
-router.get("/all", async (req, res) => {
+router.get("/all", async (_, res) => {
   try {
     const users = await getUsers().toArray();
     return res.status(200).json({ success: true, users });
@@ -85,19 +76,30 @@ router.get("/all", async (req, res) => {
 });
 
 //get a user's info
-router.get("/me", async (req, res) => {
-  console.log("USER GET /me request received!");
-  const user = await AuthenticateUser(req, res);
-  if (!user) return;
-  res.status(200).json({ user: user });
+router.get("/me", isAuthenticated, (req, res) => {
+  console.log("USER GET /me request received!", req.user);
+  delete req.user.password_hash;
+  res.json({ user: req.user });
+});
+
+router.post("/logout", (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ message: "Logout failed", error: err.message });
+    } else {
+      return res.json({ message: "Logout success" });
+    }
+  });
 });
 
 //delete a user's account
-router.delete("/me", async (req, res) => {
+router.delete("/me", isAuthenticated, async (req, res) => {
   console.log("USER DELETE /me request received!");
-  return handleUserRequest(req, res, async (user) => {
+  return handleGenRequest(req, res, async () => {
     //delete any lists made by the user
-    const userLists = await getUserLists(user.userID);
+    const userLists = await getUserLists(req.user.userID);
     if (userLists && userLists.length > 0) {
       userLists.forEach(async (list) => {
         console.log("List: ", list);
@@ -105,13 +107,13 @@ router.delete("/me", async (req, res) => {
       });
     }
     //delete any games made by the user
-    const userGames = await getAllGamesByUserId(user.userID);
+    const userGames = await getAllGamesByUserId(req.user.userID);
     if (userGames && userGames.length > 0) {
       userGames.forEach(async (game) => {
         await deleteGame(game.id);
       });
     }
-    await deleteUser(user.userID);
+    await deleteUser(req.user.userID);
     return res
       .status(200)
       .json({ success: true, message: "user deleted successfully" });
@@ -120,7 +122,7 @@ router.delete("/me", async (req, res) => {
 
 router.patch("/me", async (req, res) => {
   console.log("USER PATCH /me request received!");
-  return handleUserRequest(req, res, async (user) => {
+  return handleGenRequest(req, res, async () => {
     //read updated parameters
     const { username, profile_banner_phrase, profile_picture_url } = req.body;
     if (!profile_banner_phrase || profile_banner_phrase.trim() === "") {
@@ -135,7 +137,7 @@ router.patch("/me", async (req, res) => {
     }
 
     //update the user's profile phrase
-    await updateUser(user.userID, {
+    await updateUser(req.user.userID, {
       profile_banner_phrase: profile_banner_phrase,
       username: username,
       profile_picture_url: profile_picture_url,

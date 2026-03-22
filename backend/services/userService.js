@@ -1,6 +1,10 @@
 import { db, COLLECTIONS } from "../db/mongo.js";
 
 //General purpose functions to handle user related database operations, such as creating a new user, updating a user's info, etc. These functions are used by the userRouter to handle incoming requests, and are also used by other services (e.g. listService) to get user info when needed.
+export async function getUserByUsername(username) {
+  return await db.collection(COLLECTIONS.USERS).findOne({ username: username });
+}
+
 export async function verifyUser(username, password) {
   return await db
     .collection(COLLECTIONS.USERS)
