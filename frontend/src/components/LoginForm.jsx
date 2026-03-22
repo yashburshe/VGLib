@@ -32,6 +32,7 @@ export default function LoginForm({ onSignUpClick, onLoginSuccess }) {
           <Form.Label>Username</Form.Label>
           <Form.Control
             type="text"
+            name="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             isInvalid={!!error && !username}
@@ -42,6 +43,7 @@ export default function LoginForm({ onSignUpClick, onLoginSuccess }) {
           <Form.Label>Password</Form.Label>
           <Form.Control
             type="password"
+            name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             isInvalid={!!error && !password}

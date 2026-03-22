@@ -2,7 +2,7 @@ import { makeAuthReq } from "./frontEndUtils";
 
 export async function getUserLists() {
   const data = await makeAuthReq("/api/list/userlists", "GET");
-  return data?.lists ?? [];
+  if (data) return data.lists;
 }
 
 export async function getList(listID) {

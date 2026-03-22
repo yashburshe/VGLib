@@ -7,7 +7,7 @@ export async function getUser() {
   if (data) {
     return data.user;
   } else {
-    console.error("Failed to retrieve user!");
+    console.warn("Failed to retrieve user!");
   }
 }
 
@@ -22,14 +22,13 @@ export async function login(username, password) {
     });
     const data = await response.json();
     if (!response.ok) {
-      console.error("Login failed: ", data.message);
+      console.warn("Login failed: ", data.message);
       return false;
     } else {
-      localStorage.setItem("token", data.token);
       return true;
     }
-  } catch (error) {
-    console.error("Network Error: ", error);
+  } catch {
+    console.warn("login failed");
     return false;
   }
 }
@@ -45,15 +44,14 @@ export async function register(username, password) {
     });
     const data = await response.json();
     if (!response.ok) {
-      console.error("Registration failed: ", data.message);
+      console.warn("Registration failed: ", data.message);
       return false;
     } else {
       console.log("Registration successful!");
-      localStorage.setItem("token", data.token);
       return true;
     }
-  } catch (error) {
-    console.error("Network Error: ", error);
+  } catch {
+    console.error("Registration failed. Try again");
     return false;
   }
 }
@@ -61,7 +59,6 @@ export async function register(username, password) {
 export async function deleteUser() {
   const data = await makeAuthReq("/api/user/me", "DELETE");
   if (data) {
-    localStorage.removeItem("token");
     console.log("Account deleted successfully!");
   } else {
     console.log("Account deletion failed!");

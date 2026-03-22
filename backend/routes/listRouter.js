@@ -1,4 +1,5 @@
 import { Router } from "express";
+import passport from "passport";
 
 import { db, COLLECTIONS } from "../db/mongo.js";
 import {
@@ -8,35 +9,38 @@ import {
   toggleListItem,
   getUserLists,
 } from "../services/listService.js";
-import { handleUserRequest, handleGenRequest } from "./routeUtil.js";
+//Additional Utils
+import { handleGenRequest } from "./routeUtil.js";
+import { isAuthenticated } from "../middleware/auth.js";
 
 const router = Router();
 
 //create a new custom list
-router.post("/", async (req, res) => {
+router.post("/", isAuthenticated, async (req, res) => {
   console.log("POST /api/list REQ with body: ", req.body);
-  return handleUserRequest(req, res, async (user) => {
+  return handleGenRequest(req, res, async () => {
     const { listName } = req.body;
     const existingList = await db
       .collection(COLLECTIONS.LISTS)
-      .findOne({ user: user.userID, name: listName });
+      .findOne({ user: req.user.userID, name: listName });
     if (existingList) {
       return res.status(400).json({
         success: false,
-        message: `list: ${listName} already exists for user ${user.urserID}`,
+        message: `list: ${listName} already exists for user ${req.user.urserID}`,
       });
     }
-    createList(user.userID, listName);
+    createList(req.user.userID, listName);
     return res.status(200).json({
       success: true,
-      message: `list: ${listName} successfully added for user ${user.userID}`,
+      message: `list: ${listName} successfully added for user ${req.user.userID}`,
     });
   });
 });
 
-router.get("/userlists", async (req, res) => {
+router.get("/userlists", isAuthenticated, async (req, res) => {
+  const user = req.user;
   console.log("GET /listByUser request received!");
-  return handleUserRequest(req, res, async (user) => {
+  return handleGenRequest(req, res, async () => {
     const lists = await getUserLists(user.userID);
     if (lists) {
       return res.status(200).json({ success: true, lists: lists });
@@ -62,9 +66,9 @@ router.get("/:listID", async (req, res) => {
   });
 });
 
-router.delete("/:listID", async (req, res) => {
+router.delete("/:listID", isAuthenticated, async (req, res) => {
   console.log("DELETE /list request received! ListID: ", req.params.listID);
-  return handleUserRequest(req, res, async () => {
+  return handleGenRequest(req, res, async () => {
     await deleteList(Number(req.params.listID));
     return res
       .status(200)
@@ -72,9 +76,9 @@ router.delete("/:listID", async (req, res) => {
   });
 });
 
-router.patch("/:listID", async (req, res) => {
+router.patch("/:listID", isAuthenticated, async (req, res) => {
   console.log("PATCH /list request received! ListID: ", req.params.listID);
-  return handleUserRequest(req, res, async () => {
+  return handleGenRequest(req, res, async () => {
     const { gameID } = req.body;
     const listID = Number(req.params.listID);
 

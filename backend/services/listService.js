@@ -3,9 +3,7 @@ import { db, COLLECTIONS } from "../db/mongo.js";
 //General purpose functions to handle list collection operations
 
 export async function createList(userID, listName) {
-  console.log(
-    `Attempting to create list with name: ${listName} for userID: ${userID}`,
-  );
+  console.log(`Creating list: ${listName} for userID: ${userID}`);
   //check if there is already a list associated with the user with the given name
   const existingList = await db
     .collection(COLLECTIONS.LISTS)

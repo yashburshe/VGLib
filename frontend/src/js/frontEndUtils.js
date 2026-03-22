@@ -2,12 +2,7 @@
 
 export async function makeAuthReq(endpoint, method = "GET", body = null) {
   //Handle Authorization
-  const token = localStorage.getItem("token");
-  if (!token) {
-    console.warn("No authentication token found");
-    return null;
-  }
-  const headers = { Authorization: `Bearer ${token}` };
+  const headers = {};
   const fetchOptions = { method, headers };
   if (body) {
     headers["Content-Type"] = "application/json";
