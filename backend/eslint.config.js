@@ -2,6 +2,7 @@ import globals from "globals";
 import js from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier";
 import prettier from "eslint-plugin-prettier";
+import reactPlugin from "eslint-plugin-react";
 
 export default [
   {
@@ -26,12 +27,19 @@ export default [
       },
     },
     plugins: {
-      prettier: prettier,
-    },
-
-    rules: {
-      // ESLint recommended rules
-      ...js.configs.recommended.rules,
+  prettier: prettier,
+  react: reactPlugin, 
+},
+settings: {           
+  react: {
+    version: "detect",
+  },
+},
+rules: {
+  ...js.configs.recommended.rules,
+  "react/prop-types": "error", 
+  ...
+}
 
       indent: [
         "error",
