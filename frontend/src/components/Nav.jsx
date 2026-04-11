@@ -40,7 +40,6 @@ export default function NavBar() {
       );
 
     const onLogout = () => {
-      localStorage.removeItem("token");
       navigate("/login");
     };
 

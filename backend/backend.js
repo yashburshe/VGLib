@@ -9,12 +9,6 @@ import userRouter from "./routes/userRouter.js";
 import listRouter from "./routes/listRouter.js";
 import gamesRouter from "./routes/gamesRouter.js";
 
-try {
-  process.loadEnvFile();
-} catch {
-  console.log("Unable to load env file. Ignore if in production!");
-}
-
 if (!db) {
   console.error("MongoDB database not initialized. Exiting.");
   process.exit(1);
