@@ -19,10 +19,16 @@ export default function NavBar() {
     fetchUser();
   }, []);
 
+  const onLogout = () => {
+    navigate("/login");
+  };
+
   //Handle User Nav Bar Item on right hand side (only if user is logged in)
   function userItem() {
-    if (!user || location.pathname === "/login") return <></>;
+    if (!user || location.pathname === "/login")
+      return <Nav.Link href="/login">Login</Nav.Link>;
 
+    //If user has profile picture use it, otherwise use default icon
     const userImage =
       user.profile_picture_url && user.profile_picture_url.trim() !== "" ? (
         <Image
@@ -38,10 +44,6 @@ export default function NavBar() {
           className="icon"
         />
       );
-
-    const onLogout = () => {
-      navigate("/login");
-    };
 
     return (
       <>
@@ -81,7 +83,6 @@ export default function NavBar() {
             <Nav.Link href="/search">Search</Nav.Link>
             <Nav.Link href="/games">Games</Nav.Link>
             <Nav.Link href="/users">Users</Nav.Link>
-            {!user ? <Nav.Link href="/login">Login</Nav.Link> : null}
           </Nav>
           {userItem()}
         </Navbar.Collapse>
