@@ -1,57 +1,40 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
 
 import UserProfile from "../components/UserProfile";
 import UserLists from "../components/UserLists";
 import UserGames from "../components/UserGames";
+import { useUser } from "../components/UserContext.jsx";
 
-import { getUser } from "../js/user.js";
 import { getUserLists } from "../js/list.js";
 import { getGamesByUser } from "../js/game.js";
 import { Container } from "react-bootstrap";
 
 export default function ProfilePage() {
-  const navigate = useNavigate();
+  const { user } = useUser();
 
-  const [userProfile, setUserProfile] = useState({});
   const [userLists, setUserLists] = useState([]);
   const [userGames, setUserGames] = useState([]);
 
-  const fetchAndSetLists = async () => {
-    const tmp = await getUserLists();
-    setUserLists(tmp);
-  };
-
-  const fetchAndSetGames = async (userID) => {
-    const games = await getGamesByUser(userID);
-    setUserGames(games);
-  };
-
   useEffect(() => {
+    if (!user) return; // Don't fetch if user data isn't loaded yet
     const init = async () => {
-      const fetchedUser = await getUser();
-      if (!fetchedUser) {
-        console.error("profilePage.jsx: getUser failed!");
-        navigate("/login");
-        return;
-      }
-      setUserProfile(fetchedUser);
-      await fetchAndSetGames(fetchedUser.userID);
+      const lists = await getUserLists();
+      setUserLists(lists);
+
+      const games = await getGamesByUser(user.userID);
+      setUserGames(games);
     };
-
     init();
-    fetchAndSetLists();
-  }, []);
+  }, [user]);
 
-  let listNames = [];
-  if (userLists) {
-    listNames = userLists.map((list) => list.name);
+  const listNames = userLists.map((list) => list.name);
+  if (!user) {
+    return <p>Loading...</p>;
   }
-
   return (
     <>
       <main className="profile-page">
-        <UserProfile user={userProfile} listNames={listNames} />
+        <UserProfile user={user} listNames={listNames} />
         <Container className="lists-section mt-4">
           <h2>Your Lists</h2>
           <UserLists lists={userLists} />
