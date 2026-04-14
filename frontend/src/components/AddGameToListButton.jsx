@@ -7,19 +7,13 @@ export default function AddGameToListButton({ lists, game }) {
   const [selectedLists, setSelectedLists] = useState(new Set([]));
   const safeLists = useMemo(() => (Array.isArray(lists) ? lists : []), [lists]);
 
-  const handleClose = () => {
-    setSelectedLists(new Set([]));
-    setShow(false);
-  };
-
-  const handleShow = () => setShow(true);
 
   const handleSubmit = async () => {
     for (const listID of selectedLists) {
       const response = await toggleGameInList(listID, game.id);
       console.log(response);
     }
-    handleClose();
+    setShow(false);
     alert("refresh page to see updates");
   };
 
@@ -37,11 +31,11 @@ export default function AddGameToListButton({ lists, game }) {
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button variant="primary" onClick={() => setShow(true)}>
         Add to List
       </Button>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={() => setShow(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Add {game.name} to List</Modal.Title>
         </Modal.Header>
