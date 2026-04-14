@@ -5,7 +5,7 @@ import Container from "react-bootstrap/esm/Container";
 import Row from "react-bootstrap/esm/Row";
 import Col from "react-bootstrap/esm/Col";
 
-import { getUser } from "../js/user";
+import { useUser } from "../components/UserContext";
 import { getUserLists } from "../js/list";
 import DeleteGameModalButton from "../components/DeleteGameModalButton";
 import EditGameModalButton from "../components/EditGameModalButton";
@@ -13,7 +13,7 @@ import AddGameToListButton from "../components/AddGameToListButton";
 
 export default function GameDetailsPage() {
   const { gameId } = useParams();
-  const [user, setUser] = useState();
+  const { user } = useUser();
   const [gameDetails, setGameDetails] = useState({});
   const [userLists, setUserLists] = useState([]);
   const isLoggedIn = Boolean(user);
@@ -21,10 +21,6 @@ export default function GameDetailsPage() {
     isLoggedIn && Number(user.userID) === Number(gameDetails.userId);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      setUser(await getUser());
-    };
-    fetchUser();
     const fetchGameDetails = async () => {
       const res = await fetch(`/api/games/${gameId}`);
       const data = await res.json();
