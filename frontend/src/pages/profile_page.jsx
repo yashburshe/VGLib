@@ -34,7 +34,7 @@ export default function ProfilePage() {
   return (
     <>
       <main className="profile-page">
-        <UserProfile user={user} listNames={listNames} />
+        <UserProfile listNames={listNames} />
         <Container className="lists-section mt-4">
           <h2>Your Lists</h2>
           <UserLists lists={userLists} />
