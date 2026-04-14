@@ -65,6 +65,23 @@ router.get("/:listID", async (req, res) => {
   });
 });
 
+router.get("/userlistsWithGame/:gameID", isAuthenticated, async (req, res) => {
+  console.log("GET /userlistsWithGame: ", req.params.gameID);
+  return handleGenRequest(req, res, async () => {
+    const user = req.user;
+    const lists = await getUserLists(user.userID);
+    if (!lists) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No lists found for this user!" });
+    }
+    filtered = lists.filter((list) =>
+      list.games?.includes(Number(req.params.gameID)),
+    );
+    return res.status(200).json({ success: true, lists: filtered });
+  });
+});
+
 router.delete("/:listID", isAuthenticated, async (req, res) => {
   console.log("DELETE /list request received! ListID: ", req.params.listID);
   return handleGenRequest(req, res, async () => {
