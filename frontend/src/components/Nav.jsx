@@ -1,70 +1,57 @@
-import { useState, useEffect } from "react";
 import { Container, Nav, Navbar, Image, NavDropdown } from "react-bootstrap";
 import { PersonCircle } from "react-bootstrap-icons";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router";
 
-import { getUser } from "../js/user";
+import { useUser } from "./UserContext.jsx";
 
 export default function NavBar() {
   const navigate = useNavigate();
   const location = useLocation();
-
-  const [user, setUser] = useState();
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      setUser(await getUser());
-    };
-    fetchUser();
-  }, []);
+  const { user, setUser } = useUser();
 
   const onLogout = () => {
+    setUser(null);
     navigate("/login");
   };
 
-  //Handle User Nav Bar Item on right hand side (only if user is logged in)
-  function userItem() {
-    if (!user || location.pathname === "/login")
+  function userProfileIcon() {
+    if (!user || location.pathname === "/login") return null;
+    return user.profile_picture_url &&
+      user.profile_picture_url.trim() !== "" ? (
+      <Image
+        src={user.profile_picture_url}
+        roundedCircle
+        alt="user profile icon"
+        className="icon"
+      />
+    ) : (
+      <PersonCircle
+        size={20}
+        style={{ marginRight: "6px", marginBottom: "2px" }}
+        className="icon"
+      />
+    );
+  }
+
+  function userProfileLink() {
+    if (!user || location.pathname === "/login") {
       return <Nav.Link href="/login">Login</Nav.Link>;
-
-    //If user has profile picture use it, otherwise use default icon
-    const userImage =
-      user.profile_picture_url && user.profile_picture_url.trim() !== "" ? (
-        <Image
-          src={user.profile_picture_url}
-          roundedCircle
-          alt="user profile icon"
-          className="icon"
-        />
-      ) : (
-        <PersonCircle
-          size={20}
-          style={{ marginRight: "6px", marginBottom: "2px" }}
-          className="icon"
-        />
-      );
-
+    }
     return (
-      <>
-        <Nav className="ms-auto">
-          {" "}
-          {/* Right aligned*/}
-          <NavDropdown
-            title={
-              <span className="d-inline-flex align-items-center gap-2">
-                {accountLabel}
-                {userImage}
-              </span>
-            }
-            align="end"
-          >
-            <NavDropdown.Item href="/profile">My Profile</NavDropdown.Item>
-            <NavDropdown.Divider />
-            <NavDropdown.Item onClick={onLogout}>Log Out</NavDropdown.Item>
-          </NavDropdown>
-        </Nav>
-      </>
+      <NavDropdown
+        title={
+          <span className="d-inline-flex align-items-center gap-2">
+            {user.username}
+            {userProfileIcon()}
+          </span>
+        }
+        align="end"
+      >
+        <NavDropdown.Item href="/profile">My Profile</NavDropdown.Item>
+        <NavDropdown.Divider />
+        <NavDropdown.Item onClick={onLogout}>Log Out</NavDropdown.Item>
+      </NavDropdown>
     );
   }
 
@@ -84,7 +71,7 @@ export default function NavBar() {
             <Nav.Link href="/games">Games</Nav.Link>
             <Nav.Link href="/users">Users</Nav.Link>
           </Nav>
-          {userItem()}
+          {userProfileLink()}
         </Navbar.Collapse>
       </Container>
     </Navbar>
