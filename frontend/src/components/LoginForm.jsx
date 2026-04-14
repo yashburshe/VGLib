@@ -3,10 +3,14 @@ import { useState } from "react";
 import { login } from "../js/user";
 import { Button, Container, Form, Alert } from "react-bootstrap";
 
+import { useUser } from "./UserContext.jsx";
+import { getUser } from "../js/user";
+
 export default function LoginForm({ onSignUpClick, onLoginSuccess }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { setUser } = useUser();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,7 +21,7 @@ export default function LoginForm({ onSignUpClick, onLoginSuccess }) {
       return;
     }
     (await login(username, password))
-      ? onLoginSuccess()
+      ? (setUser(await getUser()), onLoginSuccess())
       : setError("Invalid username or password");
   };
 
