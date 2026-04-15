@@ -12,7 +12,6 @@ export function UserProvider({ children }) {
       const u = await getUser();
       setUser(u);
     }
-    console.log("Fetching user data...");
     fetchUser();
   }, []);
 

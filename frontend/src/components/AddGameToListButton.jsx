@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import { toggleGameInList, getUserLists } from "../js/list";
 
-//
 export default function AddGameToListButton({ game }) {
   const [show, setShow] = useState(false);
   const [usersLists, setUsersLists] = useState(new Map());
@@ -30,7 +29,6 @@ export default function AddGameToListButton({ game }) {
       return;
     }
 
-    console.log(response);
     //update the state
     setUsersLists((prev) => {
       const next = new Map(prev);
