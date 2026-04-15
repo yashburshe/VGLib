@@ -5,14 +5,6 @@ export async function getUserLists() {
   if (data) return data.lists;
 }
 
-export async function getUserListsWithGame(gameID) {
-  const data = await makeAuthReq(
-    `/api/list/userlistsWithGame/${gameID}`,
-    "GET",
-  );
-  if (data) return data.lists;
-}
-
 export async function getList(listID) {
   const data = await makeAuthReq(`/api/list/${listID}`, "GET");
   if (data) return data.list;
