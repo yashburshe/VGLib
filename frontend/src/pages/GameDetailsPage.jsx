@@ -6,7 +6,6 @@ import Row from "react-bootstrap/esm/Row";
 import Col from "react-bootstrap/esm/Col";
 
 import { useUser } from "../components/UserContext";
-import { getUserLists } from "../js/list";
 import DeleteGameModalButton from "../components/DeleteGameModalButton";
 import EditGameModalButton from "../components/EditGameModalButton";
 import AddGameToListButton from "../components/AddGameToListButton";
@@ -15,7 +14,6 @@ export default function GameDetailsPage() {
   const { gameId } = useParams();
   const { user } = useUser();
   const [gameDetails, setGameDetails] = useState({});
-  const [userLists, setUserLists] = useState([]);
   const isLoggedIn = Boolean(user);
   const canDeleteGame =
     isLoggedIn && Number(user.userID) === Number(gameDetails.userId);
@@ -24,20 +22,11 @@ export default function GameDetailsPage() {
     const fetchGameDetails = async () => {
       const res = await fetch(`/api/games/${gameId}`);
       const data = await res.json();
-      console.log(data);
       setGameDetails(data.game);
     };
 
     fetchGameDetails();
   }, [gameId]);
-
-  useEffect(() => {
-    const fetchUserLists = async () => {
-      const lists = await getUserLists();
-      setUserLists(lists);
-    };
-    fetchUserLists();
-  }, []);
 
   return (
     <Container className="mt-4">
@@ -52,7 +41,7 @@ export default function GameDetailsPage() {
             />
             {isLoggedIn ? (
               <>
-                <AddGameToListButton lists={userLists} game={gameDetails} />
+                <AddGameToListButton game={gameDetails} />
                 {canDeleteGame ? (
                   <>
                     <DeleteGameModalButton

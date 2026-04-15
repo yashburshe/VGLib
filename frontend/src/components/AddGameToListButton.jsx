@@ -1,30 +1,41 @@
-import { useMemo, useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
-import { toggleGameInList } from "../js/list";
+import { toggleGameInList, getUserLists } from "../js/list";
 
-export default function AddGameToListButton({ lists, game }) {
+//
+export default function AddGameToListButton({ game }) {
   const [show, setShow] = useState(false);
-  const [selectedLists, setSelectedLists] = useState(new Set([]));
-  const safeLists = useMemo(() => (Array.isArray(lists) ? lists : []), [lists]);
-
-
-  const handleSubmit = async () => {
-    for (const listID of selectedLists) {
-      const response = await toggleGameInList(listID, game.id);
-      console.log(response);
+  const [usersLists, setUsersLists] = useState(new Map());
+  useEffect(() => {
+    //load in list of listIDs that contain the given game
+    async function fetchLists() {
+      const lists = await getUserLists();
+      const kvPairs = lists.map((list) => [
+        list.listID,
+        {
+          name: list.name,
+          containsGame: list.games?.includes(game.id) || false,
+        },
+      ]);
+      setUsersLists(new Map(kvPairs));
     }
-    setShow(false);
-    alert("refresh page to see updates");
-  };
+    fetchLists();
+  }, []);
 
-  const handleToggle = (listID) => {
-    setSelectedLists((prev) => {
-      const next = new Set(prev);
-      if (next.has(listID)) {
-        next.delete(listID);
-      } else {
-        next.add(listID);
-      }
+  const handleToggle = async (listID) => {
+    //add or remove the game from this list
+    const response = await toggleGameInList(listID, game.id);
+    if (!response) {
+      alert("update failed, try again");
+      return;
+    }
+
+    console.log(response);
+    //update the state
+    setUsersLists((prev) => {
+      const next = new Map(prev);
+      const old = prev.get(listID);
+      next.set(listID, { ...old, containsGame: !old.containsGame });
       return next;
     });
   };
@@ -32,43 +43,30 @@ export default function AddGameToListButton({ lists, game }) {
   return (
     <>
       <Button variant="primary" onClick={() => setShow(true)}>
-        Add to List
+        Add to List(s)
       </Button>
 
       <Modal show={show} onHide={() => setShow(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Add {game.name} to List</Modal.Title>
+          <Modal.Title>Add {game.name} to List(s)</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
-            {safeLists.map((list) => {
-              //console.log("creating form checkbox for list: ", list);
-              const alreadyInList = list.games?.includes(game.id);
-
-              return (
-                <Form.Check
-                  key={list.listID}
-                  type="checkbox"
-                  label={list.name}
-                  value={list.listID}
-                  disabled={alreadyInList}
-                  checked={alreadyInList || selectedLists.has(list.listID)}
-                  onChange={() => handleToggle(list.listID)}
-                />
-              );
-            })}
+            {[...usersLists].map(([listID, { name, containsGame }]) => (
+              <Form.Check
+                key={listID}
+                type="checkbox"
+                label={name}
+                value={listID}
+                checked={containsGame}
+                onChange={() => handleToggle(listID)}
+              />
+            ))}
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button
-            variant="primary"
-            onClick={handleSubmit}
-            disabled={selectedLists.size === 0}
-          >
-            Apply
+          <Button variant="primary" onClick={() => setShow(false)}>
+            Close
           </Button>
         </Modal.Footer>
       </Modal>
