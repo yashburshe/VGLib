@@ -1,90 +1,93 @@
-import { useState, useEffect } from "react";
 import { Container, Nav, Navbar, Image, NavDropdown } from "react-bootstrap";
 import { PersonCircle } from "react-bootstrap-icons";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router";
 
-import { getUser } from "../js/user";
+import { logout } from "../js/user.js";
+import { useUser } from "./UserContext.jsx";
+
+import "../css/navBar.css";
+import SearchBar from "./SearchBar.jsx";
 
 export default function NavBar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, setUser } = useUser();
 
-  const [user, setUser] = useState();
+  const isSearchPage = location.pathname === "/search";
+  const isLoginPage = location.pathname === "/login";
+  const accountLabel = user?.username ?? "My Account";
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      setUser(await getUser());
-    };
-    fetchUser();
-  }, []);
+  const onLogout = () => {
+    setUser(null);
+    navigate("/login");
+  };
 
-  //Handle User Nav Bar Item on right hand side (only if user is logged in)
-  function userItem() {
-    if (!user || location.pathname === "/login") return <></>;
+  const UserIcon = () => {
+    return user?.profile_picture_url &&
+      user.profile_picture_url.trim() !== "" ? (
+      <Image
+        src={user.profile_picture_url}
+        roundedCircle
+        alt="user profile icon"
+        className="icon"
+      />
+    ) : (
+      <PersonCircle className="icon" alt="user profile icon" />
+    );
+  };
 
-    const userImage =
-      user.profile_picture_url && user.profile_picture_url.trim() !== "" ? (
-        <Image
-          src={user.profile_picture_url}
-          roundedCircle
-          alt="user profile icon"
-          className="icon"
-        />
-      ) : (
-        <PersonCircle
-          size={20}
-          style={{ marginRight: "6px", marginBottom: "2px" }}
-          className="icon"
-        />
+  const AccountDropdown = () => {
+    if (isLoginPage) return <></>;
+    else if (!user)
+      return (
+        <Nav>
+          <Nav.Link href="/login">Log in</Nav.Link>
+        </Nav>
       );
-
-    const onLogout = () => {
-      localStorage.removeItem("token");
-      navigate("/login");
-    };
-
-    return (
-      <>
-        <Nav className="ms-auto">
-          {" "}
-          {/* Right aligned*/}
+    else
+      return (
+        <Nav>
           <NavDropdown
             title={
               <span className="d-inline-flex align-items-center gap-2">
-                {accountLabel}
-                {userImage}
+                {user.username}
+                <UserIcon />
               </span>
             }
             align="end"
           >
             <NavDropdown.Item href="/profile">My Profile</NavDropdown.Item>
             <NavDropdown.Divider />
-            <NavDropdown.Item onClick={onLogout}>Log Out</NavDropdown.Item>
+            <NavDropdown.Item href="/logout">Log Out</NavDropdown.Item>
           </NavDropdown>
         </Nav>
-      </>
-    );
-  }
+      );
+  };
 
-  const accountLabel =
-    user && user.username !== "" ? user.username : "My Account";
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar expand="lg" bg="light">
       <Container>
         <Navbar.Brand href="/">VGLib</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
+        <Navbar.Toggle aria-controls="nav" />
+
+        <Navbar.Collapse id="nav">
+          {/* LEFT LINKS */}
           <Nav className="me-auto">
-            {" "}
-            {/* Left aligned*/}
             <Nav.Link href="/top">Top</Nav.Link>
-            <Nav.Link href="/search">Search</Nav.Link>
             <Nav.Link href="/games">Games</Nav.Link>
             <Nav.Link href="/users">Users</Nav.Link>
-            {!user ? <Nav.Link href="/login">Login</Nav.Link> : null}
           </Nav>
-          {userItem()}
+
+          {/* CENTER SEARCH BAR — expands fully */}
+          {!isSearchPage && (
+            <div className="flex-grow-1 d-flex align-items-center mx-3">
+              <SearchBar />
+            </div>
+          )}
+
+          {/* RIGHT ACCOUNT DROPDOWN */}
+          <AccountDropdown />
         </Navbar.Collapse>
       </Container>
     </Navbar>

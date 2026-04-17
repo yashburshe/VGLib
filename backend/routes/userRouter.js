@@ -82,14 +82,15 @@ router.get("/me", isAuthenticated, (req, res) => {
   res.json({ user: req.user });
 });
 
-router.post("/logout", (req, res) => {
+router.post("/logout", isAuthenticated, (req, res) => {
+  console.log("POST /logout received");
   req.logout((err) => {
     if (err) {
       return res
         .status(500)
-        .json({ message: "Logout failed", error: err.message });
+        .json({ success: false, message: "Logout failed", error: err.message });
     } else {
-      return res.json({ message: "Logout success" });
+      return res.status(200).json({ success: true, message: "Logout success" });
     }
   });
 });

@@ -1,87 +1,38 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
-import GameCard from "./components/GameCard";
-import SearchBar from "./components/SearchBar";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
 
-function App() {
-  const [topGames, setTopGames] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [visibleColumns, setVisibleColumns] = useState(4);
-  const navigate = useNavigate();
+import "bootstrap/dist/css/bootstrap.min.css";
 
-  useEffect(() => {
-    const updateVisibleColumns = () => {
-      const width = window.innerWidth;
-      if (width >= 1200) {
-        setVisibleColumns(4);
-      } else if (width >= 992) {
-        setVisibleColumns(3);
-      } else if (width >= 576) {
-        setVisibleColumns(2);
-      } else {
-        setVisibleColumns(1);
-      }
-    };
+import HomePage from "./pages/HomePage.jsx";
+import LoginPage from "./pages/login_page.jsx";
+import ProfilePage from "./pages/profile_page.jsx";
+import GamesPage from "./pages/GamesPage.jsx";
+import NavBar from "./components/Nav.jsx";
+import GameDetailsPage from "./pages/GameDetailsPage.jsx";
+import TopGamesPage from "./pages/TopGames.jsx";
+import ListDetailsPage from "./pages/ListDetailsPage.jsx";
+import UsersPage from "./pages/UsersPage.jsx";
+import UserPage from "./pages/UserPage.jsx";
+import SearchPage from "./pages/SearchPage.jsx";
+import Footer from "./components/Footer.jsx";
 
-    updateVisibleColumns();
-    window.addEventListener("resize", updateVisibleColumns);
-    return () => window.removeEventListener("resize", updateVisibleColumns);
-  }, []);
-
-  useEffect(() => {
-    const fetchTopGames = async () => {
-      setIsLoading(true);
-      try {
-        const res = await fetch("/api/games/top");
-        const data = await res.json();
-        setTopGames((data?.topGames || []).slice(0, 12));
-      } catch {
-        setTopGames([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchTopGames();
-  }, []);
-
-  const oneRowGames = topGames.slice(0, visibleColumns);
-
+export default function App() {
   return (
-    <Container className="mt-4">
-      <SearchBar />
-      <section>
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h2 className="mb-0">Top Games</h2>
-          <Button variant="outline-primary" onClick={() => navigate("/top")}>
-            View More
-          </Button>
-        </div>
-
-        {isLoading ? (
-          <div className="d-flex align-items-center gap-2 text-muted">
-            <Spinner animation="border" size="sm" />
-            Loading top games...
-          </div>
-        ) : null}
-
-        {!isLoading && topGames.length > 0 ? (
-          <Row xs={1} sm={2} lg={3} xl={4} className="g-4">
-            {oneRowGames.map((game) => (
-              <Col key={game.id}>
-                <GameCard game={game} showCount />
-              </Col>
-            ))}
-          </Row>
-        ) : null}
-
-        {!isLoading && topGames.length === 0 ? (
-          <p className="text-muted">No top games available right now.</p>
-        ) : null}
-      </section>
-    </Container>
+    <BrowserRouter>
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/games" element={<GamesPage />} />
+        <Route path="/users" element={<UsersPage />} />
+        <Route path="/users/:userId" element={<UserPage />} />
+        <Route path="/games/:gameId" element={<GameDetailsPage />} />
+        <Route path="/lists/:listId" element={<ListDetailsPage />} />
+        <Route path="/top" element={<TopGamesPage />} />
+        <Route path="/search" element={<SearchPage />} />
+      </Routes>
+      <Footer />
+    </BrowserRouter>
   );
 }
-
-export default App;

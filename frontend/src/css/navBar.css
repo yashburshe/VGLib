@@ -1,0 +1,61 @@
+.icon {
+  width: 22px;
+  height: 22px;
+  object-fit: cover;
+  display: inline-block;
+  margin-bottom: 2px;
+}
+
+.navbar-brand {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.navbar .nav-link,
+.navbar .dropdown-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.navbar .dropdown-menu {
+  padding: 0.5rem 0;
+  font-size: 1.1rem;
+  min-width: 200px;
+}
+
+.navbar .dropdown-item {
+  padding: 0.75rem 1.25rem;
+}
+
+.navbar .dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+/* Make the search bar expand to fill horizontal space */
+.navbar .search-bar-container {
+  flex-grow: 1; /* Take all available width */
+  max-width: 500px; /* Prevent it from becoming absurdly wide */
+  margin-left: 1rem;
+  margin-right: 1rem;
+
+  display: flex; /* Ensures vertical alignment */
+  align-items: center; /* Aligns with nav links */
+}
+
+/* Ensure the input stretches fully */
+.navbar .search-bar-container .form-control {
+  width: 100%;
+}
+
+/* Remove bottom margin added by Bootstrap spacing utilities */
+.navbar .search-bar-container.mb-5 {
+  margin-bottom: 0;
+}
+
+@media (max-width: 992px) {
+  .navbar .search-bar-container {
+    max-width: 100%;
+    margin: 0.75rem 0;
+  }
+}
