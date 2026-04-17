@@ -17,20 +17,18 @@ export default function SearchBar() {
   };
 
   return (
-    <section className="mb-5">
-      <Form onSubmit={onSearch}>
-        <InputGroup>
-          <Form.Control
-            type="search"
-            placeholder="Search games by title, summary, or platform"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-          />
-          <Button type="submit" variant="primary">
-            Search
-          </Button>
-        </InputGroup>
-      </Form>
-    </section>
+    <Form inline="true" onSubmit={onSearch} className="w-100">
+      <InputGroup>
+        <Form.Control
+          type="search"
+          placeholder="Search games by title, summary, or platform"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        ></Form.Control>
+        <Button type="submit" variant="primary">
+          Search
+        </Button>
+      </InputGroup>
+    </Form>
   );
 }
