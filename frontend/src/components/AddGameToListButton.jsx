@@ -54,7 +54,7 @@ export default function AddGameToListButton({ game }) {
               <Form.Check
                 key={listID}
                 type="checkbox"
-                label={name}
+                label={<a href={`/lists/${listID}`}>{name}</a>}
                 value={listID}
                 checked={containsGame}
                 onChange={() => handleToggle(listID)}
