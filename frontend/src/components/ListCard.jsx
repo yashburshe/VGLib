@@ -1,26 +1,52 @@
-import { Card, Button } from "react-bootstrap";
+import { useState } from "react";
+import { Card, Button, Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Trash } from "react-bootstrap-icons";
 
 import { deleteList } from "../js/list.js";
 import "../css/list.css";
 
-export default function ListCard({ list }) {
+export default function ListCard({ list, onListDeleted }) {
   const navigate = useNavigate();
   const requiredLists = ["Favorites", "Wishlist", "Owned"];
   const isDefaultList = requiredLists.includes(list.name);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const onDelete = (e) => {
+  const onDeleteClick = (e) => {
     e.stopPropagation();
-    deleteList(list.listID);
-    alert("List deleted!");
+    setShowDeleteConfirm(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+
+    const result = await deleteList(list.listID);
+    if (!result?.success) {
+      alert(result?.message || "Failed to delete list");
+      setIsDeleting(false);
+      return;
+    }
+
+    if (onListDeleted) {
+      onListDeleted(list.listID);
+    }
+    setShowDeleteConfirm(false);
+    setIsDeleting(false);
+  };
+
+  const handleCardClick = () => {
+    if (showDeleteConfirm || isDeleting) {
+      return;
+    }
+    navigate(`/lists/${list.listID}`);
   };
 
   const DeleteButton = () => {
     return (
       <>
-        <Button variant="outline-danger" size="sm">
-          <Trash size={20} onClick={onDelete} />
+        <Button variant="outline-danger" size="sm" onClick={onDeleteClick}>
+          <Trash size={20} />
         </Button>
       </>
     );
@@ -29,7 +55,7 @@ export default function ListCard({ list }) {
   return (
     <Card
       className="list-grid-card h-100 w-100"
-      onClick={() => navigate(`/lists/${list.listID}`)}
+      onClick={handleCardClick}
       style={{ cursor: "pointer" }}
     >
       <Card.Body className="d-flex flex-column">
@@ -48,6 +74,41 @@ export default function ListCard({ list }) {
           </div>
         ) : null}
       </Card.Body>
+
+      <Modal
+        show={showDeleteConfirm}
+        onHide={() => setShowDeleteConfirm(false)}
+        centered
+      >
+        <Modal.Header closeButton onClick={(e) => e.stopPropagation()}>
+          <Modal.Title>Delete List</Modal.Title>
+        </Modal.Header>
+        <Modal.Body onClick={(e) => e.stopPropagation()}>
+          Are you sure you want to delete the {list.name} list?
+        </Modal.Body>
+        <Modal.Footer onClick={(e) => e.stopPropagation()}>
+          <Button
+            variant="secondary"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowDeleteConfirm(false);
+            }}
+            disabled={isDeleting}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="danger"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleConfirmDelete();
+            }}
+            disabled={isDeleting}
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Card>
   );
 }

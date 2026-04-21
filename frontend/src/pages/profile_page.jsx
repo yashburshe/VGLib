@@ -15,11 +15,21 @@ export default function ProfilePage() {
   const [userLists, setUserLists] = useState([]);
   const [userGames, setUserGames] = useState([]);
 
+  const refreshUserLists = async () => {
+    const lists = await getUserLists();
+    setUserLists(lists);
+  };
+
+  const handleListDeleted = (deletedListID) => {
+    setUserLists((prev) =>
+      prev.filter((list) => Number(list.listID) !== Number(deletedListID)),
+    );
+  };
+
   useEffect(() => {
     if (!user) return; // Don't fetch if user data isn't loaded yet
     const init = async () => {
-      const lists = await getUserLists();
-      setUserLists(lists);
+      await refreshUserLists();
 
       const games = await getGamesByUser(user.userID);
       setUserGames(games);
@@ -34,10 +44,10 @@ export default function ProfilePage() {
   return (
     <>
       <main className="profile-page">
-        <UserProfile listNames={listNames} />
+        <UserProfile listNames={listNames} onListCreated={refreshUserLists} />
         <Container className="lists-section mt-4">
           <h2>Your Lists</h2>
-          <UserLists lists={userLists} />
+          <UserLists lists={userLists} onListDeleted={handleListDeleted} />
         </Container>
         <Container className="lists-section mt-4">
           <h2>Games You Created</h2>
