@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import GameCard from "../components/GameCard";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -7,13 +8,24 @@ import Pagination from "react-bootstrap/Pagination";
 import { Spinner } from "react-bootstrap";
 
 import AddGameToListButton from "../components/AddGameToListButton";
+import NewGameModalButton from "../components/NewGameModalButton";
+import { useUser } from "../components/UserContext";
 import { getUserLists } from "../js/list";
 
 export default function GamesPage() {
+  const { user } = useUser();
   const [games, setGames] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [userLists, setUserLists] = useState([]);
   const gamesPerPage = 12;
+
+  const fetchGames = async () => {
+    const res = await fetch("/api/games");
+    const data = await res.json();
+
+    setGames(data.games);
+    setCurrentPage(1);
+  };
 
   const totalPages = Math.ceil(games.length / gamesPerPage);
   const startIndex = (currentPage - 1) * gamesPerPage;
@@ -31,15 +43,6 @@ export default function GamesPage() {
   });
 
   useEffect(() => {
-    const fetchGames = async () => {
-      const res = await fetch("/api/games");
-      const data = await res.json();
-      console.log(data.games);
-
-      setGames(data.games);
-      setCurrentPage(1);
-    };
-
     fetchGames();
   }, []);
 
@@ -53,7 +56,16 @@ export default function GamesPage() {
 
   return (
     <Container className="mt-4">
-      <h1 className="mb-4">Games</h1>
+      <div className="d-flex justify-content-between align-items-center mb-4 gap-3">
+        <h1 className="mb-0">Games</h1>
+        {user ? (
+          <NewGameModalButton onGameCreated={fetchGames} />
+        ) : (
+          <Link to="/login" className="btn btn-outline-primary">
+            Log in to add a game
+          </Link>
+        )}
+      </div>
       {games.length > 0 ? (
         <>
           <Row xs={1} sm={2} lg={3} xl={4} className="g-4">
