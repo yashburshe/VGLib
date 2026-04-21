@@ -1,12 +1,19 @@
 import { useState } from "react";
 
-import { register } from "../js/user";
+import { getUser, login, register } from "../js/user";
 import { Button, Container, Form, Alert } from "react-bootstrap";
+import { useUser } from "./UserContext.jsx";
 
-export default function RegistrationForm({ onLoginClick, onRegisterSuccess }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+export default function RegistrationForm({
+  username,
+  password,
+  onUsernameChange,
+  onPasswordChange,
+  onLoginClick,
+  onRegisterSuccess,
+}) {
   const [error, setError] = useState("");
+  const { setUser } = useUser();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,9 +23,22 @@ export default function RegistrationForm({ onLoginClick, onRegisterSuccess }) {
       setError("Please enter both a username and password");
       return;
     }
-    (await register(username, password))
-      ? onRegisterSuccess()
-      : setError("Invalid: username already taken");
+
+    const registrationSuccess = await register(username, password);
+    if (!registrationSuccess) {
+      setError("Invalid: username already taken");
+      return;
+    }
+
+    const loginSuccess = await login(username, password);
+    if (!loginSuccess) {
+      setError("Account created. Please log in.");
+      onLoginClick();
+      return;
+    }
+
+    setUser(await getUser());
+    onRegisterSuccess();
   };
 
   //TODO: set confirm password and password complexity rules. Ensure that password hash is sent to backend, not raw password
@@ -34,7 +54,7 @@ export default function RegistrationForm({ onLoginClick, onRegisterSuccess }) {
           <Form.Control
             type="text"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => onUsernameChange(e.target.value)}
             isInvalid={!!error && !username}
           />
         </Form.Group>
@@ -44,12 +64,17 @@ export default function RegistrationForm({ onLoginClick, onRegisterSuccess }) {
           <Form.Control
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => onPasswordChange(e.target.value)}
             isInvalid={!!error && !password}
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" className="w-100">
+        <Button
+          variant="primary"
+          type="submit"
+          className="w-100"
+          disabled={!username.trim() || !password.trim()}
+        >
           Register
         </Button>
       </Form>

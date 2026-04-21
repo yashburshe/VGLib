@@ -21,11 +21,11 @@ router.post("/", isAuthenticated, async (req, res) => {
     const { listName } = req.body;
     const existingList = await db
       .collection(COLLECTIONS.LISTS)
-      .findOne({ user: req.user.userID, name: listName });
+      .findOne({ userID: req.user.userID, name: listName });
     if (existingList) {
       return res.status(400).json({
         success: false,
-        message: `list: ${listName} already exists for user ${req.user.urserID}`,
+        message: `list: ${listName} already exists for user ${req.user.userID}`,
       });
     }
     const listID = await createList(req.user.userID, listName);

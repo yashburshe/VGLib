@@ -2,7 +2,7 @@ import Card from "react-bootstrap/Card";
 import Image from "react-bootstrap/Image";
 import { Link } from "react-router";
 
-export default function ProfileCard({ user, renderProp }) {
+export default function ProfileCard({ user, renderProp, isSelf = false }) {
   if (!user) return null;
 
   const joinedYear = user.createdAt
@@ -19,7 +19,7 @@ export default function ProfileCard({ user, renderProp }) {
           alt={`${user.username} avatar`}
           style={{ width: "120px", height: "120px", objectFit: "cover" }}
         />
-        <Link to={`/users/${user.userID}`}>
+        <Link to={isSelf ? '/profile' : `/users/${user.userID}`}>
           <Card.Title className="fs-6 fw-bold mb-4 text-dark">
             {user.username}
           </Card.Title>

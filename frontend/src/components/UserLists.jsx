@@ -2,6 +2,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import ListCard from "./ListCard";
 
 export default function UserLists({ lists, fetchLists }) {
+export default function UserLists({ lists, onListDeleted }) {
   if (!lists || lists.length === 0) {
     return (
       <section className="lists-row">
@@ -16,6 +17,7 @@ export default function UserLists({ lists, fetchLists }) {
         {lists.map((list) => (
           <Col key={list.listID} className="d-flex">
             <ListCard list={list} onListDelete={fetchLists} />
+            <ListCard list={list} onListDeleted={onListDeleted} />
           </Col>
         ))}
       </Row>

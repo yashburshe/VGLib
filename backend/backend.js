@@ -39,18 +39,19 @@ app.use(
   }),
 );
 
-//Initialize Passport
 app.use(passport.initialize());
 app.use(passport.session());
 
-//Static and api routes
-app.use(express.static("../frontend/dist"));
 app.use("/api/user", userRouter);
 app.use("/api/list", listRouter);
 app.use("/api/games", gamesRouter);
 
-app.listen(PORT, () => {
-  console.log("Server running in port ", PORT);
+app.use(express.static(path.join(__dirname, "dist")));
+
+app.get("/{*splat}", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
-export default app;
+app.listen(PORT, () => {
+  console.log("Server running on port ", PORT);
+});

@@ -11,9 +11,8 @@ export default function SearchBar() {
     e.preventDefault();
     const q = searchText.trim();
     const params = new URLSearchParams();
-    if (q) params.set("q", q);
-    const queryString = params.toString();
-    navigate(queryString ? `/search?${queryString}` : "/search");
+    params.set("q", q);
+    navigate(`/search?${params.toString()}`);
   };
 
   return (

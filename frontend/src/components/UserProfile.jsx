@@ -10,6 +10,12 @@ import "../css/profile.css";
 
 export default function UserProfile({
   listNames,
+  onListCreated,
+  onGameCreated,
+  external = false,
+}) {
+export default function UserProfile({
+  listNames,
   fetchLists,
   external = false,
 }) {
@@ -32,10 +38,13 @@ export default function UserProfile({
           ""
         ) : (
           <div className="profile-actions">
-            <NewGameModalButton />
+            <NewGameModalButton onGameCreated={onGameCreated} />
             <NewListModalButton
+             
               existingNames={listNames}
               onListCreated={fetchLists}
+           
+              onListCreated={onListCreated}
             />
             <EditProfileModalButton userProp={user} />
             <DeleteAccountModalButton />
