@@ -10,8 +10,12 @@ export default function ListCard({ list, onListDeleted }) {
   const navigate = useNavigate();
   const requiredLists = ["Favorites", "Wishlist", "Owned"];
   const isDefaultList = requiredLists.includes(list.name);
-  const descriptionText =
-    list.description || (isDefaultList ? "" : "No Description");
+  const gamesCount =
+    Array.isArray(list.games) && list.games.length >= 0
+      ? list.games.length
+      : typeof list.count === "number"
+        ? list.count
+        : 0;
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -67,11 +71,6 @@ export default function ListCard({ list, onListDeleted }) {
             <span className="list-count-pill">{list.count} items</span>
           )}
         </Card.Title>
-        {descriptionText ? (
-          <Card.Text className="text-muted mb-3 list-description">
-            {descriptionText}
-          </Card.Text>
-        ) : null}
         {list.previewGameCovers?.length > 0 ? (
           <div className="list-preview-row mb-3">
             {list.previewGameCovers.map((coverURL, index) => (
@@ -86,6 +85,8 @@ export default function ListCard({ list, onListDeleted }) {
               <span className="list-preview-more">+{list.overflowCount}</span>
             ) : null}
           </div>
+        ) : gamesCount === 0 ? (
+          <Card.Text className="text-muted mb-3">No games in list</Card.Text>
         ) : null}
         {!isDefaultList ? (
           <div className="mt-auto">
