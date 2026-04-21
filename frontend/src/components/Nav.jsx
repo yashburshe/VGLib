@@ -50,7 +50,7 @@ export default function NavBar() {
       return (
         <Nav className="ms-lg-2">
           <Button href="/login" variant="primary">
-            Log in
+            Create Account
           </Button>
         </Nav>
       );
