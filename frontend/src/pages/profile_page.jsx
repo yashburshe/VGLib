@@ -6,7 +6,7 @@ import UserGames from "../components/UserGames";
 import { useUser } from "../components/UserContext.jsx";
 
 import { getUserLists } from "../js/list.js";
-import { getGamesByUser } from "../js/game.js";
+import { getGame, getGamesByUser } from "../js/game.js";
 import { Container } from "react-bootstrap";
 
 export default function ProfilePage() {
@@ -17,7 +17,39 @@ export default function ProfilePage() {
 
   const refreshUserLists = async () => {
     const lists = await getUserLists();
-    setUserLists(lists);
+
+    const previewGameIDs = [
+      ...new Set(lists.flatMap((list) => (list.games || []).slice(0, 3))),
+    ];
+
+    const previewGames = await Promise.all(
+      previewGameIDs.map(async (gameID) => {
+        const game = await getGame(gameID);
+        return [gameID, game];
+      }),
+    );
+
+    const gameCoverByID = new Map(
+      previewGames
+        .filter(([, game]) => game?.cover_url)
+        .map(([gameID, game]) => [gameID, game.cover_url]),
+    );
+
+    const listsWithPreviews = lists.map((list) => {
+      const gameIDs = list.games || [];
+      const previewGameCovers = gameIDs
+        .slice(0, 3)
+        .map((gameID) => gameCoverByID.get(gameID))
+        .filter(Boolean);
+
+      return {
+        ...list,
+        previewGameCovers,
+        overflowCount: Math.max(gameIDs.length - 3, 0),
+      };
+    });
+
+    setUserLists(listsWithPreviews);
   };
 
   const handleListDeleted = (deletedListID) => {
