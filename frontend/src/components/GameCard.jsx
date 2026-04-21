@@ -19,7 +19,7 @@ export default function GameCard({ game, showCount = false, renderProp }) {
       />
       <Card.Body className="p-3">
         <Link to={`/games/${game.id}`}>
-          <Card.Title className="fs-6 fw-bold mb-4 text-dark">
+          <Card.Title className="fs-6 fw-bold mb-4 text-dark game-card-title">
             {game.name}
           </Card.Title>
         </Link>

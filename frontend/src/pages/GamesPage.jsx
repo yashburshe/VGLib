@@ -5,7 +5,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import Pagination from "react-bootstrap/Pagination";
-import { Spinner } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
 
 import AddGameToListButton from "../components/AddGameToListButton";
 import NewGameModalButton from "../components/NewGameModalButton";
@@ -75,11 +75,22 @@ export default function GamesPage() {
                   key={game.id}
                   game={game}
                   renderProp={
-                    <AddGameToListButton
-                      lists={userLists}
-                      game={game}
-                      compact={true}
-                    />
+                    user ? (
+                      <AddGameToListButton
+                        lists={userLists}
+                        game={game}
+                        compact={true}
+                      />
+                    ) : (
+                      <div className="d-flex flex-column gap-2">
+                        <Button variant="secondary" size="sm" disabled>
+                          Add to List(s)
+                        </Button>
+                        <p className="mb-0 small text-muted">
+                          Log in to add this game to your lists.
+                        </p>
+                      </div>
+                    )
                   }
                 />
               </Col>
