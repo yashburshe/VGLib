@@ -63,7 +63,11 @@ export default function GamesPage() {
                   key={game.id}
                   game={game}
                   renderProp={
-                    <AddGameToListButton lists={userLists} game={game} />
+                    <AddGameToListButton
+                      lists={userLists}
+                      game={game}
+                      compact={true}
+                    />
                   }
                 />
               </Col>
