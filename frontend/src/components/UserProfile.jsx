@@ -11,6 +11,7 @@ import "../css/profile.css";
 export default function UserProfile({
   listNames,
   onListCreated,
+  onGameCreated,
   external = false,
 }) {
   const { user } = useUser();
@@ -32,7 +33,7 @@ export default function UserProfile({
           ""
         ) : (
           <div className="profile-actions">
-            <NewGameModalButton />
+            <NewGameModalButton onGameCreated={onGameCreated} />
             <NewListModalButton
               existingNames={listNames}
               onListCreated={onListCreated}

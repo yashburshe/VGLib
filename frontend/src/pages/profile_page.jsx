@@ -15,6 +15,12 @@ export default function ProfilePage() {
   const [userLists, setUserLists] = useState([]);
   const [userGames, setUserGames] = useState([]);
 
+  const refreshUserGames = async () => {
+    if (!user) return;
+    const games = await getGamesByUser(user.userID);
+    setUserGames(games);
+  };
+
   const refreshUserLists = async () => {
     const lists = await getUserLists();
 
@@ -62,9 +68,7 @@ export default function ProfilePage() {
     if (!user) return; // Don't fetch if user data isn't loaded yet
     const init = async () => {
       await refreshUserLists();
-
-      const games = await getGamesByUser(user.userID);
-      setUserGames(games);
+      await refreshUserGames();
     };
     init();
   }, [user]);
@@ -76,7 +80,11 @@ export default function ProfilePage() {
   return (
     <>
       <main className="profile-page">
-        <UserProfile listNames={listNames} onListCreated={refreshUserLists} />
+        <UserProfile
+          listNames={listNames}
+          onListCreated={refreshUserLists}
+          onGameCreated={refreshUserGames}
+        />
         <Container className="lists-section mt-4">
           <h2>Your Lists</h2>
           <UserLists lists={userLists} onListDeleted={handleListDeleted} />
