@@ -1,4 +1,11 @@
-import { Container, Nav, Navbar, Image, NavDropdown } from "react-bootstrap";
+import {
+  Container,
+  Nav,
+  Navbar,
+  Image,
+  NavDropdown,
+  Button,
+} from "react-bootstrap";
 import { PersonCircle } from "react-bootstrap-icons";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router";
@@ -41,8 +48,10 @@ export default function NavBar() {
     if (isLoginPage) return <></>;
     else if (!user)
       return (
-        <Nav>
-          <Nav.Link href="/login">Log in</Nav.Link>
+        <Nav className="ms-lg-2">
+          <Button href="/login" variant="primary">
+            Log in
+          </Button>
         </Nav>
       );
     else
