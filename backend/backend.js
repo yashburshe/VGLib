@@ -44,7 +44,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //Static and api routes
-app.use(express.static("../frontend/dist"));
+app.use(express.static(path.join(__dirname, "dist")));
 app.use("/api/user", userRouter);
 app.use("/api/list", listRouter);
 app.use("/api/games", gamesRouter);
