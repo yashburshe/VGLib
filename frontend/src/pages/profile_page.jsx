@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import UserProfile from "../components/UserProfile";
 import UserLists from "../components/UserLists";
@@ -10,7 +11,8 @@ import { getGame, getGamesByUser } from "../js/game.js";
 import { Container } from "react-bootstrap";
 
 export default function ProfilePage() {
-  const { user } = useUser();
+  const { user, isUserLoading } = useUser();
+  const navigate = useNavigate();
 
   const [userLists, setUserLists] = useState([]);
   const [userGames, setUserGames] = useState([]);
@@ -73,10 +75,21 @@ export default function ProfilePage() {
     init();
   }, [user]);
 
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      navigate("/login", { replace: true });
+    }
+  }, [isUserLoading, user, navigate]);
+
   const listNames = userLists.map((list) => list.name);
-  if (!user) {
+  if (isUserLoading) {
     return <p>Loading...</p>;
   }
+
+  if (!user) {
+    return null;
+  }
+
   return (
     <>
       <main className="profile-page">
