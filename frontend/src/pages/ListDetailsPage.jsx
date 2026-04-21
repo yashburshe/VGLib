@@ -35,6 +35,8 @@ export default function ListDetailsPage() {
 
   const requiredLists = ["Favorites", "Wishlist", "Owned"];
   const isDefaultList = requiredLists.includes(listDetails.name);
+  const descriptionText =
+    listDetails.description || (isDefaultList ? "" : "No Description");
 
   const DeleteListButton = () => {
     return (
@@ -75,7 +77,7 @@ export default function ListDetailsPage() {
       <Col md={8} lg={9}>
         <h1>{listDetails.name}</h1>
         {isDefaultList ? <></> : <DeleteListButton />}
-        <p>{listDetails.description ?? "No Description"}</p>
+        {descriptionText ? <p>{descriptionText}</p> : null}
         <h3 className="mt-4">Games in this list</h3>
         <Row className="mt-3">
           {games.length === 0 && <p>No games added!</p>}

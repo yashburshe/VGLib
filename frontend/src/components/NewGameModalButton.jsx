@@ -5,7 +5,7 @@ import { Modal, Button, Form, Toast, ToastContainer } from "react-bootstrap";
 
 import { createGame } from "../js/game";
 
-export default function NewGameModal() {
+export default function NewGameModal({ onGameCreated }) {
   const game_default = {
     name: "",
     summary: "",
@@ -35,6 +35,9 @@ export default function NewGameModal() {
       setIsSubmitting(true);
       const res = await createGame(game);
       if (res && res.success) {
+        if (onGameCreated) {
+          await onGameCreated();
+        }
         setShow(false);
         setGame(game_default);
         setShowErrorToast(false);

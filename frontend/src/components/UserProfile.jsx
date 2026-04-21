@@ -8,7 +8,12 @@ import { useUser } from "./UserContext.jsx";
 
 import "../css/profile.css";
 
-export default function UserProfile({ listNames, external = false }) {
+export default function UserProfile({
+  listNames,
+  onListCreated,
+  onGameCreated,
+  external = false,
+}) {
   const { user } = useUser();
   const yearJoined = new Date(user.createdAt).getFullYear();
   return (
@@ -28,8 +33,11 @@ export default function UserProfile({ listNames, external = false }) {
           ""
         ) : (
           <div className="profile-actions">
-            <NewGameModalButton />
-            <NewListModalButton existingNames={listNames} />
+            <NewGameModalButton onGameCreated={onGameCreated} />
+            <NewListModalButton
+              existingNames={listNames}
+              onListCreated={onListCreated}
+            />
             <EditProfileModalButton userProp={user} />
             <DeleteAccountModalButton />
           </div>

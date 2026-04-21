@@ -4,7 +4,7 @@ import { Modal, Button, Form, Alert } from "react-bootstrap";
 
 import { createList } from "../js/list.js";
 
-export default function AddListModalButton({ existingNames }) {
+export default function AddListModalButton({ existingNames, onListCreated }) {
   const [show, setShow] = useState(false);
   const [listName, setListName] = useState("");
   const [error, setError] = useState("");
@@ -19,7 +19,17 @@ export default function AddListModalButton({ existingNames }) {
       setError("A list with this name already exists");
       return;
     }
-    await createList(listName.trim());
+
+    const result = await createList(listName.trim());
+    if (!result?.success) {
+      setError(result?.message || "Failed to create list");
+      return;
+    }
+
+    if (onListCreated) {
+      await onListCreated();
+    }
+
     setListName("");
     setError("");
     setShow(false);
