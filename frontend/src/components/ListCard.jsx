@@ -1,10 +1,4 @@
-import {
-  Card,
-  Button,
-  Carousel,
-  CarouselItem,
-  CarouselCaption,
-} from "react-bootstrap";
+import { Card, Button, Carousel } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Trash } from "react-bootstrap-icons";
 import { useState, useEffect } from "react";
@@ -18,20 +12,19 @@ export default function ListCard({ list, onListDelete }) {
   const isDefaultList = ["Favorites", "Wishlist", "Owned"].includes(list.name);
   const [games, setGames] = useState([]);
   useEffect(() => {
-    //load in each game's details
-    async function fetchGames() {
-      const promises = list.games?.map(async (id) => {
-        return await getGame(id);
-      });
-      const games = await Promise.all(promises);
-      console.log("fetched games: ", games);
-      setGames(games);
-    }
-    fetchGames();
-  }, []);
+    let isMounted = true;
 
-  const firstGameCoverURL = games.length > 0 ? games[0].cover_url : "";
-  console.log("list card cover art: ", firstGameCoverURL);
+    async function fetchGames() {
+      if (!list.games || list.games.length === 0) return;
+      const games = await Promise.all(list.games.map((id) => getGame(id)));
+      if (isMounted) setGames(games);
+    }
+
+    fetchGames();
+    return () => {
+      isMounted = false;
+    };
+  }, [list.games]);
 
   const gameNames = games.map((g) => g.name);
   const gameNamesText =
@@ -39,20 +32,19 @@ export default function ListCard({ list, onListDelete }) {
       ? gameNames.slice(0, 3).join(", ") + (gameNames.length > 3 ? "..." : "")
       : "No games yet";
 
-  const onDelete = (e) => {
-    e.stopPropagation();
-    deleteList(list.listID);
-    alert("TODO: replace with toast List deleted!");
-  };
-
   const DeleteButton = () => {
     if (isDefaultList) return <></>;
+
+    const onDelete = async (e) => {
+      e.stopPropagation();
+      await deleteList(list.listID);
+      onListDelete();
+    };
+
     return (
-      <>
-        <Button variant="outline-danger" size="sm">
-          <Trash size={20} onClick={onDelete} />
-        </Button>
-      </>
+      <Button variant="outline-danger" size="sm" onClick={onDelete}>
+        <Trash size={20} />
+      </Button>
     );
   };
 
@@ -67,7 +59,7 @@ export default function ListCard({ list, onListDelete }) {
           className="mb-3"
         >
           {games.map((g) => (
-            <Carousel.Item>
+            <Carousel.Item key={g.id}>
               <img
                 className="d-block w-100"
                 src={g.cover_url}

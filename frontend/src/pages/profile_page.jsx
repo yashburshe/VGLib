@@ -13,18 +13,22 @@ export default function ProfilePage() {
   const { user } = useUser();
 
   const [userLists, setUserLists] = useState([]);
+  const fetchLists = async () => {
+    const lists = await getUserLists();
+    setUserLists(lists);
+  };
+
   const [userGames, setUserGames] = useState([]);
+  const fetchGames = async () => {
+    const games = await getGamesByUser(user.userID);
+    setUserGames(games);
+  };
 
   useEffect(() => {
-    if (!user) return; // Don't fetch if user data isn't loaded yet
-    const init = async () => {
-      const lists = await getUserLists();
-      setUserLists(lists);
-
-      const games = await getGamesByUser(user.userID);
-      setUserGames(games);
-    };
-    init();
+    if (user) {
+      fetchLists();
+      fetchGames();
+    }
   }, [user]);
 
   const listNames = userLists.map((list) => list.name);
@@ -34,10 +38,10 @@ export default function ProfilePage() {
   return (
     <>
       <main className="profile-page">
-        <UserProfile listNames={listNames} />
+        <UserProfile listNames={listNames} fetchLists={fetchLists} />
         <Container className="lists-section mt-4">
           <h2>My Lists</h2>
-          <UserLists lists={userLists} />
+          <UserLists lists={userLists} fetchLists={fetchLists} />
         </Container>
         <Container className="lists-section mt-4">
           <h2>My Games</h2>
