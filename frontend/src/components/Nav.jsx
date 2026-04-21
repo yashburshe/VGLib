@@ -16,11 +16,11 @@ export default function NavBar() {
 
   const isSearchPage = location.pathname === "/search";
   const isLoginPage = location.pathname === "/login";
-  const accountLabel = user?.username ?? "My Account";
 
-  const onLogout = () => {
+  const onLogout = async () => {
+    await logout();
     setUser(null);
-    navigate("/login");
+    navigate("/");
   };
 
   const UserIcon = () => {
@@ -59,7 +59,7 @@ export default function NavBar() {
           >
             <NavDropdown.Item href="/profile">My Profile</NavDropdown.Item>
             <NavDropdown.Divider />
-            <NavDropdown.Item href="/logout">Log Out</NavDropdown.Item>
+            <NavDropdown.Item onClick={onLogout}>Log Out</NavDropdown.Item>
           </NavDropdown>
         </Nav>
       );

@@ -35,10 +35,11 @@ export async function login(username, password) {
 
 export async function logout() {
   const response = await makeAuthReq("/api/user/logout", "POST");
-  if (!response.success) {
+  if (!response?.success) {
     console.error("Error when attempting to logout. Please try again");
+    return false;
   }
-  return response.success;
+  return true;
 }
 
 export async function register(username, password) {
