@@ -12,10 +12,7 @@ export async function getList(listID) {
 
 export async function createList(listName) {
   const data = await makeAuthReq("/api/list", "POST", { listName: listName });
-  if (data) {
-    console.log(data.message);
-  }
-  return data;
+  return data?.listID ?? null;
 }
 
 export async function deleteList(listID) {

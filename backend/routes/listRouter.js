@@ -28,10 +28,11 @@ router.post("/", isAuthenticated, async (req, res) => {
         message: `list: ${listName} already exists for user ${req.user.urserID}`,
       });
     }
-    createList(req.user.userID, listName);
+    const listID = await createList(req.user.userID, listName);
     return res.status(200).json({
       success: true,
       message: `list: ${listName} successfully added for user ${req.user.userID}`,
+      listID: listID,
     });
   });
 });
