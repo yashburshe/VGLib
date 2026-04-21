@@ -5,8 +5,10 @@ import Container from "react-bootstrap/Container";
 import Pagination from "react-bootstrap/Pagination";
 import ProfileCard from "../components/ProfileCard";
 import { Spinner } from "react-bootstrap";
+import { useUser } from "../components/UserContext";
 
 export default function UsersPage() {
+  const { user } = useUser();
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 12;
@@ -41,7 +43,17 @@ export default function UsersPage() {
 
   return (
     <Container className="mt-4">
-      <h1 className="mb-4">Users</h1>
+      {user ? (
+        <section className="mb-4">
+          <h1 className="h5 mb-3">Your Profile</h1>
+          <Row xs={1} sm={2} lg={3} xl={4} className="g-4">
+            <Col key={user.userID}>
+              <ProfileCard user={user} isSelf={true}/>
+            </Col>
+          </Row>
+        </section>
+      ) : null}
+      <h1 className="mb-4">All Users</h1>
       {users.length > 0 ? (
         <>
           <Row xs={1} sm={2} lg={3} xl={4} className="g-4">

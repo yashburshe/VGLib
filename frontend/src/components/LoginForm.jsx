@@ -6,9 +6,14 @@ import { Button, Container, Form, Alert } from "react-bootstrap";
 import { useUser } from "./UserContext.jsx";
 import { getUser } from "../js/user";
 
-export default function LoginForm({ onSignUpClick, onLoginSuccess }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+export default function LoginForm({
+  username,
+  password,
+  onUsernameChange,
+  onPasswordChange,
+  onSignUpClick,
+  onLoginSuccess,
+}) {
   const [error, setError] = useState("");
   const { setUser } = useUser();
 
@@ -38,7 +43,7 @@ export default function LoginForm({ onSignUpClick, onLoginSuccess }) {
             type="text"
             name="username"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => onUsernameChange(e.target.value)}
             isInvalid={!!error && !username}
           />
         </Form.Group>
@@ -49,12 +54,17 @@ export default function LoginForm({ onSignUpClick, onLoginSuccess }) {
             type="password"
             name="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => onPasswordChange(e.target.value)}
             isInvalid={!!error && !password}
           />
         </Form.Group>
 
-        <Button variant="primary" type="submit" className="w-100">
+        <Button
+          variant="primary"
+          type="submit"
+          className="w-100"
+          disabled={!username.trim() || !password.trim()}
+        >
           Log in
         </Button>
       </Form>

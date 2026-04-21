@@ -1,4 +1,11 @@
-import { Container, Nav, Navbar, Image, NavDropdown } from "react-bootstrap";
+import {
+  Container,
+  Nav,
+  Navbar,
+  Image,
+  NavDropdown,
+  Button,
+} from "react-bootstrap";
 import { PersonCircle } from "react-bootstrap-icons";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router";
@@ -16,11 +23,11 @@ export default function NavBar() {
 
   const isSearchPage = location.pathname === "/search";
   const isLoginPage = location.pathname === "/login";
-  const accountLabel = user?.username ?? "My Account";
 
-  const onLogout = () => {
+  const onLogout = async () => {
+    await logout();
     setUser(null);
-    navigate("/login");
+    navigate("/");
   };
 
   const UserIcon = () => {
@@ -41,8 +48,10 @@ export default function NavBar() {
     if (isLoginPage) return <></>;
     else if (!user)
       return (
-        <Nav>
-          <Nav.Link href="/login">Log in</Nav.Link>
+        <Nav className="ms-lg-2">
+          <Button href="/login" variant="primary">
+            Create Account
+          </Button>
         </Nav>
       );
     else
@@ -59,7 +68,7 @@ export default function NavBar() {
           >
             <NavDropdown.Item href="/profile">My Profile</NavDropdown.Item>
             <NavDropdown.Divider />
-            <NavDropdown.Item href="/logout">Log Out</NavDropdown.Item>
+            <NavDropdown.Item onClick={onLogout}>Log Out</NavDropdown.Item>
           </NavDropdown>
         </Nav>
       );

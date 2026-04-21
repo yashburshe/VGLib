@@ -11,7 +11,7 @@ import { useSearchParams } from "react-router-dom";
 import GameCard from "../components/GameCard";
 
 export default function SearchPage() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchText, setSearchText] = useState(searchParams.get("q") || "");
   const [platformFilter, setPlatformFilter] = useState("");
   const [ratingSort, setRatingSort] = useState("desc");
@@ -22,7 +22,10 @@ export default function SearchPage() {
   const gamesPerPage = 12;
 
   const trimmedSearch = searchText.trim();
-  const hasActiveFilters = Boolean(trimmedSearch || platformFilter);
+  const hasSubmittedQuery = searchParams.has("q");
+  const hasActiveFilters = Boolean(
+    platformFilter || trimmedSearch || hasSubmittedQuery,
+  );
   const totalPages = Math.max(1, Math.ceil(games.length / gamesPerPage));
   const startIndex = (currentPage - 1) * gamesPerPage;
   const paginatedGames = games.slice(startIndex, startIndex + gamesPerPage);
@@ -40,6 +43,15 @@ export default function SearchPage() {
   useEffect(() => {
     setSearchText(searchParams.get("q") || "");
   }, [searchParams]);
+
+  const onSearchSubmit = (e) => {
+    e.preventDefault();
+
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.set("q", searchText.trim());
+
+    setSearchParams(nextParams);
+  };
 
   useEffect(() => {
     setCurrentPage(1);
@@ -80,6 +92,21 @@ export default function SearchPage() {
     const timeoutId = setTimeout(async () => {
       setIsLoading(true);
       try {
+        if (!trimmedSearch && !platformFilter) {
+          const res = await fetch("/api/games");
+          const data = await res.json();
+          const allGames = data?.games || [];
+          const sortedGames = [...allGames].sort((a, b) => {
+            const ratingDiff = Number(a?.rating || 0) - Number(b?.rating || 0);
+            if (ratingSort === "asc") {
+              return ratingDiff || (a?.name || "").localeCompare(b?.name || "");
+            }
+            return -ratingDiff || (a?.name || "").localeCompare(b?.name || "");
+          });
+          setGames(sortedGames);
+          return;
+        }
+
         const params = new URLSearchParams();
         if (trimmedSearch) params.set("q", trimmedSearch);
         if (platformFilter) params.set("platform", platformFilter);
@@ -101,7 +128,7 @@ export default function SearchPage() {
   return (
     <Container className="mt-4">
       <h1 className="mb-3">Search Games</h1>
-      <Form className="mb-4">
+      <Form className="mb-4" onSubmit={onSearchSubmit}>
         <Row className="g-3">
           <Col md={6}>
             <Form.Control
