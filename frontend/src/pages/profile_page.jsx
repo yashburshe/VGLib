@@ -36,11 +36,11 @@ export default function ProfilePage() {
       <main className="profile-page">
         <UserProfile listNames={listNames} />
         <Container className="lists-section mt-4">
-          <h2>Your Lists</h2>
+          <h2>My Lists</h2>
           <UserLists lists={userLists} />
         </Container>
         <Container className="lists-section mt-4">
-          <h2>Games You Created</h2>
+          <h2>My Games</h2>
           <UserGames games={userGames} />
         </Container>
       </main>
