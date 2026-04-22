@@ -37,7 +37,7 @@ Yash Mahesh Burshe and Ben Piperno as part of [NEU CS5610: Web Development Sprin
 - [Deployment URL](https://vglib-backend.onrender.com "View the website as an end user")
 - [Design Documents](/designdoc/README.md "View planning materials")
 - [Presentation Slides](https://docs.google.com/presentation/d/1D69h_bxtXzOx8lmD1nvb9B6FIwDBmkb7k5RjO4Jvrok/edit?usp=sharing "View slides on this website's design and implmentation")
-- [Video Demonstration](https://youtu.be/yplfG392Iec "Watch us present on this website")
+- [Video Demonstration](https://youtu.be/jyzo7-lyU3M "Watch us present on this website")
 - [Usability Study Report](https://docs.google.com/document/d/1EICVEL-MW-JKtLowObQbarGlNqZYW8z5H1E9p-x8OPE/edit?usp=sharing "View the study info collected to improve the usability of the site")
 ## Attribution:
 
