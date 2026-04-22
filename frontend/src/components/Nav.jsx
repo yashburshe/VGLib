@@ -108,24 +108,26 @@ export default function NavBar() {
         <Navbar.Brand href="/">VGLib</Navbar.Brand>
         <Navbar.Toggle aria-controls="nav" />
 
-        <Navbar.Collapse id="nav">
+        <Navbar.Collapse id="nav" className="align-items-lg-center">
+          {/* Search appears first in collapsed mobile nav */}
+          {!isSearchPage && (
+            <div className="search-bar-container order-1 order-lg-2">
+              <SearchBar />
+            </div>
+          )}
+
           {/* LEFT LINKS */}
-          <Nav className="me-auto">
+          <Nav className="me-auto order-2 order-lg-1">
             <Nav.Link href="/top">Top</Nav.Link>
             <Nav.Link href="/games">Games</Nav.Link>
             <Nav.Link href="/users">Users</Nav.Link>
             <MyListsDropdown />
           </Nav>
 
-          {/* CENTER SEARCH BAR — expands fully */}
-          {!isSearchPage && (
-            <div className="flex-grow-1 d-flex align-items-center mx-3">
-              <SearchBar />
-            </div>
-          )}
-
           {/* RIGHT ACCOUNT DROPDOWN */}
-          <AccountDropdown />
+          <div className="order-3 order-lg-3 nav-account-container">
+            <AccountDropdown />
+          </div>
         </Navbar.Collapse>
       </Container>
     </Navbar>
