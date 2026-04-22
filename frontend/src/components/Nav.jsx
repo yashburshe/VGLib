@@ -63,7 +63,7 @@ export default function NavBar() {
       <Nav>
         <NavDropdown title="My Lists">
           {[...userLists].map(([listID, name]) => (
-            <NavDropdown.Item href={`/lists/${listID}`}>
+            <NavDropdown.Item href={`/lists/${listID}`} key={listID}>
               {name}
             </NavDropdown.Item>
           ))}

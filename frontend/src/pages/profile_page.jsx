@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Container } from "react-bootstrap";
 
 import UserProfile from "../components/UserProfile";
 import UserLists from "../components/UserLists";
@@ -8,61 +9,23 @@ import { useUser } from "../components/UserContext.jsx";
 
 import { getUserLists } from "../js/list.js";
 import { getGame, getGamesByUser } from "../js/game.js";
-import { Container } from "react-bootstrap";
 
 export default function ProfilePage() {
   const { user, isUserLoading } = useUser();
   const navigate = useNavigate();
 
   const [userLists, setUserLists] = useState([]);
-  const fetchLists = async () => {
+  const refreshUserLists = async () => {
+    if (!user) return;
     const lists = await getUserLists();
     setUserLists(lists);
   };
 
   const [userGames, setUserGames] = useState([]);
-
   const refreshUserGames = async () => {
     if (!user) return;
     const games = await getGamesByUser(user.userID);
     setUserGames(games);
-  };
-
-  const refreshUserLists = async () => {
-    const lists = await getUserLists();
-
-    const previewGameIDs = [
-      ...new Set(lists.flatMap((list) => (list.games || []).slice(0, 3))),
-    ];
-
-    const previewGames = await Promise.all(
-      previewGameIDs.map(async (gameID) => {
-        const game = await getGame(gameID);
-        return [gameID, game];
-      }),
-    );
-
-    const gameCoverByID = new Map(
-      previewGames
-        .filter(([, game]) => game?.cover_url)
-        .map(([gameID, game]) => [gameID, game.cover_url]),
-    );
-
-    const listsWithPreviews = lists.map((list) => {
-      const gameIDs = list.games || [];
-      const previewGameCovers = gameIDs
-        .slice(0, 3)
-        .map((gameID) => gameCoverByID.get(gameID))
-        .filter(Boolean);
-
-      return {
-        ...list,
-        previewGameCovers,
-        overflowCount: Math.max(gameIDs.length - 3, 0),
-      };
-    });
-
-    setUserLists(listsWithPreviews);
   };
 
   const handleListDeleted = (deletedListID) => {
@@ -78,16 +41,6 @@ export default function ProfilePage() {
       await refreshUserGames();
     };
     init();
-  const fetchGames = async () => {
-    const games = await getGamesByUser(user.userID);
-    setUserGames(games);
-  };
-
-  useEffect(() => {
-    if (user) {
-      fetchLists();
-      fetchGames();
-    }
   }, [user]);
 
   useEffect(() => {
@@ -109,13 +62,13 @@ export default function ProfilePage() {
     <>
       <main className="profile-page">
         <UserProfile
-          listNames={listNames} fetchLists={fetchLists}
+          listNames={listNames}
           onListCreated={refreshUserLists}
           onGameCreated={refreshUserGames}
         />
         <Container className="lists-section mt-4">
           <h2>My Lists</h2>
-          <UserLists lists={userLists} fetchLists={fetchLists} onListDeleted={handleListDeleted} />
+          <UserLists lists={userLists} onListDeleted={handleListDeleted} />
         </Container>
         <Container className="lists-section mt-4">
           <h2>My Games</h2>

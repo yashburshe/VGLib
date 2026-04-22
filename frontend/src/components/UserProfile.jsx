@@ -14,11 +14,6 @@ export default function UserProfile({
   onGameCreated,
   external = false,
 }) {
-export default function UserProfile({
-  listNames,
-  fetchLists,
-  external = false,
-}) {
   const { user } = useUser();
   const yearJoined = new Date(user.createdAt).getFullYear();
   return (
@@ -40,10 +35,7 @@ export default function UserProfile({
           <div className="profile-actions">
             <NewGameModalButton onGameCreated={onGameCreated} />
             <NewListModalButton
-             
               existingNames={listNames}
-              onListCreated={fetchLists}
-           
               onListCreated={onListCreated}
             />
             <EditProfileModalButton userProp={user} />
