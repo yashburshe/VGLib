@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { Button, Modal, Toast, ToastContainer } from "react-bootstrap";
 
@@ -94,3 +95,8 @@ export default function DeleteGameModalButton({ gameId, gameName }) {
     </>
   );
 }
+
+DeleteGameModalButton.propTypes = {
+  gameId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  gameName: PropTypes.string,
+};

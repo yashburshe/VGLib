@@ -1,6 +1,7 @@
 //Modal for users to create a new modal
 
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { Modal, Button, Form } from "react-bootstrap";
 
 import { updateUser } from "../js/user.js";
@@ -78,3 +79,11 @@ export default function EditProfileModalButton({ userProp }) {
     </>
   );
 }
+
+EditProfileModalButton.propTypes = {
+  userProp: PropTypes.shape({
+    username: PropTypes.string,
+    profile_banner_phrase: PropTypes.string,
+    profile_picture_url: PropTypes.string,
+  }),
+};

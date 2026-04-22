@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import { Card, Button, Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Trash } from "react-bootstrap-icons";
@@ -12,7 +13,6 @@ export default function ListCard({ list, onListDeleted }) {
   const isDefaultList = requiredLists.includes(list.name);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-
 
   const onDeleteClick = (e) => {
     e.stopPropagation();
@@ -142,3 +142,15 @@ export default function ListCard({ list, onListDeleted }) {
     </Card>
   );
 }
+
+ListCard.propTypes = {
+  list: PropTypes.shape({
+    listID: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+      .isRequired,
+    name: PropTypes.string.isRequired,
+    count: PropTypes.number,
+    previewGameCovers: PropTypes.arrayOf(PropTypes.string),
+    overflowCount: PropTypes.number,
+  }).isRequired,
+  onListDeleted: PropTypes.func,
+};

@@ -1,6 +1,7 @@
 //Modal for users to create a new modal
 
 import { useState } from "react";
+import PropTypes from "prop-types";
 import { Modal, Button, Form, Toast, ToastContainer } from "react-bootstrap";
 
 import { createGame } from "../js/game";
@@ -159,3 +160,7 @@ export default function NewGameModal({ onGameCreated }) {
     </>
   );
 }
+
+NewGameModal.propTypes = {
+  onGameCreated: PropTypes.func,
+};

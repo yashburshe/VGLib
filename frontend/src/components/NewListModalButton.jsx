@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 import { Modal, Button, Form, Alert } from "react-bootstrap";
 
 import { createList } from "../js/list.js";
@@ -35,7 +36,7 @@ export default function NewListModalButton({ existingNames, onListCreated }) {
 
       // Notify parent (optionally pass listID)
       onListCreated(listID);
-    } catch (err) {
+    } catch {
       setError("Failed to create list. Please try again.");
     } finally {
       setLoading(false);
@@ -91,3 +92,8 @@ export default function NewListModalButton({ existingNames, onListCreated }) {
     </>
   );
 }
+
+NewListModalButton.propTypes = {
+  existingNames: PropTypes.arrayOf(PropTypes.string),
+  onListCreated: PropTypes.func.isRequired,
+};

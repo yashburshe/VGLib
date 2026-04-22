@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import PropTypes from "prop-types";
 import { Button, Modal, Form } from "react-bootstrap";
 import { HeartFill, BookmarkFill, Bookshelf } from "react-bootstrap-icons";
 import { useNavigate } from "react-router-dom";
@@ -181,3 +182,11 @@ export default function AddGameToListButton({ game, compact = false }) {
     </div>
   );
 }
+
+AddGameToListButton.propTypes = {
+  game: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    name: PropTypes.string,
+  }),
+  compact: PropTypes.bool,
+};

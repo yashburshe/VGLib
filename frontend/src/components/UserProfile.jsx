@@ -1,4 +1,5 @@
 import { Container, Image } from "react-bootstrap";
+import PropTypes from "prop-types";
 
 import EditProfileModalButton from "./EditProfileModalButton";
 import NewGameModalButton from "./NewGameModalButton";
@@ -46,3 +47,10 @@ export default function UserProfile({
     </Container>
   );
 }
+
+UserProfile.propTypes = {
+  listNames: PropTypes.arrayOf(PropTypes.string),
+  onListCreated: PropTypes.func,
+  onGameCreated: PropTypes.func,
+  external: PropTypes.bool,
+};

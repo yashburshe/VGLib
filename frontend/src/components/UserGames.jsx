@@ -1,4 +1,5 @@
 import { Col, Container, Row } from "react-bootstrap";
+import PropTypes from "prop-types";
 import GameCard from "./GameCard";
 
 export default function UserGames({ games }) {
@@ -22,3 +23,13 @@ export default function UserGames({ games }) {
     </Container>
   );
 }
+
+UserGames.propTypes = {
+  games: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+      name: PropTypes.string,
+      cover_url: PropTypes.string,
+    }),
+  ),
+};

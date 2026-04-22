@@ -1,4 +1,5 @@
 import { Col, Container, Row } from "react-bootstrap";
+import PropTypes from "prop-types";
 import ListCard from "./ListCard";
 
 export default function UserLists({ lists, onListDeleted }) {
@@ -22,3 +23,17 @@ export default function UserLists({ lists, onListDeleted }) {
     </Container>
   );
 }
+
+UserLists.propTypes = {
+  lists: PropTypes.arrayOf(
+    PropTypes.shape({
+      listID: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+        .isRequired,
+      name: PropTypes.string,
+      count: PropTypes.number,
+      previewGameCovers: PropTypes.arrayOf(PropTypes.string),
+      overflowCount: PropTypes.number,
+    }),
+  ),
+  onListDeleted: PropTypes.func,
+};

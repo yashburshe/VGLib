@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { Alert, Button, Form, Modal } from "react-bootstrap";
 
 import { updateGame } from "../js/game";
@@ -136,3 +137,18 @@ export default function EditGameModalButton({ gameProp, onUpdated }) {
     </>
   );
 }
+
+EditGameModalButton.propTypes = {
+  gameProp: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    name: PropTypes.string,
+    summary: PropTypes.string,
+    rating: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    cover_url: PropTypes.string,
+    platforms: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.string),
+      PropTypes.string,
+    ]),
+  }),
+  onUpdated: PropTypes.func,
+};

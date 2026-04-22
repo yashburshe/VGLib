@@ -1,4 +1,5 @@
 import Card from "react-bootstrap/Card";
+import PropTypes from "prop-types";
 import { Link } from "react-router";
 import ListGroup from "react-bootstrap/ListGroup";
 import "../css/gamecard.css";
@@ -29,3 +30,14 @@ export default function GameCard({ game, showCount = false, renderProp }) {
     </Card>
   );
 }
+
+GameCard.propTypes = {
+  game: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+    name: PropTypes.string.isRequired,
+    cover_url: PropTypes.string,
+    listCount: PropTypes.number,
+  }).isRequired,
+  showCount: PropTypes.bool,
+  renderProp: PropTypes.node,
+};

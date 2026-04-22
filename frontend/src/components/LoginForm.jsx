@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PropTypes from "prop-types";
 
 import { login } from "../js/user";
 import { Button, Container, Form, Alert } from "react-bootstrap";
@@ -77,3 +78,12 @@ export default function LoginForm({
     </Container>
   );
 }
+
+LoginForm.propTypes = {
+  username: PropTypes.string.isRequired,
+  password: PropTypes.string.isRequired,
+  onUsernameChange: PropTypes.func.isRequired,
+  onPasswordChange: PropTypes.func.isRequired,
+  onSignUpClick: PropTypes.func.isRequired,
+  onLoginSuccess: PropTypes.func.isRequired,
+};
