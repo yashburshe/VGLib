@@ -15,10 +15,42 @@ export default function ProfilePage() {
   const navigate = useNavigate();
 
   const [userLists, setUserLists] = useState([]);
+  
   const refreshUserLists = async () => {
-    if (!user) return;
     const lists = await getUserLists();
-    setUserLists(lists);
+
+    const previewGameIDs = [
+      ...new Set(lists.flatMap((list) => (list.games || []).slice(0, 3))),
+    ];
+
+    const previewGames = await Promise.all(
+      previewGameIDs.map(async (gameID) => {
+        const game = await getGame(gameID);
+        return [gameID, game];
+      }),
+    );
+
+    const gameCoverByID = new Map(
+      previewGames
+        .filter(([, game]) => game?.cover_url)
+        .map(([gameID, game]) => [gameID, game.cover_url]),
+    );
+
+    const listsWithPreviews = lists.map((list) => {
+      const gameIDs = list.games || [];
+      const previewGameCovers = gameIDs
+        .slice(0, 3)
+        .map((gameID) => gameCoverByID.get(gameID))
+        .filter(Boolean);
+
+      return {
+        ...list,
+        previewGameCovers,
+        overflowCount: Math.max(gameIDs.length - 3, 0),
+      };
+    });
+
+    setUserLists(listsWithPreviews);
   };
 
   const [userGames, setUserGames] = useState([]);
