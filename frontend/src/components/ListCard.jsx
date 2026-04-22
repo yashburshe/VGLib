@@ -43,6 +43,13 @@ export default function ListCard({ list, onListDeleted }) {
     navigate(`/lists/${list.listID}`);
   };
 
+  const handleCardKeyDown = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleCardClick();
+    }
+  };
+
   const DeleteButton = () => {
     return (
       <>
@@ -57,6 +64,10 @@ export default function ListCard({ list, onListDeleted }) {
     <Card
       className="list-grid-card h-100 w-100"
       onClick={handleCardClick}
+      onKeyDown={handleCardKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-label={`Open ${list.name} list`}
       style={{ cursor: "pointer" }}
     >
       <Card.Body className="d-flex flex-column">
