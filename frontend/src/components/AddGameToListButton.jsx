@@ -142,25 +142,13 @@ export default function AddGameToListButton({ game, compact = false }) {
           <Modal.Title>Add {game.name} to Custom List(s)</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
-            {[...usersLists].map(([listID, { name, containsGame }]) => (
-              <Form.Check
-                key={listID}
-                type="checkbox"
-                label={<a href={`/lists/${listID}`}>{name}</a>}
-                value={listID}
-                checked={containsGame}
-                onChange={() => handleToggle(listID)}
-              />
-            ))}
-          </Form>
           {customLists.length > 0 ? (
             <Form>
               {customLists.map(([listID, { name, containsGame }]) => (
                 <Form.Check
                   key={listID}
                   type="checkbox"
-                  label={name}
+                  label={<a href={`/lists/${listID}`}>{name}</a>}
                   value={listID}
                   checked={containsGame}
                   onChange={() => handleToggleDefaultList(listID)}
