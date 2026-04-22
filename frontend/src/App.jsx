@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect, useState, useContext } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./css/main.css";

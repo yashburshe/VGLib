@@ -15,7 +15,7 @@ export default function ProfilePage() {
   const navigate = useNavigate();
 
   const [userLists, setUserLists] = useState([]);
-  
+
   const refreshUserLists = async () => {
     const lists = await getUserLists();
 

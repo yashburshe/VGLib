@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import GameCard from "../components/GameCard";
-import SearchBar from "../components/SearchBar";
 
 function App() {
   const [topGames, setTopGames] = useState([]);

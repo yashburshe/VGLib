@@ -48,7 +48,7 @@ export default function UsersPage() {
           <h1 className="h5 mb-3">Your Profile</h1>
           <Row xs={1} sm={2} lg={3} xl={4} className="g-4">
             <Col key={user.userID}>
-              <ProfileCard user={user} isSelf={true}/>
+              <ProfileCard user={user} isSelf={true} />
             </Col>
           </Row>
         </section>
