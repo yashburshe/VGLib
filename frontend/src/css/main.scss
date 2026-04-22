@@ -30,3 +30,19 @@ $theme-colors: (
 );
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
+
+// Accessible override: ensure outline primary buttons meet WCAG AA on white.
+.btn-outline-primary {
+  --bs-btn-color: #9f1d1d;
+  --bs-btn-border-color: #9f1d1d;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #9f1d1d;
+  --bs-btn-hover-border-color: #9f1d1d;
+  --bs-btn-focus-shadow-rgb: 159, 29, 29;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #861818;
+  --bs-btn-active-border-color: #861818;
+  --bs-btn-disabled-color: #9f1d1d;
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: #9f1d1d;
+}
