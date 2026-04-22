@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import { Button, Modal, Form } from "react-bootstrap";
 import { HeartFill, BookmarkFill, Bookshelf } from "react-bootstrap-icons";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toggleGameInList, getUserLists } from "../js/list";
 
 export default function AddGameToListButton({ game, compact = false }) {
@@ -149,7 +149,14 @@ export default function AddGameToListButton({ game, compact = false }) {
                 <Form.Check
                   key={listID}
                   type="checkbox"
-                  label={<a href={`/lists/${listID}`}>{name}</a>}
+                  label={
+                    <Link
+                      to={`/lists/${listID}`}
+                      onClick={() => setShow(false)}
+                    >
+                      {name}
+                    </Link>
+                  }
                   value={listID}
                   checked={containsGame}
                   onChange={() => handleToggleDefaultList(listID)}

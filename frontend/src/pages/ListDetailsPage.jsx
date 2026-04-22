@@ -30,7 +30,7 @@ export default function ListDetailsPage() {
         const fetchedGames = await Promise.all(
           details.games.map((gameId) => getGame(gameId)),
         );
-        setGames(fetchedGames);
+        setGames(fetchedGames.filter(Boolean));
       } else {
         setGames([]);
       }
@@ -151,15 +151,15 @@ export default function ListDetailsPage() {
           {games.length === 0 && <p>No games added!</p>}
           {games?.length > 0 &&
             games.map((game) => (
-              <Col key={game.id}>
+              <Col key={game?.id ?? `${listId}-missing-game`}>
                 <GameCard
-                  key={game.id}
+                  key={game?.id ?? `${listId}-missing-game-card`}
                   game={game}
                   renderProp={
                     <UnsetItemFromListButton
-                      gameID={game.id}
+                      gameID={game?.id}
                       listID={listId}
-                      gameName={game.name}
+                      gameName={game?.name}
                     />
                   }
                 />
