@@ -16,6 +16,7 @@ export default function GameCard({ game, showCount = false, renderProp }) {
         style={{ objectFit: "cover", height: "250px" }}
         variant="top"
         src={game.cover_url}
+        alt={game.name ? `${game.name} cover art` : "Game cover art"}
       />
       <Card.Body className="p-3">
         <Link to={`/games/${game.id}`}>

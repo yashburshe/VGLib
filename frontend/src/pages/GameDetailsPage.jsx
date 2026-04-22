@@ -38,6 +38,11 @@ export default function GameDetailsPage() {
               fluid
               rounded
               className="shadow-sm mb-2"
+              alt={
+                gameDetails.name
+                  ? `${gameDetails.name} cover art`
+                  : "Game cover art"
+              }
             />
             {isLoggedIn ? (
               <>

@@ -53,7 +53,13 @@ export default function ListCard({ list, onListDeleted }) {
   const DeleteButton = () => {
     return (
       <>
-        <Button variant="outline-danger" size="sm" onClick={onDeleteClick}>
+        <Button
+          variant="outline-danger"
+          size="sm"
+          onClick={onDeleteClick}
+          aria-label={`Delete ${list.name} list`}
+          title={`Delete ${list.name} list`}
+        >
           <Trash size={20} />
         </Button>
       </>
