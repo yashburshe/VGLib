@@ -15,7 +15,7 @@ export default function UserLists({ lists, onListDeleted }) {
       <Row xs={1} sm={2} lg={3} xl={4} className="g-4">
         {lists.map((list) => (
           <Col key={list.listID} className="d-flex">
-            <ListCard list={list} onListDeleted={onListDeleted} />
+            <ListCard list={list} onListDelete={onListDeleted} />
           </Col>
         ))}
       </Row>

@@ -9,9 +9,11 @@ import {
 import { PersonCircle } from "react-bootstrap-icons";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router";
+import { useEffect, useState } from "react";
 
 import { logout } from "../js/user.js";
 import { useUser } from "./UserContext.jsx";
+import { getUserLists } from "../js/list.js";
 
 import "../css/navBar.css";
 import SearchBar from "./SearchBar.jsx";
@@ -20,6 +22,16 @@ export default function NavBar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, setUser } = useUser();
+  const [userLists, setUserLists] = useState(new Map());
+  useEffect(() => {
+    //load in list of listIDs that contain the given game
+    async function fetchLists() {
+      const lists = await getUserLists();
+      const kvPairs = lists.map((list) => [list.listID, list.name]);
+      setUserLists(new Map(kvPairs));
+    }
+    fetchLists();
+  }, [user]);
 
   const isSearchPage = location.pathname === "/search";
   const isLoginPage = location.pathname === "/login";
@@ -41,6 +53,22 @@ export default function NavBar() {
       />
     ) : (
       <PersonCircle className="icon" alt="user profile icon" />
+    );
+  };
+
+  const MyListsDropdown = () => {
+    if (isLoginPage || !user) return <></>;
+
+    return (
+      <Nav>
+        <NavDropdown title="My Lists">
+          {[...userLists].map(([listID, name]) => (
+            <NavDropdown.Item href={`/lists/${listID}`} key={listID}>
+              {name}
+            </NavDropdown.Item>
+          ))}
+        </NavDropdown>
+      </Nav>
     );
   };
 
@@ -86,6 +114,7 @@ export default function NavBar() {
             <Nav.Link href="/top">Top</Nav.Link>
             <Nav.Link href="/games">Games</Nav.Link>
             <Nav.Link href="/users">Users</Nav.Link>
+            <MyListsDropdown />
           </Nav>
 
           {/* CENTER SEARCH BAR — expands fully */}

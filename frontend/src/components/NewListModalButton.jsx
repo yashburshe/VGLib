@@ -1,38 +1,45 @@
-//Button and Modal for users to create a new list
 import { useState } from "react";
 import { Modal, Button, Form, Alert } from "react-bootstrap";
 
 import { createList } from "../js/list.js";
 
-export default function AddListModalButton({ existingNames, onListCreated }) {
+export default function NewListModalButton({ existingNames, onListCreated }) {
   const [show, setShow] = useState(false);
   const [listName, setListName] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleAdd = async () => {
-    if (!listName.trim()) {
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // prevents default form submission
+    setError("");
+
+    const trimmed = listName.trim();
+    if (!trimmed) {
       setError("List name cannot be empty");
       return;
     }
 
-    if (existingNames && existingNames.includes(listName.trim())) {
+    const normalized = trimmed.toLowerCase();
+    if (existingNames?.map((n) => n.toLowerCase()).includes(normalized)) {
       setError("A list with this name already exists");
       return;
     }
 
-    const result = await createList(listName.trim());
-    if (!result?.success) {
-      setError(result?.message || "Failed to create list");
-      return;
-    }
+    try {
+      setLoading(true);
+      const listID = await createList(trimmed);
 
-    if (onListCreated) {
-      await onListCreated();
-    }
+      // Clear state
+      setListName("");
+      setShow(false);
 
-    setListName("");
-    setError("");
-    setShow(false);
+      // Notify parent (optionally pass listID)
+      onListCreated(listID);
+    } catch (err) {
+      setError("Failed to create list. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleClose = () => {
@@ -51,29 +58,35 @@ export default function AddListModalButton({ existingNames, onListCreated }) {
         <Modal.Header closeButton>
           <Modal.Title>Create New List</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          {error && <Alert variant="danger">{error}</Alert>}
-          <Form>
+
+        <Form onSubmit={handleSubmit}>
+          <Modal.Body>
+            {error && <Alert variant="danger">{error}</Alert>}
+
             <Form.Group>
               <Form.Label>List Name</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter list name"
                 value={listName}
-                onChange={(e) => setListName(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+                onChange={(e) => {
+                  setListName(e.target.value);
+                  setError("");
+                }}
               />
             </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleAdd}>
-            Create List
-          </Button>
-        </Modal.Footer>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Cancel
+            </Button>
+
+            <Button variant="primary" type="submit" disabled={loading}>
+              {loading ? "Creating..." : "Create List"}
+            </Button>
+          </Modal.Footer>
+        </Form>
       </Modal>
     </>
   );
